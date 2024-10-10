@@ -1,0 +1,101 @@
+// import type { FC } from 'react';
+
+// import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
+// import { theme as antTheme, Dropdown, Layout } from 'antd';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useNavigate } from 'react-router-dom';
+
+// import Avator from '@/assets/header/avator.jpeg';
+// import Logo from '@/assets/logo/logo.png';
+// import { removeAllTag } from '@/stores/tags-view.store';
+// import { setUserItem } from '@/stores/user.store';
+
+// const { Header } = Layout;
+
+// interface HeaderProps {
+//   collapsed: boolean;
+//   toggle: () => void;
+// }
+
+// const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
+//   const { logged, device, username } = useSelector(state => state.user);
+//   const navigate = useNavigate();
+//   const token = antTheme.useToken();
+//   const dispatch = useDispatch();
+
+//   const onLogout = async () => {
+//     localStorage.clear();
+//     dispatch(
+//       setUserItem({
+//         logged: false,
+//         userId: undefined,
+//         username: undefined,
+//         roles: [],
+//         permission: undefined,
+//       }),
+//     );
+
+//     dispatch(removeAllTag());
+
+//     navigate('/login');
+//   };
+
+//   const toLogin = () => {
+//     navigate('/login');
+//   };
+
+
+//   return (
+//     <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
+//       {device !== 'MOBILE' && (
+//         <div className="logo" style={{ width: collapsed ? 80 : 200 }}>
+//           <img src={Logo} alt="" style={{ marginRight: collapsed ? '2px' : '20px' }} />
+//         </div>
+//       )}
+
+//       <div className="layout-page-header-main">
+//         <div onClick={toggle}>
+//           <span id="sidebar-trigger">{collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}</span>
+//         </div>
+//         <div className="actions">
+//           {logged ? (
+//             <Dropdown
+//               menu={{
+//                 items: [
+//                   {
+//                     key: '0',
+//                     icon: <UserOutlined />,
+//                     label: (
+//                       <span>
+//                         {username}
+//                       </span>
+//                     ),
+//                   },
+//                   {
+//                     key: '1',
+//                     icon: <LogoutOutlined />,
+//                     label: (
+//                       <span onClick={onLogout}>
+//                         Logout
+//                       </span>
+//                     ),
+//                   },
+//                 ],
+//               }}
+//             >
+//               <span className="user-action">
+//                 <img src={Avator} className="user-avator" alt="avator" />
+//               </span>
+//             </Dropdown>
+//           ) : (
+//             <span style={{ cursor: 'pointer' }} onClick={toLogin}>
+//               Login
+//             </span>
+//           )}
+//         </div>
+//       </div>
+//     </Header>
+//   );
+// };
+
+// export default HeaderComponent;
