@@ -1,11 +1,9 @@
 import type { FC, ReactElement } from 'react';
 import type { RouteProps } from 'react-router';
 
-import { useIntl } from 'react-intl';
 
-import PrivateRoute from './private-route';
-import { useSelector } from 'react-redux';
 import { RoleCode } from '@/types/role';
+import { useSelector } from 'react-redux';
 
 export type WrapperRouteProps = RouteProps & {
   /** document title locale id */
@@ -15,7 +13,6 @@ export type WrapperRouteProps = RouteProps & {
 };
 
 const WrapperRouteComponent: FC<WrapperRouteProps> = ({ title, permittedRoles: allowRoles, ...props }) => {
-  const { formatMessage } = useIntl();
 
   const { roles } = useSelector(state => state.user);
 

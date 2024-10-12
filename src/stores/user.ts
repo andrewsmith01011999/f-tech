@@ -6,9 +6,9 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 
 import { createSlice } from '@reduxjs/toolkit';
-import { createAsyncAction } from '.';
 import { LoginParams } from '@/types/user/login';
 import { apiAccount, apiLogin } from '@/apis/user.api';
+import { createAsyncAction } from './action';
 
 export interface UserState {
   userId?: number;

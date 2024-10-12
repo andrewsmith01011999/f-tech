@@ -17,8 +17,8 @@ const App: React.FC = () => {
                 <Spin
                     spinning={loading}
                     className="app-loading-wrapper"
-                    tip={"Loading"}
-                ></Spin>
+                    tip={<div>Loading</div>}
+                >Loading</Spin>
                 <RenderRouter />
             </Suspense>
         </HistoryRouter>
