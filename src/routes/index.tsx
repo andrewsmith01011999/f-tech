@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 import WrapperRouteComponent from './config';
 import { PATHS } from '@/utils/paths';
+import SignInPage from '@/pages/signin';
+import SignUpPage from '@/pages/signup';
 
 const HomePage = lazy(() => import('@/pages/home'));
 
@@ -13,6 +15,14 @@ const routes: RouteObject[] = [
   {
     path: PATHS.HOME,
     element: <WrapperRouteComponent element={<HomePage />} title="Homage" />,
+  },
+  {
+    path: PATHS.SIGNIN,
+    element: <WrapperRouteComponent element={<SignInPage />} title="Signin Page" />,
+  },
+  {
+    path: PATHS.SIGNUP,
+    element: <WrapperRouteComponent element={<SignUpPage />} title="Signup Page" />,
   },
 ];
 
@@ -23,20 +33,6 @@ const RenderRouter: FC = () => {
 
   historyNavigation.navigate = useNavigate();
   historyNavigation.location = useLocation();
-
-  // useEffect(() => {
-  //   if (location.pathname === PATHS.LOGIN) {
-  //     return;
-  //   }
-
-  //   const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN_KEY);
-
-  //   if (!token) {
-  //     navigate(PATHS.LOGIN);
-  //     return;
-  //   }
-
-  // }, [logged]);
 
   const element = useRoutes(routes);
   return element;

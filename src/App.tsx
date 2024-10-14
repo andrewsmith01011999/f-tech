@@ -1,32 +1,29 @@
 import 'dayjs/locale/zh-cn';
 
-import { ConfigProvider, Spin } from 'antd';
+import { Spin } from 'antd';
 import { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 
 import { history, HistoryRouter } from '@/routes/history';
 
 import RenderRouter from './routes';
-import { themeConfig } from './consts/token';
+import { API_PATH } from './utils/env';
 
 const App: React.FC = () => {
-    const {loading } = useSelector(state => state.global);
-
-
+    const { loading } = useSelector(state => state.global);
+    console.log(API_PATH)
     return (
-        <ConfigProvider theme={themeConfig}>
-            <HistoryRouter history={history}>
-                <Suspense
-                    fallback={
-                        <Spin spinning={loading} className="app-loading-wrapper" tip={<div>Loading</div>}>
-                            Loading
-                        </Spin>
-                    }
-                >
-                    <RenderRouter />
-                </Suspense>
-            </HistoryRouter>
-        </ConfigProvider>
+        <HistoryRouter history={history}>
+            <Suspense
+                fallback={
+                    <Spin spinning={loading} className="app-loading-wrapper" tip={<div>Loading</div>}>
+                        Loading
+                    </Spin>
+                }
+            >
+                <RenderRouter />
+            </Suspense>
+        </HistoryRouter>
     );
 };
 

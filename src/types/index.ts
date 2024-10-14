@@ -4,6 +4,13 @@ export interface Locales<T = any> {
   /** English */
   en_US: T;
 }
+
+export type Response<T = any> = {
+  code?: number;
+  message: string;
+  entity: T;
+};
+
 export type SortDirection = 'ASC' | 'DESC';
 
 export type Language = keyof Locales;
