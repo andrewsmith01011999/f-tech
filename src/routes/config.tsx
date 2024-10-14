@@ -16,14 +16,15 @@ const WrapperRouteComponent: FC<WrapperRouteProps> = ({ title, permittedRoles: a
 
   const { roles } = useSelector(state => state.user);
 
-  if (title) {
-    document.title = title
-  }
+  // if (title) {
+  //   document.title = title
+  // }
 
-  let isAuthorized = !allowRoles || allowRoles.some(role => roles.includes(role));
+  // let isAuthorized = !allowRoles || allowRoles.some(role => roles.includes(role));
 
-  // return !isAuthorized ? <PrivateRoute {...props} /> : (props.element as ReactElement);
-  return !isAuthorized ? <></> : (props.element as ReactElement);
+  // // return !isAuthorized ? <PrivateRoute {...props} /> : (props.element as ReactElement);
+  // return !isAuthorized ? <></> : (props.element as ReactElement);
+  return (props.element as ReactElement);
 };
 
 export default WrapperRouteComponent;
