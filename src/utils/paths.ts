@@ -1,4 +1,6 @@
 export const PATHS = {
   HOME: '/',
-  LOGIN: '/login',
+  SIGNIN: '/signin',
+  SIGNUP: '/signup',
+  FORGOT_PASSWORD: '/forgot-password'
 }

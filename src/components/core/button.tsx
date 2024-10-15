@@ -4,7 +4,7 @@ import type { FC } from 'react';
 
 import { Button } from 'antd';
 
-interface BaseButtonProps extends ButtonProps {}
+interface BaseButtonProps extends ButtonProps { }
 
 const DefaultButton: FC<BaseButtonProps> = props => {
   return <Button {...props} />;

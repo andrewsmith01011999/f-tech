@@ -1,21 +1,25 @@
-import type { AxiosRequestConfig, Method } from 'axios';
-import { message as $message } from 'antd';
-import axios from 'axios';
-import Qs from 'qs'
+import { LocalStorageKeys } from '@/consts/local-storage';
 import store from '@/stores';
 import { setGlobalState } from '@/stores/global';
-import { apiRefreshToken } from './user.api';
-import { PATHS } from '@/utils/paths';
+import { Response } from '@/types';
 import { historyNavigation } from '@/utils/common';
-import { LocalStorageKeys } from '@/consts/local-storage';
+import { API_PATH } from '@/utils/env';
+import { PATHS } from '@/utils/paths';
+import { message as $message } from 'antd';
+import type { AxiosRequestConfig, Method } from 'axios';
+import axios from 'axios';
+import Qs from 'qs';
+import { apiRefreshToken } from './user.api';
+
+export type BaseResponse<T = any> = Promise<Response<T>>;
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL + '',
+  baseURL: API_PATH + '',
   timeout: 6000,
   validateStatus: function (status) {
     return status >= 200 && status < 300;
   },
-  paramsSerializer: params => Qs.stringify(params, {arrayFormat: 'repeat'})
+  paramsSerializer: params => Qs.stringify(params, { arrayFormat: 'repeat' })
 });
 
 axiosInstance.interceptors.request.use(
@@ -47,10 +51,9 @@ axiosInstance.interceptors.response.use(
     );
 
     const response: Response<any> = {
-      status: true,
       message: 'Success',
       code: config?.status,
-      result: config?.data,
+      entity: config?.data,
     };
 
     return response;
@@ -74,24 +77,24 @@ axiosInstance.interceptors.response.use(
         Authorization: `Bearer ${localStorage.getItem(LocalStorageKeys.REFRESH_TOKEN_KEY)}`,
       };
 
-      const { result, status } = await apiRefreshToken(config);
+      const { code, entity } = await apiRefreshToken(config);
 
-      if (status && result?.token) {
-        // resave access token
-        localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN_KEY, result.token);
-        localStorage.setItem(LocalStorageKeys.REFRESH_TOKEN_KEY, result.refreshToken);
+      // if (status && result?.token) {
+      //   // resave access token
+      //   localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN_KEY, result.token);
+      //   localStorage.setItem(LocalStorageKeys.REFRESH_TOKEN_KEY, result.refreshToken);
 
-        config.headers = {
-          ...config.headers,
-          Authorization: `Bearer ${result.token}`,
-        };
+      //   config.headers = {
+      //     ...config.headers,
+      //     Authorization: `Bearer ${result.token}`,
+      //   };
 
-        return axiosInstance(config);
-      }
+      //   return axiosInstance(config);
+      // }
 
     } else if (error?.status === 401) {
       $message.error('Session expired. Login again');
-      historyNavigation.navigate(PATHS.LOGIN)
+      historyNavigation.navigate(PATHS.SIGNIN)
 
       localStorage.removeItem(LocalStorageKeys.ACCESS_TOKEN_KEY);
       localStorage.removeItem(LocalStorageKeys.REFRESH_TOKEN_KEY);
@@ -100,9 +103,8 @@ axiosInstance.interceptors.response.use(
     }
 
     const errorResponse: Response<null> = {
-      status: false,
       message: 'Error',
-      result: null,
+      entity: null,
     };
 
     if (error?.data) {
@@ -120,14 +122,7 @@ axiosInstance.interceptors.response.use(
 
 export default axiosInstance;
 
-export type Response<T = any> = {
-  status: boolean;
-  message: string;
-  result: T;
-  code?: number;
-};
 
-export type BaseResponse<T = any> = Promise<Response<T>>;
 
 /**
  *

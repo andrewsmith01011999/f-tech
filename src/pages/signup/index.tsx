@@ -1,22 +1,24 @@
+import GooglIcon from '@/assets/icons/Google.svg';
 import AuthFormWrapper from "@/components/authen/form-wrapper";
 import AuthPageLayout from "@/components/authen/layout";
 import BaseButton from "@/components/core/button";
 import { PATHS } from "@/utils/paths";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, MailOutlined, UserOutlined,  } from "@ant-design/icons";
 import { css } from "@emotion/react";
-import { Button, Checkbox, Divider, Form, FormProps, Input } from "antd";
+import { Divider, Form, FormProps, Input } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import GooglIcon from '@/assets/icons/Google.svg'
 
 type FieldType = {
-    username?: string;
-    password?: string;
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
 };
 
 
 
-const SignInPage: FC = () => {
+const SignUpPage: FC = () => {
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
         var username = values.username;
         var password = values.password;
@@ -30,9 +32,9 @@ const SignInPage: FC = () => {
 
     return <div css={styles}>
         <AuthPageLayout>
-            <AuthFormWrapper title="SIGN IN">
+            <AuthFormWrapper title="SIGN UP">
                 <Form
-                    initialValues={{  }}
+                    initialValues={{}}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                 >
@@ -48,27 +50,41 @@ const SignInPage: FC = () => {
                     </Form.Item>
 
                     <Form.Item<FieldType>
+                        name="email"
+                        rules={[{ required: true, message: 'Please input your email!' }]}
+                    >
+                        <Input
+                            width={100}
+                            placeholder="Email"
+                            prefix={<MailOutlined />}
+                        />
+                    </Form.Item>
+
+                    <Form.Item<FieldType>
                         name="password"
                         rules={[{ required: true, message: 'Please input your password!' }]}
                     >
                         <Input.Password
                             width={100}
                             placeholder="Password"
-                            prefix={<LockOutlined />} // Add lock icon
+                            prefix={<LockOutlined />}
                         />
                     </Form.Item>
 
-                    <div className="link-forgot-password">
-                        <p>
-                            <Link to={PATHS.FORGOT_PASSWORD}>
-                                Forgot password?
-                            </Link>
-                        </p>
-                    </div>
+                    <Form.Item<FieldType>
+                        name="confirmPassword"
+                        rules={[{ required: true, message: 'Please input your confirm password!' }]}
+                    >
+                        <Input.Password
+                            width={100}
+                            placeholder="Confirm Password"
+                            prefix={<LockOutlined />}
+                        />
+                    </Form.Item>
 
                     <Form.Item>
                         <BaseButton shape="round" type="primary" htmlType="submit" >
-                            Login
+                            Create anew account
                         </BaseButton>
                     </Form.Item>
                 </Form>
@@ -86,8 +102,8 @@ const SignInPage: FC = () => {
 
                 <div className="link-create-account">
                     <p>
-                        <Link to={PATHS.SIGNUP}>
-                            Have no acount yet?
+                        <Link to={PATHS.SIGNIN}>
+                            Do you already have an account?
                         </Link>
                     </p>
                 </div>
@@ -120,4 +136,4 @@ const styles = css(`
     }
 `)
 
-export default SignInPage
+export default SignUpPage

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '/public/ftech-logo.svg';
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
 import BaseInput from '@/components/core/input';
+import { PATHS } from '@/utils/paths';
 
 const { Header } = Layout;
 
@@ -25,11 +26,11 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     const onLogout = async () => {
         localStorage.clear();
 
-        navigate('/login');
+        navigate(PATHS.SIGNIN);
     };
 
     const toLogin = () => {
-        navigate('/login');
+        navigate(PATHS.SIGNIN);
     };
 
     return (
