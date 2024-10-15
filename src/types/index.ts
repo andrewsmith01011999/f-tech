@@ -6,6 +6,7 @@ export interface Locales<T = any> {
 }
 
 export type Response<T = any> = {
+  success: boolean;
   code?: number;
   message: string;
   entity: T;

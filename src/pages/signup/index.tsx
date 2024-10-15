@@ -84,7 +84,7 @@ const SignUpPage: FC = () => {
 
                     <Form.Item>
                         <BaseButton shape="round" type="primary" htmlType="submit" >
-                            Create anew account
+                            Create a new account
                         </BaseButton>
                     </Form.Item>
                 </Form>
