@@ -80,11 +80,11 @@ export const request = <T = any>(
   config?: AxiosRequestConfig,
 ): BaseResponse<T> => {
   // remove undefined | null | '' field
-  if (data) {
-    Object.keys(data).forEach(key => {
-      if (data[key] == null || data[key] === '') delete data[key];
-    });
-  }
+  // if (data) {
+  //   Object.keys(data).forEach(key => {
+  //     if (data[key] == null || data[key] === '') delete data[key];
+  //   });
+  // }
 
   switch (method) {
     case 'post':

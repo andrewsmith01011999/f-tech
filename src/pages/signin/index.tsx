@@ -106,7 +106,9 @@ const SignInPage: FC = () => {
                 </div>
 
                 <BaseButton shape="round" className="btn-registration" disabled={loading}>
-                    <span>Registration</span>
+                    <Link to={PATHS.SIGNUP}>
+                        <span>Registration</span>
+                    </Link>
                 </BaseButton>
 
             </AuthFormWrapper>

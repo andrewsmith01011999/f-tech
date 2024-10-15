@@ -1,5 +1,6 @@
 const ApiPaths = {
-    LOGIN: "authenticate/login"
+    SIGNIN: "authenticate/login",
+    SIGNUP: "account/create"
 }
 
 const ApiConfigs = {
