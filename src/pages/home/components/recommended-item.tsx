@@ -1,4 +1,4 @@
-import { Button, ConfigProvider, Flex, Image, Typography } from 'antd';
+import { Button, Flex, Image, Typography } from 'antd';
 import AmdSvg from '/public/amd.svg';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -26,19 +26,10 @@ export const RecommendedItem = () => {
                     </Typography.Text>
                 </Flex>
 
-                <ConfigProvider
-                    theme={{
-                        token: {
-                            colorPrimary: '#007AFF',
-                            borderRadius: 20,
-                        },
-                    }}
-                >
-                    <Button type="primary">
-                        <PlusOutlined style={{ fontSize: 12 }} />
-                        Follow
-                    </Button>
-                </ConfigProvider>
+                <Button type="primary" size="small">
+                    <PlusOutlined style={{ fontSize: 12 }} />
+                    Follow
+                </Button>
             </Flex>
         </Flex>
     );

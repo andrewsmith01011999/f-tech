@@ -10,6 +10,9 @@ export const themeConfig: ThemeConfig = {
     components: {
         Input: {
             algorithm: true,
+            colorBorder: 'transparent',
+            borderRadius: 6,
+            colorBgContainer: '#2C353D',
         },
         Menu: {
             algorithm: true,
@@ -37,6 +40,12 @@ export const themeConfig: ThemeConfig = {
             marginXS: 0,
             marginXXS: 0,
         },
+        Button: {
+            algorithm: true,
+            colorPrimary: '#007AFF',
+            borderRadius: 20,
+            borderRadiusSM: 20,   
+        }
     },
     algorithm: theme.darkAlgorithm,
 };

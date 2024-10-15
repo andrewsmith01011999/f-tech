@@ -12,18 +12,18 @@ import { PostWrapper } from './layout/post-wrapper';
 import { EventList } from './components/events-list';
 import { RecommendedCreatorList } from './components/recommended-creator-list';
 import { EventsWrapper } from './layout/events-wrapper';
+import { CreatePost } from '../post/create-post';
 
 const HomePage: FC = props => {
     return (
         <ConfigProvider theme={themeConfig}>
-
             <Layout>
                 <HeaderComponent
                     collapsed={false}
                     toggle={function (): void {
                         throw new Error('Function not implemented.');
                     }}
-                />
+                    />
 
                 <PageWrapper>
                     <MenuWrapper>
@@ -37,6 +37,7 @@ const HomePage: FC = props => {
                 </MenuWrapper>
 
                 <PostWrapper>
+                    <CreatePost />
                     {Array.from({ length: 10 }).map((_, index) => (
                         <PostSummary key={index} />
                     ))}
