@@ -6,7 +6,16 @@ interface PageWrapperProps {
 }
 
 export const PageWrapper: FC<PageWrapperProps> = ({ children }) => {
-    return <Flex style={{
-      padding: '20px 40px',
-    }} gap={20}>{children}</Flex>;
+    return (
+        <Flex
+            style={{
+                padding: '20px',
+                maxWidth: 1440,
+                justifyContent: 'center',
+            }}
+            gap={20}
+        >
+            {children}
+        </Flex>
+    );
 };

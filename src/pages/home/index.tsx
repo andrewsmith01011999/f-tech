@@ -7,6 +7,11 @@ import { PopularMenu } from './components/popular-menu';
 import { MenuWrapper } from './layout/menu-wrapper';
 import { PageWrapper } from './layout/page-wrapper';
 import { ResourceMenu } from './components/resource-menu';
+import { PostSummary } from './components/post-summary';
+import { PostWrapper } from './layout/post-wrapper';
+import { EventList } from './components/events-list';
+import { RecommendedCreatorList } from './components/recommended-creator-list';
+import { EventsWrapper } from './layout/events-wrapper';
 
 const HomePage: FC = props => {
     return (
@@ -32,6 +37,18 @@ const HomePage: FC = props => {
                         <ResourceMenu />
                     </CardMenu>
                 </MenuWrapper>
+
+                <PostWrapper>
+                    {Array.from({ length: 10 }).map((_, index) => (
+                        <PostSummary key={index} />
+                    ))}
+                </PostWrapper>
+
+                <EventsWrapper>
+                    <EventList />
+
+                    <RecommendedCreatorList />
+                </EventsWrapper>
             </PageWrapper>
         </Layout>
     );
