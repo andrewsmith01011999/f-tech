@@ -15,11 +15,27 @@ export const themeConfig: ThemeConfig = {
             algorithm: true,
             itemSelectedBg: '#2C353D',
             itemSelectedColor: '#fff',
-            itemPaddingInline: 4
+            itemPaddingInline: 4,
         },
         Card: {
             algorithm: true,
             borderRadius: 16,
+            colorBorderSecondary: 'transparent',
+        },
+        Tag: {
+            algorithm: true,
+            borderRadiusSM: 20,
+            colorBgBase: '#2C353D',
+            colorBorder: 'transparent',
+            colorText: '#C5D0E6',
+            marginXS: 0,
+            fontSizeSM: 10,
+        },
+        Typography: {
+            algorithm: true,
+            titleMarginTop: 0,
+            marginXS: 0,
+            marginXXS: 0,
         },
     },
     algorithm: theme.darkAlgorithm,
