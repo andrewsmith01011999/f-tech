@@ -12,6 +12,7 @@ import MainLayout from '@/layout/main-layout';
 
 const HomePage = lazy(() => import('@/pages/home'));
 const PostPage = lazy(() => import('@/pages/post'));
+const ProfilePage = lazy(() => import('@/pages/profile'));
 
 const routes: RouteObject[] = [
     {
@@ -26,6 +27,10 @@ const routes: RouteObject[] = [
                 path: PATHS.POSTS,
                 element: <WrapperRouteComponent element={<PostPage />} title="Posts Page" />,
             },
+            {
+                path: PATHS.PROFILE,
+                element: <WrapperRouteComponent element={<ProfilePage />} title="Profile Page" />,
+            }
         ],
     },
 

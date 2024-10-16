@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import '../index.less';
 
-import { theme as antTheme, Dropdown, Layout } from 'antd';
+import { theme as antTheme, Avatar, Dropdown, Layout } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ import Logo from '/public/ftech-logo.svg';
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
 import BaseInput from '@/components/core/input';
 import { PATHS } from '@/utils/paths';
+import BackgroundPlaceholder from '/public/background-placeholder.svg';
 
 const { Header } = Layout;
 
@@ -33,6 +34,10 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         navigate(PATHS.SIGNIN);
     };
 
+    const toProfile = () => {
+        navigate(PATHS.PROFILE);
+    };
+
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
             {device !== 'MOBILE' && (
@@ -47,7 +52,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                 </div>
 
                 <div className="search-container">
-                    <BaseInput.Search placeholder='Type here to search...' className='search' />
+                    <BaseInput.Search placeholder="Type here to search..." className="search" />
                 </div>
 
                 <div className="actions">
@@ -58,7 +63,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                                     {
                                         key: '0',
                                         icon: <UserOutlined />,
-                                        label: <span>{username}</span>,
+                                        label: <span onClick={toProfile}>Profile</span>,
                                     },
                                     {
                                         key: '1',
@@ -69,7 +74,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                             }}
                         >
                             <span className="user-action">
-                                <img src={Logo} className="user-avator" alt="avator" />
+                                <Avatar size={42} src={BackgroundPlaceholder} className="user-avator" alt="avator" />
                             </span>
                         </Dropdown>
                     ) : (
