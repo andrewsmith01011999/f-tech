@@ -1,6 +1,8 @@
 import { Card, Flex, Image, Tag, Typography } from 'antd';
 import PlaceholderSvg from '/public/placeholder.svg';
 import ArrowRightSvg from '/public/arrow-right.svg';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/utils/paths';
 
 const programmingLanguages = [
     'JavaScript',
@@ -18,8 +20,10 @@ const programmingLanguages = [
 ];
 
 export const PostSummary = () => {
+    const navigate = useNavigate();
+
     return (
-        <Card style={{ cursor: 'pointer' }}>
+        <Card style={{ cursor: 'pointer' }} onClick={() => navigate(PATHS.POSTS)}>
             <Flex gap={20}>
                 <Image
                     style={{ borderRadius: 16, width: 156, height: 156, objectFit: 'contain' }}
