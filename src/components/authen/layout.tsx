@@ -6,7 +6,7 @@ import { ThemeConfig } from "antd";
 
 const AuthPageLayout: FC = (props) => {
     return <Row css={styles}>
-        <Col span={24} className="left" md={{ span: 16 }}>
+        <Col span={24} className="left" md={{ span: 15 }}>
             <Row className="left-inner" align={"middle"} gutter={{ md: 6 }}>
                 <Col span={24}>
                     <img className="left-image" src={Logo} />
@@ -18,7 +18,7 @@ const AuthPageLayout: FC = (props) => {
                 </Col>
             </Row>
         </Col>
-        <Col span={24} css={formStyles} md={{ span: 8 }} className="right">
+        <Col span={24} css={formStyles} md={{ span: 9 }} className="right">
             {props.children}
         </Col>
     </Row>

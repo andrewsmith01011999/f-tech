@@ -7,11 +7,9 @@ import { useSelector } from 'react-redux';
 import { history, HistoryRouter } from '@/routes/history';
 
 import RenderRouter from './routes';
-import { API_PATH } from './utils/env';
 
 const App: React.FC = () => {
     const { loading } = useSelector(state => state.global);
-    console.log(API_PATH)
     return (
         <HistoryRouter history={history}>
             <Suspense

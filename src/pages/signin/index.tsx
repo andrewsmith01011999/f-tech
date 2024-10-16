@@ -6,8 +6,11 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { css } from "@emotion/react";
 import { Button, Checkbox, Divider, Form, FormProps, Input } from "antd";
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import GooglIcon from '@/assets/icons/Google.svg'
+import { useDispatch } from "react-redux";
+import { loginAsync } from "@/stores/user.action";
+import { useSelector } from 'react-redux';
 
 type FieldType = {
     username?: string;
@@ -17,22 +20,34 @@ type FieldType = {
 
 
 const SignInPage: FC = () => {
-    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-        var username = values.username;
-        var password = values.password;
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading } = useSelector(state => state.global);
+
+    const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        var username = values.username ?? "";
+        var password = values.password ?? "";
 
         // Do something
+        const res = await dispatch(await loginAsync({
+            username,
+            password
+        }))
+
+        if (!!res) {
+            navigate(PATHS.HOME)
+        }
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        // Do something on failed submit form
     };
 
     return <div css={styles}>
         <AuthPageLayout>
             <AuthFormWrapper title="SIGN IN">
                 <Form
-                    initialValues={{  }}
+                    initialValues={{}}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                 >
@@ -67,7 +82,7 @@ const SignInPage: FC = () => {
                     </div>
 
                     <Form.Item>
-                        <BaseButton shape="round" type="primary" htmlType="submit" >
+                        <BaseButton shape="round" type="primary" htmlType="submit" loading={loading}>
                             Login
                         </BaseButton>
                     </Form.Item>
@@ -79,21 +94,21 @@ const SignInPage: FC = () => {
                     </span>
                 </Divider>
 
-                <BaseButton shape="round" className="btn-google">
+                <BaseButton shape="round" className="btn-google" disabled={loading}>
                     <img src={GooglIcon}></img>
                     <span>Google</span>
                 </BaseButton>
 
                 <div className="link-create-account">
                     <p>
-                        <Link to={PATHS.SIGNUP}>
-                            Have no acount yet?
-                        </Link>
+                        Have no acount yet?
                     </p>
                 </div>
 
-                <BaseButton shape="round" className="btn-registration">
-                    <span>Registration</span>
+                <BaseButton shape="round" className="btn-registration" disabled={loading}>
+                    <Link to={PATHS.SIGNUP}>
+                        <span>Registration</span>
+                    </Link>
                 </BaseButton>
 
             </AuthFormWrapper>
@@ -108,11 +123,11 @@ const styles = css(`
 
     .link-create-account {
         text-align: center;
-        color: #fff;
+        color: #ccc;
     }
     
     .divider span {
-        opacity: 50%;
+        color: #ccc;
     }
     
     .btn-google,.btn-registration {

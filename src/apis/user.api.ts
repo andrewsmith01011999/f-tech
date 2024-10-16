@@ -1,26 +1,28 @@
-import type { Account } from '@/types/user/user';
-import type { LoginParams, LoginResult, LogoutParams, LogoutResult } from '../types/user/login';
+import type { LogoutParams, LogoutResult, SignInRequest, SignInResponse, SignUpRequest } from '../types/user/auth';
 
 import { AxiosRequestConfig } from 'axios';
 
 
+import { ApiPaths } from '@/consts/apis';
 import { request } from './request';
 
-export const apiLogin = (data: LoginParams) => request<LoginResult>('post', '/api/v1/auth/login', data);
+export const apiSignIn = (data: SignInRequest) => request<SignInResponse>(
+  'post',
+  ApiPaths.SIGNIN,
+  data
+);
+
+export const apiSignUp = (data: SignUpRequest) => request<SignInResponse>(
+  'post',
+  ApiPaths.SIGNUP,
+  data,
+  {
+    params: {
+      autoWallet: "yes"
+    }
+  })
 
 export const apiRefreshToken = (config: AxiosRequestConfig) =>
-  request<LoginResult>('get', '/api/v1/auth/refreshToken', {}, config);
+  request<SignInResponse>('get', '/api/v1/auth/refreshToken', {}, config);
 
 export const apiLogout = (data: LogoutParams) => request<LogoutResult>('post', '/api/v1/auth/logout', data);
-
-export const apiAccount = (accessToken: string) =>
-  request<Account>(
-    'get',
-    '/api/v1/account',
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    },
-  );

@@ -1,19 +1,13 @@
 import { LocalStorageKeys } from '@/consts/local-storage';
 import { Device } from '@/types/layout';
 import { MenuChild } from '@/types/layout/menu';
-import type { Locale, Permission } from '@/types/user/user';
-import type { PayloadAction } from '@reduxjs/toolkit';
-
-
-import { createSlice } from '@reduxjs/toolkit';
-import { LoginParams } from '@/types/user/login';
-import { apiAccount, apiLogin } from '@/apis/user.api';
-import { createAsyncAction } from './action';
+import type { Permission } from '@/types/user/user';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
   userId?: number;
 
-  username?: string;
+  username?: string; 
 
   /** menu list for init tagsView */
   menuList: MenuChild[];
@@ -26,7 +20,7 @@ export interface UserState {
   /** user's device */
   device?: Device;
 
-  /** menu collapsed status */
+  /** menu collapsed status */ 
   collapsed?: boolean;
 
   /** notification count */
@@ -64,44 +58,3 @@ export const { setUserItem } = userSlice.actions;
 
 export default userSlice.reducer;
 
-
-export const loginAsync = createAsyncAction<LoginParams, boolean>(payload => {
-  return async dispatch => {
-    const { result, status } = await apiLogin(payload);
-
-    if (status && result && result.token) {
-      localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN_KEY, result.token);
-      localStorage.setItem(LocalStorageKeys.REFRESH_TOKEN_KEY, result.refreshToken);
-
-      dispatch(
-        setUserItem({
-          logged: true,
-        }),
-      );
-
-      return true;
-    }
-
-    return false;
-  };
-});
-
-export const loadProfile = createAsyncAction<string, boolean>(token => {
-  return async dispatch => {
-    const { result, status } = await apiAccount(token);
-
-    if (result && status) {
-      dispatch(
-        setUserItem({
-          userId: result.id,
-          username: result.username,
-          roles: result.roles.map(role => role.code),
-        }),
-      );
-
-      return true;
-    }
-
-    return false;
-  };
-});

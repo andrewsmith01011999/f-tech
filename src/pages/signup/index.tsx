@@ -1,13 +1,16 @@
+import { apiSignUp } from '@/apis/user.api';
 import GooglIcon from '@/assets/icons/Google.svg';
 import AuthFormWrapper from "@/components/authen/form-wrapper";
 import AuthPageLayout from "@/components/authen/layout";
 import BaseButton from "@/components/core/button";
+import { SignUpRequest } from '@/types/user/auth';
 import { PATHS } from "@/utils/paths";
-import { LockOutlined, MailOutlined, UserOutlined,  } from "@ant-design/icons";
+import { LockOutlined, MailOutlined, UserOutlined, } from "@ant-design/icons";
 import { css } from "@emotion/react";
-import { Divider, Form, FormProps, Input } from "antd";
+import { Divider, Form, FormProps, Input, message } from "antd";
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
 
 type FieldType = {
     username: string;
@@ -16,24 +19,51 @@ type FieldType = {
     confirmPassword: string;
 };
 
-
-
 const SignUpPage: FC = () => {
-    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-        var username = values.username;
-        var password = values.password;
+    const [form] = Form.useForm();
+    const navigate = useNavigate();
+    const { loading } = useSelector(state => state.global);
 
-        // Do something
+    // Function to validate password confirmation
+    const validateConfirmPassword = (_: any, value: string) => {
+        const password = form.getFieldValue('password');
+
+        if (value && value !== password) {
+            return Promise.reject(new Error('Passwords do not match!'));
+        }
+        return Promise.resolve();
+    };
+
+    const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        const req: SignUpRequest = {
+            email: values.email,
+            username: values.username,
+            password: values.password,
+            address: "",
+            avatar: "",
+            bio: "",
+            gender: "",
+            roleName: "",
+            handle: "",
+            categoryList: []
+        }
+
+        const { success, message: mess } = await apiSignUp(req);
+        if (success) {
+            message.success("Registration account successfully")
+            navigate(PATHS.SIGNIN)
+        }
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        // console.log('Failed:', errorInfo);
     };
 
     return <div css={styles}>
         <AuthPageLayout>
             <AuthFormWrapper title="SIGN UP">
                 <Form
+                    form={form}
                     initialValues={{}}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
@@ -51,7 +81,10 @@ const SignUpPage: FC = () => {
 
                     <Form.Item<FieldType>
                         name="email"
-                        rules={[{ required: true, message: 'Please input your email!' }]}
+                        rules={[
+                            { required: true, message: 'Please input email!' },
+                            { type: 'email', message: 'Please input a valid email!' },
+                        ]}
                     >
                         <Input
                             width={100}
@@ -73,7 +106,12 @@ const SignUpPage: FC = () => {
 
                     <Form.Item<FieldType>
                         name="confirmPassword"
-                        rules={[{ required: true, message: 'Please input your confirm password!' }]}
+                        rules={[
+                            { required: true, message: 'Please input your confirm password!' },
+                            {
+                                validator: validateConfirmPassword, // Custom validator for password match
+                            },
+                        ]}
                     >
                         <Input.Password
                             width={100}
@@ -83,8 +121,8 @@ const SignUpPage: FC = () => {
                     </Form.Item>
 
                     <Form.Item>
-                        <BaseButton shape="round" type="primary" htmlType="submit" >
-                            Create anew account
+                        <BaseButton shape="round" type="primary" htmlType="submit" loading={loading}>
+                            Create a new account
                         </BaseButton>
                     </Form.Item>
                 </Form>
@@ -95,21 +133,21 @@ const SignUpPage: FC = () => {
                     </span>
                 </Divider>
 
-                <BaseButton shape="round" className="btn-google">
+                <BaseButton shape="round" className="btn-google" disabled={loading}>
                     <img src={GooglIcon}></img>
                     <span>Google</span>
                 </BaseButton>
 
                 <div className="link-create-account">
                     <p>
-                        <Link to={PATHS.SIGNIN}>
-                            Do you already have an account?
-                        </Link>
+                        Do you already have an account?
                     </p>
                 </div>
 
-                <BaseButton shape="round" className="btn-registration">
-                    <span>Registration</span>
+                <BaseButton shape="round" className="btn-registration" disabled={loading}>
+                    <Link to={PATHS.SIGNIN}>
+                        <span>Signin</span>
+                    </Link>
                 </BaseButton>
 
             </AuthFormWrapper>
@@ -124,11 +162,11 @@ const styles = css(`
 
     .link-create-account {
         text-align: center;
-        color: #fff;
+        color: #ccc;
     }
     
     .divider span {
-        opacity: 50%;
+        color: #ccc;
     }
     
     .btn-google,.btn-registration {
