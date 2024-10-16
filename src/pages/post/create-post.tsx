@@ -2,14 +2,27 @@ import { UserInfo } from '@/components/user/user-info';
 import { Button, Card, Flex, Form, Input, Space } from 'antd';
 import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
+import { OnAction } from '@/types';
+import { FC } from 'react';
 
-export const CreatePost = () => {
+interface CreatePostProps {
+    onCancel?: OnAction;
+}
+
+export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
+    const [form] = Form.useForm();
+
+    const onFinish = (values: any) => {
+        console.log('Success:', values);
+        onCancel && onCancel();
+    };
+
     return (
         <Card>
             <Flex vertical gap={10}>
                 <UserInfo />
 
-                <Form layout="vertical">
+                <Form layout="vertical" form={form} name="createPost" onFinish={onFinish}>
                     <Form.Item
                         name="title"
                         label="Title"
@@ -24,12 +37,12 @@ export const CreatePost = () => {
                 </Form>
 
                 <Flex align="center" justify="space-between">
-                    <Space size='large'>
+                    <Space size="large">
                         <img src={GallerySvg} />
                         <img src={EmojiSvg} />
                     </Space>
 
-                    <Button type="primary" htmlType="submit">
+                    <Button form="createPost" type="primary" htmlType="submit">
                         Post
                     </Button>
                 </Flex>

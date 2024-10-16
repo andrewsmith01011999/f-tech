@@ -38,3 +38,5 @@ export interface StatusCount {
   status: string;
   count: number;
 }
+
+export type OnAction = (...args: unknown[]) => void;

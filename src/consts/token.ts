@@ -44,7 +44,18 @@ export const themeConfig: ThemeConfig = {
             algorithm: true,
             colorPrimary: '#007AFF',
             borderRadius: 20,
-            borderRadiusSM: 20,   
+            borderRadiusSM: 20,
+            colorLink: '#007AFF',
+            linkDecoration: 'underline',
+        },
+        Tabs: {
+            itemColor: '#fff',
+            itemSelectedColor: '#fff',
+            itemHoverColor: '#007AFF',
+            inkBarColor: '#007AFF',
+        },
+        Spin: {
+            colorPrimary: '#007AFF',
         }
     },
     algorithm: theme.darkAlgorithm,
