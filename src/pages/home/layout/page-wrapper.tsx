@@ -12,6 +12,7 @@ export const PageWrapper: FC<PageWrapperProps> = ({ children }) => {
                 padding: '20px',
                 maxWidth: 1440,
                 justifyContent: 'center',
+                margin: 'auto',
             }}
             gap={20}
         >
