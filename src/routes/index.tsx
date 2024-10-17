@@ -13,6 +13,7 @@ import MainLayout from '@/layout/main-layout';
 const HomePage = lazy(() => import('@/pages/home'));
 const PostPage = lazy(() => import('@/pages/post'));
 const ProfilePage = lazy(() => import('@/pages/profile'));
+const NotFoundPage = lazy(() => import('@/pages/404'));
 
 const routes: RouteObject[] = [
     {
@@ -30,10 +31,9 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.PROFILE,
                 element: <WrapperRouteComponent element={<ProfilePage />} title="Profile Page" />,
-            }
+            },
         ],
     },
-
     {
         path: PATHS.SIGNIN,
         element: <WrapperRouteComponent element={<SignInPage />} title="Signin Page" />,
@@ -41,6 +41,10 @@ const routes: RouteObject[] = [
     {
         path: PATHS.SIGNUP,
         element: <WrapperRouteComponent element={<SignUpPage />} title="Signup Page" />,
+    },
+    {
+        path: '*',
+        element: <WrapperRouteComponent element={<NotFoundPage />} title="Not Found Page" />,
     },
 ];
 

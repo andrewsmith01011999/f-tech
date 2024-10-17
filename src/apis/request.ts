@@ -1,4 +1,5 @@
 import { ApiConfigs } from '@/consts/apis';
+import { LocalStorageKeys } from '@/consts/local-storage';
 import store from '@/stores';
 import { setGlobalState } from '@/stores/global';
 import { Response } from '@/types';
@@ -11,10 +12,13 @@ import Qs from 'qs';
 export type BaseResponse<T = any> = Promise<Response<T>>;
 
 const axiosInstance = axios.create({
-  baseURL: API_PATH,
-  timeout: ApiConfigs.TIME_OUT_MS,
-  validateStatus: status => status >= 200 && status < 300,
-  paramsSerializer: params => Qs.stringify(params, { arrayFormat: 'repeat' })
+    baseURL: API_PATH,
+    timeout: ApiConfigs.TIME_OUT_MS,
+    validateStatus: status => status >= 200 && status < 300,
+    paramsSerializer: params => Qs.stringify(params, { arrayFormat: 'repeat' }),
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN_KEY)}`,
+    },
 });
 
 axiosInstance.interceptors.request.use(
@@ -34,7 +38,7 @@ axiosInstance.interceptors.response.use(
     setLoadingState(false);
     const { code, entity } = axiosResponse?.data;
 
-    const response: Response<any> = {
+    const response: Response<unknown> = {
       success: code === ApiConfigs.API_SUCCESS_CODE,
       message: 'Success',
       code: code,
@@ -50,7 +54,7 @@ axiosInstance.interceptors.response.use(
     const { response } = err;
     const { code, message, data } = response?.data || {};
 
-    const errorResponse: Response<any> = {
+    const errorResponse: Response<unknown> = {
       success: code === ApiConfigs.API_SUCCESS_CODE,
       message: message || 'An error ocurred',
       entity: data,

@@ -4,31 +4,48 @@ import { GetProp, MenuProps } from 'antd';
 import HomeSvg from '/public/home.svg';
 import BookMarkSvg from '/public/android.svg';
 import ExploreSvg from '/public/explore.svg';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserItem } from '@/stores/user';
+import { PATHS } from '@/utils/paths';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const PageMenu = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const selectedKeys = useSelector(state => state.user.selectedKeys);
+
     const items: MenuItem[] = [
         {
-            key: '1',
+            key: PATHS.HOME,
             icon: <Icon component={() => <img src={HomeSvg} alt="home" />} />,
             label: 'Home',
         },
         {
-            key: '2',
+            key: 'bookmark',
             icon: <Icon component={() => <img src={BookMarkSvg} alt="bookmark" />} />,
             label: 'Bookmark',
         },
         {
-            key: '3',
+            key: 'explore',
             icon: <Icon component={() => <img src={ExploreSvg} alt="explore" />} />,
             label: 'Explore',
         },
     ];
 
+    const onChangeSelectedKey = (path: string) => {
+        dispatch(setUserItem({ selectedKeys: [path] }));
+    };
+
+    const onMenuClick = (path: string) => {
+        onChangeSelectedKey(path);
+        navigate(path);
+    };
+
     return (
         <>
-            <BaseMenu items={items} />
+            <BaseMenu items={items} selectedKeys={selectedKeys} onSelect={k => onMenuClick(k.key)} />
         </>
     );
 };
