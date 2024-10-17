@@ -1,15 +1,24 @@
 import { SecondaryButton } from '@/components/core/secondary-button';
-import { Avatar, Divider, Flex, Input, Modal } from 'antd';
+import { Avatar, Divider, Dropdown, Flex, Input, Modal, Space, Tag } from 'antd';
 import { FC, useState } from 'react';
 import { CreatePost } from '../components/create-post';
 import { CaretDownFilled } from '@ant-design/icons';
+import { TagListingParams, useTagsListing } from '@/hooks/query/use-tags-listing';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 
 interface PostWrapperProps {
     children: React.ReactNode;
 }
 
+const initialParams: TagListingParams = {
+    page: DEFAULT_PAGE,
+    perPage: DEFAULT_PAGE_SIZE,
+};
+
 export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
 
     const handleCancel = () => {
         setIsOpen(false);
@@ -22,7 +31,36 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
     return (
         <Flex vertical gap={10}>
             <Flex gap={10} style={{ width: '100%' }} align="center">
-                <SecondaryButton icon={<CaretDownFilled />}>Tags</SecondaryButton>
+                <Dropdown
+                    menu={{
+                        items: [
+                            {
+                                key: '1',
+                                label: (
+                                    <Space align="center">
+                                        <Tag
+                                            style={{
+                                                minHeight: 32,
+                                                minWidth: 100,
+                                                fontSize: 14,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            All
+                                        </Tag>
+                                       
+                                    </Space>
+                                ),
+                            },
+                        ],
+                    }}
+                >
+                    <SecondaryButton icon={<CaretDownFilled />} loading={loadingTags}>
+                        Tags
+                    </SecondaryButton>
+                </Dropdown>
                 <Flex gap={6} flex={1} align="center">
                     <Avatar
                         size={48}

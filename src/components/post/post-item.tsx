@@ -1,20 +1,69 @@
-import { Button, Card, Flex, Image, Typography } from 'antd';
+import { Button, Card, Dropdown, Flex, Image, Typography } from 'antd';
 import { UserInfo } from '../user/user-info';
 import { PostTag } from './post-tag';
-import { BarChartOutlined, CommentOutlined, LikeOutlined, ShareAltOutlined } from '@ant-design/icons';
+import {
+    BarChartOutlined,
+    CommentOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    EllipsisOutlined,
+    EyeInvisibleOutlined,
+    GlobalOutlined,
+    KeyOutlined,
+    LikeOutlined,
+    ShareAltOutlined,
+} from '@ant-design/icons';
 import { IconButton } from './icon-button';
 
 export const PostItem = () => {
     return (
         <Card>
-            <Flex
-                vertical
-                gap={8}
-                
-            >
-                <Flex align="center" gap={8}>
-                    <UserInfo />
-                    <PostTag>Inquiry</PostTag>
+            <Flex vertical gap={8}>
+                <Flex justify="space-between" align="flex-start">
+                    <Flex align="center" gap={8}>
+                        <UserInfo />
+                        <PostTag>Inquiry</PostTag>
+                    </Flex>
+                    <Dropdown
+                        menu={{
+                            items: [
+                                {
+                                    key: '1',
+                                    icon: <GlobalOutlined />,
+                                    label: <span>Public</span>,
+                                    children: [
+                                        {
+                                            key: '1.1',
+                                            icon: <GlobalOutlined />,
+                                            label: <span>Public</span>,
+                                        },
+                                        {
+                                            key: '1.2',
+                                            icon: <KeyOutlined />,
+                                            label: <span>Private</span>,
+                                        },
+                                        {
+                                            key: '1.3',
+                                            icon: <EyeInvisibleOutlined />,
+                                            label: <span>Hide</span>,
+                                        },
+                                    ],
+                                },
+                                {
+                                    key: '2',
+                                    icon: <DeleteOutlined />,
+                                    label: <span>Delete post</span>,
+                                },
+                                {
+                                    key: '3',
+                                    icon: <EditOutlined />,
+                                    label: <span>Edit post</span>,
+                                },
+                            ],
+                        }}
+                    >
+                        <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                    </Dropdown>
                 </Flex>
 
                 <Typography.Title

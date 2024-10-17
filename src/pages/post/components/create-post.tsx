@@ -1,5 +1,5 @@
 import { UserInfo } from '@/components/user/user-info';
-import { Button, Card, Flex, Form, Input, Space } from 'antd';
+import { Button, Card, Flex, Form, Input, Space, Upload } from 'antd';
 import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
 import { OnAction } from '@/types';
@@ -26,7 +26,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
         },
     });
 
-    const onFinish = (values: CreatePostPayload ) => {
+    const onFinish = (values: CreatePostPayload) => {
         console.log('Success:', values);
         onCancel && onCancel();
     };
@@ -52,8 +52,10 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
 
                 <Flex align="center" justify="space-between">
                     <Space size="large">
-                        <img src={GallerySvg} />
-                        <img src={EmojiSvg} />
+                        <Upload>
+                            <Button type="text" icon={<img src={GallerySvg} />} />
+                        </Upload>
+                        <Button type="text" icon={<img src={EmojiSvg} />} />
                     </Space>
 
                     <Button form="createPost" type="primary" htmlType="submit">
