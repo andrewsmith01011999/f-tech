@@ -11,6 +11,7 @@ import { EventsWrapper } from '@/pages/home/layout/events-wrapper';
 import { EventList } from '@/pages/home/components/events-list';
 import { RecommendedCreatorList } from '@/pages/home/components/recommended-creator-list';
 import { FC } from 'react';
+import { PopularMenu } from '@/pages/home/components/popular-menu';
 
 interface MainLayoutProps {
     children?: React.ReactNode;
@@ -31,6 +32,10 @@ const MainLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
                     <MenuWrapper>
                         <CardMenu>
                             <PageMenu />
+                        </CardMenu>
+
+                        <CardMenu>
+                            <PopularMenu />
                         </CardMenu>
 
                         <CardMenu title="Resource">

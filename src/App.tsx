@@ -8,23 +8,26 @@ import { history, HistoryRouter } from '@/routes/history';
 
 import RenderRouter from './routes';
 import MainLayout from './layout/main-layout';
+import QueryProvider from './components/provider/query-provider';
 
 const App: React.FC = () => {
     const { loading } = useSelector(state => state.global);
     return (
-        <HistoryRouter history={history}>
-            <Suspense
-                fallback={
-                    <MainLayout>
-                        <Flex justify="center">
-                            <Spin size="large" />
-                        </Flex>
-                    </MainLayout>
-                }
-            >
-                <RenderRouter />
-            </Suspense>
-        </HistoryRouter>
+        <QueryProvider>
+            <HistoryRouter history={history}>
+                <Suspense
+                    fallback={
+                        <MainLayout>
+                            <Flex justify="center">
+                                <Spin size="large" />
+                            </Flex>
+                        </MainLayout>
+                    }
+                >
+                    <RenderRouter />
+                </Suspense>
+            </HistoryRouter>
+        </QueryProvider>
     );
 };
 

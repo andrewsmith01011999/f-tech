@@ -1,4 +1,4 @@
-import { PostTab } from '@/components/post/post-tab';
+import { BaseTab } from '@/components/core/tab';
 import { TabsProps } from 'antd';
 import { PostWrapper } from './layout/post-wrapper';
 import { PostItem } from '@/components/post/post-item';
@@ -31,7 +31,7 @@ const PostPage = () => {
 
     return (
         <>
-            <PostTab items={items} defaultActiveKey='1' />
+            <BaseTab items={items} defaultActiveKey='1' />
         </>
     );
 };

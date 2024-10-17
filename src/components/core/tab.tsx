@@ -1,8 +1,8 @@
 import { Tabs, TabsProps } from 'antd';
 import { FC } from 'react';
 
-interface PostTabProps extends TabsProps {}
+interface BaseTabProps extends TabsProps {}
 
-export const PostTab: FC<PostTabProps> = props => {
+export const BaseTab: FC<BaseTabProps> = props => {
     return <Tabs {...props} centered tabBarGutter={240} />;
 };

@@ -4,4 +4,5 @@ export const PATHS = {
   SIGNUP: '/signup',
   FORGOT_PASSWORD: '/forgot-password',
   POSTS: '/posts',
+  PROFILE: '/profile',
 }

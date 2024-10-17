@@ -6,9 +6,9 @@
 - [ ] Sign in
 - [ ] Forgot password
 - [ ] Create new password
-- [ ] Profile [Posts, Medias, Replies]
 - [ ] Wallet
 - [ ] Notification page
+- [ ] Point shop
 
 #### Minh Đức
 - [ ] Home page
@@ -17,4 +17,4 @@
 - [ ] Event page
 - [ ] Event detail page
 - [ ] Help + Content policies + About
-- [ ] Point shop
+- [ ] Profile [Posts, Medias, Replies]
