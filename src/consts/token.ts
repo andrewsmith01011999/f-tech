@@ -56,7 +56,7 @@ export const themeConfig: ThemeConfig = {
         },
         Spin: {
             colorPrimary: '#007AFF',
-        }
+        },
     },
     algorithm: theme.darkAlgorithm,
 };

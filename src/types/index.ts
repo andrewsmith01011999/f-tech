@@ -5,7 +5,7 @@ export interface Locales<T = any> {
   en_US: T;
 }
 
-export type Response<T = any> = {
+export type Response<T = unknown> = {
   success: boolean;
   code?: number;
   message: string;
@@ -40,3 +40,13 @@ export interface StatusCount {
 }
 
 export type OnAction = (...args: unknown[]) => void;
+
+export type PaginationParams = {
+  page: number;
+  perPage: number;
+}
+
+export type ImageResponse = {
+  imageId: string;
+  url: string;
+}

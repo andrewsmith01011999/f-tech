@@ -2,6 +2,7 @@ import { LocalStorageKeys } from '@/consts/local-storage';
 import { Device } from '@/types/layout';
 import { MenuChild } from '@/types/layout/menu';
 import type { Permission } from '@/types/user/user';
+import { PATHS } from '@/utils/paths';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
@@ -27,6 +28,8 @@ export interface UserState {
   noticeCount: number;
 
   permission: Permission;
+
+  selectedKeys: string[];
 }
 
 const initialStates: UserState = {
@@ -42,6 +45,7 @@ const initialStates: UserState = {
     isCS: false,
     isSeller: false,
   },
+  selectedKeys: [PATHS.HOME],
 };
 
 const userSlice = createSlice({

@@ -4,6 +4,10 @@ import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
 import { OnAction } from '@/types';
 import { FC } from 'react';
+import { useCreatePost } from '@/hooks/mutate/use-create-post';
+import { useQueryClient } from '@tanstack/react-query';
+import { postKeys } from '@/consts/factory/post';
+import { CreatePostPayload } from '@/types/post/post';
 
 interface CreatePostProps {
     onCancel?: OnAction;
@@ -12,7 +16,17 @@ interface CreatePostProps {
 export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const [form] = Form.useForm();
 
-    const onFinish = (values: any) => {
+    const queryClient = useQueryClient();
+
+    const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost({
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+        },
+    });
+
+    const onFinish = (values: CreatePostPayload ) => {
         console.log('Success:', values);
         onCancel && onCancel();
     };
@@ -22,8 +36,8 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
             <Flex vertical gap={10}>
                 <UserInfo />
 
-                <Form layout="vertical" form={form} name="createPost" onFinish={onFinish}>
-                    <Form.Item
+                <Form<CreatePostPayload> layout="vertical" form={form} name="createPost" onFinish={onFinish}>
+                    <Form.Item<CreatePostPayload>
                         name="title"
                         label="Title"
                         rules={[{ required: true, message: 'Please enter post title!' }]}
@@ -31,7 +45,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                         <Input size="large" placeholder="Post title goes here..." />
                     </Form.Item>
 
-                    <Form.Item name="description" label="Description">
+                    <Form.Item<CreatePostPayload> name="content" label="Description">
                         <Input.TextArea size="large" rows={5} placeholder="Let's share what going on your mind..." />
                     </Form.Item>
                 </Form>

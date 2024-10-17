@@ -38,10 +38,14 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         navigate(PATHS.PROFILE);
     };
 
+    const toHome = () => {
+        navigate(PATHS.HOME);
+    }
+
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
             {device !== 'MOBILE' && (
-                <div className="logo" style={{ width: collapsed ? 80 : 200 }}>
+                <div className="logo" style={{ width: collapsed ? 80 : 200, cursor: 'pointer' }} onClick={toHome}>
                     <img src={Logo} alt="logo.svg" style={{ marginRight: collapsed ? '2px' : '20px' }} />
                 </div>
             )}

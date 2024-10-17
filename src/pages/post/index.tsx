@@ -1,37 +1,25 @@
 import { BaseTab } from '@/components/core/tab';
 import { TabsProps } from 'antd';
-import { PostWrapper } from './layout/post-wrapper';
-import { PostItem } from '@/components/post/post-item';
+import { ExplorePostList } from './components/explore-post-list';
+import { HomePostList } from './components/home-post-list';
 
 const PostPage = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
             label: 'Home',
-            children: (
-                <PostWrapper>
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                </PostWrapper>
-            ),
+            children: <HomePostList />,
         },
         {
             key: '2',
             label: 'Explore',
-            children: (
-                <PostWrapper>
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                </PostWrapper>
-            ),
+            children: <ExplorePostList />,
         },
     ];
 
     return (
         <>
-            <BaseTab items={items} defaultActiveKey='1' />
+            <BaseTab items={items} defaultActiveKey="1" />
         </>
     );
 };
