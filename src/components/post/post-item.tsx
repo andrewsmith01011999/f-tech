@@ -20,6 +20,7 @@ import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
 import { Post } from '@/types/post/post';
 import { FC } from 'react';
 import dayjsConfig from '@/utils/dayjs';
+import { useSearchParams } from 'react-router-dom';
 
 
 const { confirm } = Modal;
@@ -30,6 +31,8 @@ interface PostItemProps {
 
 export const PostItem: FC<PostItemProps> = ({ data }) => {
     const dispatch = useDispatch();
+
+    const [searchParams] = useSearchParams()
 
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost('1');
 

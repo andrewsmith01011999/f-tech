@@ -1,17 +1,27 @@
 import { FC } from 'react';
 import { PostSummary } from './components/post-summary';
 import { PostWrapper } from './layout/post-wrapper';
-import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
-import { Spin } from 'antd';
+import { Empty, Spin } from 'antd';
+import { CategoryListingParams, useCategoriesListing } from '@/hooks/query/category/use-category-listing';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+
+const initialParams : CategoryListingParams = {
+    page: DEFAULT_PAGE,
+    perPage: DEFAULT_PAGE_SIZE
+}
 
 const HomePage: FC = props => {
-    const { data, isLoading } = useTopicsListing({ params: { page: 1, perPage: 10 } });
+    const { data, isLoading } = useCategoriesListing({ params: initialParams });
+
+    if (!data || data.entity.length === 0) {
+        return <Empty />;
+    }
 
     return (
         <Spin spinning={isLoading}>
             <PostWrapper>
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <PostSummary key={index} />
+                {data.entity.map(category => (
+                    <PostSummary key={category.categoryId} data={category} />
                 ))}
             </PostWrapper>
         </Spin>

@@ -11,7 +11,7 @@ type AlertListingProps = {
 };
 
 export const useTopicsListing = ({ params }: AlertListingProps) => {
-    const fetchTopics = async (): Promise<Response<Topic>> => {
+    const fetchTopics = async (): Promise<Response<Topic[]>> => {
         const { data } = await axiosInstance.get('/topic/getall', {
             params,
         });
@@ -19,7 +19,7 @@ export const useTopicsListing = ({ params }: AlertListingProps) => {
         return data;
     };
 
-    return useQuery<Response<Topic>>({
+    return useQuery<Response<Topic[]>>({
         queryKey: topicKeys.listing(params),
         queryFn: fetchTopics,
         placeholderData: keepPreviousData,

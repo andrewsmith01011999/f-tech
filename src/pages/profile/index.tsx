@@ -2,8 +2,9 @@ import { TabsProps } from 'antd';
 import { ProfileInfo } from './components/profile-info';
 import { BaseTab } from '@/components/core/tab';
 import { PostItem } from '@/components/post/post-item';
-import { PostWrapper } from '../home/layout/post-wrapper';
 import { Medias } from './components/medias';
+import { PostStatus } from '@/types/post/post';
+import { PostWrapper } from '../post/layout/post-wrapper';
 
 const ProfilePage = () => {
     const items: TabsProps['items'] = [
@@ -12,9 +13,22 @@ const ProfilePage = () => {
             label: 'Posts',
             children: (
                 <PostWrapper>
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
+                    {Array.from({ length: 3 }).map((_, index) => (
+                        <PostItem
+                            data={{
+                                postId: '1',
+                                title: 'Title',
+                                content: 'Content',
+                                createdDate: '2021-09-01',
+                                status: PostStatus.PUBLIC,
+                                topic: {
+                                    name: 'Topic',
+                                    topicId: '1',
+                                },
+                                lastModifiedDate: '2021-09-01',
+                            }}
+                        />
+                    ))}
                 </PostWrapper>
             ),
         },
@@ -33,7 +47,7 @@ const ProfilePage = () => {
     return (
         <div>
             <ProfileInfo />
-            <BaseTab items={items} defaultActiveKey='1' />
+            <BaseTab items={items} defaultActiveKey="1" />
         </div>
     );
 };

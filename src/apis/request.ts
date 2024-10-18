@@ -16,59 +16,61 @@ const axiosInstance = axios.create({
     timeout: ApiConfigs.TIME_OUT_MS,
     validateStatus: status => status >= 200 && status < 300,
     paramsSerializer: params => Qs.stringify(params, { arrayFormat: 'repeat' }),
-    headers: {
-        Authorization: `Bearer ${localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN_KEY)}`,
-    },
 });
 
 axiosInstance.interceptors.request.use(
-  (config) => {
-    setLoadingState(true)
-    return config;
-  },
+    config => {
+        setLoadingState(true);
 
-  (error) => {
-    setLoadingState(false);
-    return Promise.reject(error);
-  },
+        const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN_KEY);
+
+        if (token) {
+            config!.headers!.Authorization = `Bearer ${token}`;
+        }
+
+        return config;
+    },
+
+    error => {
+        setLoadingState(false);
+        return Promise.reject(error);
+    },
 );
 
 axiosInstance.interceptors.response.use(
-  (axiosResponse: AxiosResponse) => {
-    setLoadingState(false);
-    const { code, entity } = axiosResponse?.data;
+    (axiosResponse: AxiosResponse) => {
+        setLoadingState(false);
+        const { code, entity } = axiosResponse?.data;
 
-    const response: Response<unknown> = {
-      success: code === ApiConfigs.API_SUCCESS_CODE,
-      message: 'Success',
-      code: code,
-      entity: entity,
-    };
+        const response: Response<unknown> = {
+            success: code === ApiConfigs.API_SUCCESS_CODE,
+            message: 'Success',
+            code: code,
+            entity: entity,
+        };
 
-    return response;
-  },
+        return response;
+    },
 
-  (err: AxiosError) => {
-    setLoadingState(false);
+    (err: AxiosError) => {
+        setLoadingState(false);
 
-    const { response } = err;
-    const { code, message, data } = response?.data || {};
+        const { response } = err;
+        const { code, message, data } = response?.data || {};
 
-    const errorResponse: Response<unknown> = {
-      success: code === ApiConfigs.API_SUCCESS_CODE,
-      message: message || 'An error ocurred',
-      entity: data,
-    };
+        const errorResponse: Response<unknown> = {
+            success: code === ApiConfigs.API_SUCCESS_CODE,
+            message: message || 'An error ocurred',
+            entity: data,
+        };
 
-    errorResponse.message && $message.error(errorResponse.message);
+        errorResponse.message && $message.error(errorResponse.message);
 
-    return errorResponse;
-  },
+        return errorResponse;
+    },
 );
 
 export default axiosInstance;
-
-
 
 /**
  *
@@ -78,40 +80,37 @@ export default axiosInstance;
  * @param config - Additional Axios config
  */
 export const request = <T = any>(
-  method: Lowercase<Method>,
-  url: string,
-  data?: any,
-  config?: AxiosRequestConfig,
+    method: Lowercase<Method>,
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig,
 ): BaseResponse<T> => {
-  // remove undefined | null | '' field
-  // if (data) {
-  //   Object.keys(data).forEach(key => {
-  //     if (data[key] == null || data[key] === '') delete data[key];
-  //   });
-  // }
+    // remove undefined | null | '' field
+    // if (data) {
+    //   Object.keys(data).forEach(key => {
+    //     if (data[key] == null || data[key] === '') delete data[key];
+    //   });
+    // }
 
-  switch (method) {
-    case 'post':
-      return axiosInstance.post(url, data, config);
-    case 'put':
-      return axiosInstance.put(url, data, config);
-    case 'delete':
-      return axiosInstance.delete(url, {
-        ...config,
-        data: data
-      });
-    case 'get':
-    default:
-      return axiosInstance.get(url, {
-        params: data,
-        ...config,
-
-      });
-  }
+    switch (method) {
+        case 'post':
+            return axiosInstance.post(url, data, config);
+        case 'put':
+            return axiosInstance.put(url, data, config);
+        case 'delete':
+            return axiosInstance.delete(url, {
+                ...config,
+                data: data,
+            });
+        case 'get':
+        default:
+            return axiosInstance.get(url, {
+                params: data,
+                ...config,
+            });
+    }
 };
 
 const setLoadingState = (isLoading: boolean) => {
-  store.dispatch(
-    setGlobalState({ loading: isLoading })
-  );
+    store.dispatch(setGlobalState({ loading: isLoading }));
 };

@@ -1,14 +1,16 @@
 import { SecondaryButton } from '@/components/core/secondary-button';
-import { Avatar, Divider, Dropdown, Flex, Input, Modal, Space, Tag } from 'antd';
-import { FC } from 'react';
+import { Avatar, Breadcrumb, Button, Card, Divider, Dropdown, Flex, Input, Modal, Space, Tag } from 'antd';
+import React, { FC, useState } from 'react';
 import { CreatePost } from '../components/create-post';
-import { CaretDownFilled } from '@ant-design/icons';
+import { CaretDownFilled, RightOutlined } from '@ant-design/icons';
 import { TagListingParams, useTagsListing } from '@/hooks/query/tag/use-tags-listing';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { PostModalType, setPost } from '@/stores/post';
 import { RootState } from '@/stores';
+import TagXSvg from '/public/tag-x.svg';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface PostWrapperProps {
     children: React.ReactNode;
@@ -20,10 +22,54 @@ const initialParams: TagListingParams = {
 };
 
 export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
-    const dispatch = useDispatch()
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch();
     const { type, open } = useSelector((state: RootState) => state.post.modal);
 
+    const [history, setHistory] = useState<string>('');
+
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
+    const pathSnippets = location.pathname.split('/').filter(i => i);
+    const extraBreadcrumbItems = pathSnippets.map((_, index) => {
+        const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+
+        return {
+            path: url,
+            breadcrumbName: (
+                <Link to={url} onClick={() => setHistory(location.pathname)}>
+                    {url.split('/').splice(-1)?.[0]}
+                </Link>
+            ),
+        };
+    });
+
+    const breadcrumbItems = [
+        {
+            ...(location.pathname.split('/').length > 1 && {
+                path: '-1',
+                breadcrumbName: (
+                    <Button
+                        size="small"
+                        type="text"
+                        icon={<img src={TagXSvg} alt="tag-x" />}
+                        onClick={() => {
+                            setHistory(location.pathname);
+                            navigate(-1);
+                        }}
+                    />
+                ),
+            }),
+        },
+        ...extraBreadcrumbItems,
+        {
+            ...(location.pathname.length < history.length &&
+                history.includes(location.pathname) && {
+                    path: '1',
+                    breadcrumbName: <RightOutlined onClick={() => navigate(history)} />,
+                }),
+        },
+    ];
 
     const handleCancel = (type: PostModalType) => {
         dispatch(setPost({ modal: { open: false, type } }));
@@ -33,14 +79,49 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
         dispatch(setPost({ modal: { open: true, type } }));
     };
 
+    const handleSelectTag = (id: string) => {
+        dispatch(setPost({ tagId: id }));
+    };
+
     return (
         <Flex vertical gap={10}>
-            <Flex gap={10} style={{ width: '100%' }} align="center">
-                <Dropdown
-                    menu={{
-                        items: [
-                            {
-                                key: '1',
+            <Card>
+                <Breadcrumb>
+                    {breadcrumbItems.map(item => (
+                        <React.Fragment key={item.path}>
+                            <Breadcrumb.Item>{item.breadcrumbName}</Breadcrumb.Item>
+                        </React.Fragment>
+                    ))}
+                </Breadcrumb>
+
+                <Divider />
+
+                <Flex gap={10} style={{ width: '100%' }} align="center">
+                    <Dropdown
+                        menu={{
+                            // items: [
+                            //     {
+                            //         key: '1',
+                            //         label: (
+                            //             <Space align="center">
+                            //                 <Tag
+                            //                     style={{
+                            //                         minHeight: 32,
+                            //                         minWidth: 100,
+                            //                         fontSize: 14,
+                            //                         display: 'flex',
+                            //                         alignItems: 'center',
+                            //                         justifyContent: 'center',
+                            //                     }}
+                            //                 >
+                            //                     All
+                            //                 </Tag>
+                            //             </Space>
+                            //         ),
+                            //     },
+                            // ],
+                            items: tagsData?.entity.map(tag => ({
+                                key: tag.tagId,
                                 label: (
                                     <Space align="center">
                                         <Tag
@@ -53,33 +134,34 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                                                 justifyContent: 'center',
                                             }}
                                         >
-                                            All
+                                            {tag.name}
                                         </Tag>
                                     </Space>
                                 ),
-                            },
-                        ],
-                    }}
-                >
-                    <SecondaryButton icon={<CaretDownFilled />} loading={loadingTags}>
-                        Tags
-                    </SecondaryButton>
-                </Dropdown>
-                <Flex gap={6} flex={1} align="center">
-                    <Avatar
-                        size={48}
-                        shape="circle"
-                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    />
-                    <Input
-                        size="large"
-                        placeholder="Let's share what going on your mind..."
-                        onClick={() => handleOpen('create')}
-                        readOnly
-                    />
-                    <SecondaryButton onClick={() => handleOpen('create')}>Create Post</SecondaryButton>
+                                onClick: () => handleSelectTag(tag.tagId),
+                            })),
+                        }}
+                    >
+                        <SecondaryButton icon={<CaretDownFilled />} loading={loadingTags}>
+                            Tags
+                        </SecondaryButton>
+                    </Dropdown>
+                    <Flex gap={6} flex={1} align="center">
+                        <Avatar
+                            size={48}
+                            shape="circle"
+                            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                        />
+                        <Input
+                            size="large"
+                            placeholder="Let's share what going on your mind..."
+                            onClick={() => handleOpen('create')}
+                            readOnly
+                        />
+                        <SecondaryButton onClick={() => handleOpen('create')}>Create Post</SecondaryButton>
+                    </Flex>
                 </Flex>
-            </Flex>
+            </Card>
 
             <Divider />
 

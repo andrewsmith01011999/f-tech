@@ -3,6 +3,8 @@ import PlaceholderSvg from '/public/placeholder.svg';
 import ArrowRightSvg from '/public/arrow-right.svg';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
+import { Category } from '@/types/category/category';
+import { FC } from 'react';
 
 const programmingLanguages = [
     'JavaScript',
@@ -19,15 +21,25 @@ const programmingLanguages = [
     'Scala',
 ];
 
-export const PostSummary = () => {
+interface PostSummaryProps {
+    data: Category
+}
+
+export const PostSummary : FC<PostSummaryProps> = ({data}) => {
     const navigate = useNavigate();
 
+    const {image, name, categoryId} = data
+
+    const toPost = () => {
+         navigate(`${PATHS.POSTS}?tag=${categoryId}`);
+    }
+
     return (
-        <Card style={{ cursor: 'pointer' }} onClick={() => navigate(PATHS.POSTS)}>
+        <Card style={{ cursor: 'pointer' }} onClick={toPost}>
             <Flex gap={20}>
                 <Image
                     style={{ borderRadius: 16, width: 156, height: 156, objectFit: 'contain' }}
-                    src={PlaceholderSvg}
+                    src={image ?? PlaceholderSvg}
                     alt="post"
                     preview={false}
                 />
@@ -36,7 +48,7 @@ export const PostSummary = () => {
                     <Flex vertical gap={10}>
                         <Flex justify="space-between" align="center">
                             <Typography.Title level={4} style={{ textTransform: 'uppercase' }}>
-                                Knowledge sharing
+                               {name} 
                             </Typography.Title>
 
                             <img src={ArrowRightSvg} />

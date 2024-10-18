@@ -10,6 +10,7 @@ import { postKeys } from '@/consts/factory/post';
 import { CreatePostPayload } from '@/types/post/post';
 import { useMessage } from '@/hooks/use-message';
 import { useCreateDraftPost } from '@/hooks/mutate/post/use-create-draft-post';
+import { useSearchParams } from 'react-router-dom';
 
 interface CreatePostProps {
     onCancel?: OnAction;
@@ -18,6 +19,7 @@ interface CreatePostProps {
 export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const [form] = Form.useForm();
 
+    const [searchParams] = useSearchParams();
     const queryClient = useQueryClient();
     const { success } = useMessage();
 

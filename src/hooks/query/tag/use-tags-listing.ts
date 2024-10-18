@@ -11,7 +11,7 @@ type TagListingProps = {
 };
 
 export const useTagsListing = ({ params }: TagListingProps) => {
-    const fetchTags = async (): Promise<Response<Tag>> => {
+    const fetchTags = async (): Promise<Response<Tag[]>> => {
         const { data } = await axiosInstance.get('/tag/getall', {
             params,
         });
@@ -19,7 +19,7 @@ export const useTagsListing = ({ params }: TagListingProps) => {
         return data;
     };
 
-    return useQuery<Response<Tag>>({
+    return useQuery<Response<Tag[]>>({
         queryKey: tagKeys.listing(params),
         queryFn: fetchTags,
         placeholderData: keepPreviousData,
