@@ -13,6 +13,7 @@
         "dayjs": "^1.11.13",
         "driver.js": "^0.9.8",
         "env-cmd": "^10.1.0",
+        "firebase": "^10.14.1",
         "history": "^5.0.1",
         "js-file-download": "^0.4.12",
         "lodash": "^4.17.21",

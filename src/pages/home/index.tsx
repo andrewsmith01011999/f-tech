@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { PostSummary } from './components/post-summary';
-import { PostWrapper } from './layout/post-wrapper';
 import { Empty, Spin } from 'antd';
 import { CategoryListingParams, useCategoriesListing } from '@/hooks/query/category/use-category-listing';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { PostSummary } from './components/post-summary';
+import { PostWrapper } from './layout/post-wrapper';
 
 const initialParams : CategoryListingParams = {
     page: DEFAULT_PAGE,

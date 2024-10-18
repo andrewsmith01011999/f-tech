@@ -1,9 +1,9 @@
 import { UserInfo } from '@/components/user/user-info';
-import { Button, Card, Flex, Form, Input, message, Space, Upload } from 'antd';
+import { Button, Card, Flex, Form, Input, message, Space, Upload, UploadFile, UploadProps } from 'antd';
 import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
 import { OnAction } from '@/types';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useCreatePost } from '@/hooks/mutate/post/use-create-post';
 import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
@@ -11,6 +11,7 @@ import { CreatePostPayload } from '@/types/post/post';
 import { useMessage } from '@/hooks/use-message';
 import { useCreateDraftPost } from '@/hooks/mutate/post/use-create-draft-post';
 import { useSearchParams } from 'react-router-dom';
+import { useUploadFile } from '@/hooks/use-upload-file';
 
 interface CreatePostProps {
     onCancel?: OnAction;
@@ -23,11 +24,20 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const queryClient = useQueryClient();
     const { success } = useMessage();
 
+    const { imgUrl, imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
+
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+
     const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
     const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();
 
     const onFinish = (values: CreatePostPayload) => {
-        createPost(values, {
+        createPost({
+            ...values,
+            imageUrlList: fileList.map(file => ({
+                url: file.url as string,
+            })),
+        }, {
             onSuccess: () => {
                 success('Post created successfully!');
                 queryClient.invalidateQueries({
@@ -44,7 +54,12 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
 
     const handleSaveDraft = () => {
         form.validateFields().then(values => {
-            createDraftPost(values, {
+            createDraftPost({
+                ...values,
+                imageUrlList: fileList.map(file => ({
+                    url: file.url as string,
+                })),
+            }, {
                 onSuccess: () => {
                     success('Post saved as draft successfully!');
                     queryClient.invalidateQueries({
@@ -59,6 +74,29 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
             });
         });
     };
+
+    const onChangeFile: UploadProps['onChange'] = ({ file, fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+
+    const onRemoveFile = (file: UploadFile) => {
+        const index = fileList.indexOf(file);
+        if (index > -1) {
+            const newImgUrlList = imgUrlList.slice();
+            newImgUrlList.splice(index, 1);
+            setImgUrlList(newImgUrlList);
+        }
+    };
+
+    useEffect(() => {
+        const appendFieldFileList = fileList.map((file, index) => {
+            return {
+                ...file,
+                url: imgUrlList[index],
+            };
+        })
+        setFileList(appendFieldFileList);
+    }, [imgUrlList])
 
     return (
         <Card>
@@ -81,7 +119,12 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
 
                 <Flex align="center" justify="space-between">
                     <Space size="large">
-                        <Upload>
+                        <Upload
+                            customRequest={uploadFile}
+                            onChange={onChangeFile}
+                            fileList={fileList}
+                            onRemove={onRemoveFile}
+                        >
                             <Button type="text" icon={<img src={GallerySvg} />} />
                         </Upload>
                         <Button type="text" icon={<img src={EmojiSvg} />} />
