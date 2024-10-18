@@ -3,6 +3,7 @@ import GooglIcon from '@/assets/icons/Google.svg';
 import AuthFormWrapper from "@/components/authen/form-wrapper";
 import AuthPageLayout from "@/components/authen/layout";
 import BaseButton from "@/components/core/button";
+import { RootState } from '@/stores';
 import { SignUpRequest } from '@/types/user/auth';
 import { PATHS } from "@/utils/paths";
 import { LockOutlined, MailOutlined, UserOutlined, } from "@ant-design/icons";
@@ -22,9 +23,9 @@ type FieldType = {
 const SignUpPage: FC = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
-    const { loading } = useSelector(state => state.global);
+    const { loading } = useSelector((state: RootState) => state.global);
 
-    // Function to validate password confirmation
+    // Function to validate password confirmation 
     const validateConfirmPassword = (_: any, value: string) => {
         const password = form.getFieldValue('password');
 
@@ -39,12 +40,12 @@ const SignUpPage: FC = () => {
             email: values.email,
             username: values.username,
             password: values.password,
+            confirmPassword: values.confirmPassword,
             address: "",
             avatar: "",
-            bio: "",
+            coverImage: "",
             gender: "",
             roleName: "",
-            handle: "",
             categoryList: []
         }
 
@@ -70,7 +71,11 @@ const SignUpPage: FC = () => {
                 >
                     <Form.Item<FieldType>
                         name="username"
-                        rules={[{ required: true, message: 'Please input your username!' }]}
+                        rules={[
+                            { required: true, message: 'Please input your username!' },
+                            { min: 8, message: 'Username must be at least 8 characters' },
+                            { max: 20, message: 'Username cannot exceed 20 characters' },
+                        ]}
                     >
                         <Input
                             size='large'
@@ -97,7 +102,11 @@ const SignUpPage: FC = () => {
 
                     <Form.Item<FieldType>
                         name="password"
-                        rules={[{ required: true, message: 'Please input your password!' }]}
+                        rules={[
+                            { required: true, message: 'Please input your password!' },
+                            { min: 8, message: 'Password must be at least 8 characters' },
+                            { max: 20, message: 'Passowrd cannot exceed 20 characters' },
+                        ]}
                     >
                         <Input.Password
                             size='large'

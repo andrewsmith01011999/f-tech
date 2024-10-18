@@ -10,6 +10,7 @@ import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } fr
 import BaseInput from '@/components/core/input';
 import { PATHS } from '@/utils/paths';
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
+import { RootState } from '@/stores';
 
 const { Header } = Layout;
 
@@ -19,7 +20,7 @@ interface HeaderProps {
 }
 
 const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
-    const { logged, device, username } = useSelector(state => state.user);
+    const { logged, device, username } = useSelector((state: RootState )=> state.user);
     const navigate = useNavigate();
     const token = antTheme.useToken();
     const dispatch = useDispatch();

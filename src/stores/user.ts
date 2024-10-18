@@ -6,17 +6,24 @@ import { PATHS } from '@/utils/paths';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
-  userId?: number;
+  accountId?: number;
 
   username?: string; 
 
-  /** menu list for init tagsView */
-  menuList: MenuChild[];
+  email?: string;
+
+  avatar?: string;
+
+  coverImage?: string;
+
+  createdDate?: string;
+
+  status?: string;
+
+  role?: string;
 
   /** login status */
   logged: boolean;
-
-  roles: string[];
 
   /** user's device */
   device?: Device;
@@ -27,38 +34,26 @@ export interface UserState {
   /** notification count */
   noticeCount: number;
 
-  permission: Permission;
-
   selectedKeys: string[];
 }
 
 const initialStates: UserState = {
-  noticeCount: 0,
   logged: localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN_KEY) ? true : false,
-  menuList: [],
-  username: undefined,
-  userId: undefined,
-  roles: [],
-  permission: {
-    isAdmin: false,
-    isLeader: false,
-    isCS: false,
-    isSeller: false,
-  },
-  selectedKeys: [PATHS.HOME],
+  noticeCount: 0,
+  selectedKeys: []
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState: initialStates,
   reducers: {
-    setUserItem(state, action: PayloadAction<Partial<UserState>>) {
+    setUserState(state, action: PayloadAction<Partial<UserState>>) {
       Object.assign(state, action.payload);
     },
   },
 });
 
-export const { setUserItem } = userSlice.actions;
+export const { setUserState } = userSlice.actions;
 
 export default userSlice.reducer;
 

@@ -13,15 +13,15 @@ export interface SignInResponse {
 
 export interface SignUpRequest {
   username: string;
-  handle: string;
   email: string;
   password: string;
-  bio: string;
+  confirmPassword: string;
   gender: string;
   address: string;
   avatar: string;
+  coverImage: string;
   roleName: string;
-  categoryList?: string[];
+  categoryList: string[];
 }
 
 export interface Role {

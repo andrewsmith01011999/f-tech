@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 import WrapperRouteComponent from './config';
 import { PATHS } from '@/utils/paths';
 import MainLayout from '@/layout/main-layout';
+import { RootState } from '@/stores';
 
 const SignInPage =lazy(() => import ('@/pages/auth/signin'));
 const SignUpPage =lazy(() => import ('@/pages/auth/signup'));
@@ -71,7 +72,7 @@ const routes: RouteObject[] = [
 const RenderRouter: FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { logged } = useSelector(state => state.user);
+    const { logged } = useSelector((state: RootState) => state.user);
 
     historyNavigation.navigate = useNavigate();
     historyNavigation.location = useLocation();

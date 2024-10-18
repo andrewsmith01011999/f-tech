@@ -6,15 +6,16 @@ import BookMarkSvg from '/public/android.svg';
 import ExploreSvg from '/public/explore.svg';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserItem } from '@/stores/user';
 import { PATHS } from '@/utils/paths';
+import { RootState } from '@/stores';
+import { setUserState } from '@/stores/user';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const PageMenu = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const selectedKeys = useSelector(state => state.user.selectedKeys);
+    const selectedKeys = useSelector((state: RootState) => state.user.selectedKeys);
 
     const items: MenuItem[] = [
         {
@@ -35,7 +36,7 @@ export const PageMenu = () => {
     ];
 
     const onChangeSelectedKey = (path: string) => {
-        dispatch(setUserItem({ selectedKeys: [path] }));
+        dispatch(setUserState({ selectedKeys: [path] }));
     };
 
     const onMenuClick = (path: string) => {

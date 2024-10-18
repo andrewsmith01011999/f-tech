@@ -9,9 +9,11 @@ import { history, HistoryRouter } from '@/routes/history';
 import RenderRouter from './routes';
 import MainLayout from './layout/main-layout';
 import QueryProvider from './components/provider/query-provider';
+import { RootState } from './stores';
 
 const App: React.FC = () => {
-    const { loading } = useSelector(state => state.global);
+    const { loading } = useSelector((state: RootState) => state.global);
+
     return (
         <QueryProvider>
             <HistoryRouter history={history}>
