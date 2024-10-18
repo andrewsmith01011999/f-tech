@@ -12,6 +12,7 @@ import { EventList } from '@/pages/home/components/events-list';
 import { RecommendedCreatorList } from '@/pages/home/components/recommended-creator-list';
 import { FC } from 'react';
 import { PopularMenu } from '@/pages/home/components/popular-menu';
+import { BaseCard } from '@/components/core/card';
 
 interface MainLayoutProps {
     children?: React.ReactNode;

@@ -6,14 +6,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 import WrapperRouteComponent from './config';
 import { PATHS } from '@/utils/paths';
-import SignInPage from '@/pages/signin';
-import SignUpPage from '@/pages/signup';
 import MainLayout from '@/layout/main-layout';
 
+const SignInPage =lazy(() => import ('@/pages/auth/signin'));
+const SignUpPage =lazy(() => import ('@/pages/auth/signup'));
+const ForgotPasswordPage =lazy(() => import ('@/pages/auth/forgot-password'));
+const CreateNewPasswordPage =lazy(() => import ('@/pages/auth/create-new-password'));
+const OTPVerificationPage =lazy(() => import ('@/pages/auth/otp'));
 const HomePage = lazy(() => import('@/pages/home'));
 const PostPage = lazy(() => import('@/pages/post'));
 const ProfilePage = lazy(() => import('@/pages/profile'));
 const NotFoundPage = lazy(() => import('@/pages/404'));
+const WalletPage = lazy(() => import('@/pages/wallet'))
 
 const routes: RouteObject[] = [
     {
@@ -32,6 +36,10 @@ const routes: RouteObject[] = [
                 path: PATHS.PROFILE,
                 element: <WrapperRouteComponent element={<ProfilePage />} title="Profile Page" />,
             },
+            {
+                path: PATHS.WALLET,
+                element: <WrapperRouteComponent element={<WalletPage />} title="Wallet" />,
+            }
         ],
     },
     {
@@ -41,6 +49,18 @@ const routes: RouteObject[] = [
     {
         path: PATHS.SIGNUP,
         element: <WrapperRouteComponent element={<SignUpPage />} title="Signup Page" />,
+    },
+    {
+        path: PATHS.FORGOT_PASSWORD,
+        element: <WrapperRouteComponent element={<ForgotPasswordPage />} title="Forgot password" />,
+    },
+    {
+        path: PATHS.CREATE_NEW_PASSWORD,
+        element: <WrapperRouteComponent element={<CreateNewPasswordPage />} title="Create new password" />,
+    },
+    {
+        path: PATHS.OTP_VERIFICATION,
+        element: <WrapperRouteComponent element={<OTPVerificationPage />} title="OTP Verification" />,
     },
     {
         path: '*',

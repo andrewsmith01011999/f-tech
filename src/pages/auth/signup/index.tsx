@@ -73,6 +73,7 @@ const SignUpPage: FC = () => {
                         rules={[{ required: true, message: 'Please input your username!' }]}
                     >
                         <Input
+                            size='large'
                             width={100}
                             placeholder="Username"
                             prefix={<UserOutlined />}
@@ -87,6 +88,7 @@ const SignUpPage: FC = () => {
                         ]}
                     >
                         <Input
+                            size='large'
                             width={100}
                             placeholder="Email"
                             prefix={<MailOutlined />}
@@ -98,6 +100,7 @@ const SignUpPage: FC = () => {
                         rules={[{ required: true, message: 'Please input your password!' }]}
                     >
                         <Input.Password
+                            size='large'
                             width={100}
                             placeholder="Password"
                             prefix={<LockOutlined />}
@@ -114,6 +117,7 @@ const SignUpPage: FC = () => {
                         ]}
                     >
                         <Input.Password
+                            size='large'
                             width={100}
                             placeholder="Confirm Password"
                             prefix={<LockOutlined />}
@@ -121,7 +125,13 @@ const SignUpPage: FC = () => {
                     </Form.Item>
 
                     <Form.Item>
-                        <BaseButton shape="round" type="primary" htmlType="submit" loading={loading}>
+                        <BaseButton
+                            size='large'
+                            className="auth-submit-button"
+                            shape="round"
+                            type="primary"
+                            htmlType="submit"
+                            loading={loading}>
                             Create a new account
                         </BaseButton>
                     </Form.Item>
@@ -133,7 +143,12 @@ const SignUpPage: FC = () => {
                     </span>
                 </Divider>
 
-                <BaseButton shape="round" className="btn-google" disabled={loading}>
+                <BaseButton
+                    size='large'
+                    variant="outlined"
+                    shape="round"
+                    className="btn-google"
+                    disabled={loading}>
                     <img src={GooglIcon}></img>
                     <span>Google</span>
                 </BaseButton>
@@ -144,7 +159,12 @@ const SignUpPage: FC = () => {
                     </p>
                 </div>
 
-                <BaseButton shape="round" className="btn-registration" disabled={loading}>
+                <BaseButton
+                    size='large'
+                    variant="outlined"
+                    shape="round"
+                    className="btn-registration"
+                    disabled={loading}>
                     <Link to={PATHS.SIGNIN}>
                         <span>Signin</span>
                     </Link>

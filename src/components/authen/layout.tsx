@@ -1,8 +1,7 @@
 import { Logo } from "@/utils/asset";
 import { css } from "@emotion/react";
-import { Col, ConfigProvider, Row } from "antd";
+import { Col, Row } from "antd";
 import { FC } from "react";
-import { ThemeConfig } from "antd";
 
 const AuthPageLayout: FC = (props) => {
     return <Row css={styles}>
@@ -39,7 +38,6 @@ const styles = css(`
             display: block;
             border-radius: 50%;
             height: 263px;
-            width: 263px;
             margin: 0 auto;
             
         }

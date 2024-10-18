@@ -3,6 +3,9 @@ export const PATHS = {
   SIGNIN: '/signin',
   SIGNUP: '/signup',
   FORGOT_PASSWORD: '/forgot-password',
+  CREATE_NEW_PASSWORD: '/create-new-password',
+  OTP_VERIFICATION: '/otp',
   POSTS: '/posts',
-  PROFILE: '/profile',
+  PROFILE: '/profile',  
+  WALLET: '/wallet'
 }

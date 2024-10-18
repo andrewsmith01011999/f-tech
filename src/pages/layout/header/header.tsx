@@ -3,7 +3,7 @@ import '../index.less';
 
 import { theme as antTheme, Avatar, Dropdown, Layout } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Logo from '/public/ftech-logo.svg';
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';

@@ -12,6 +12,10 @@ export type WrapperRouteProps = RouteProps & {
 };
 
 const WrapperRouteComponent: FC<WrapperRouteProps> = ({ title, permittedRoles: allowRoles, ...props }) => {
+  if (title) {
+    document.title = title;
+  }
+  
   return (props.element as ReactElement);
 };
 

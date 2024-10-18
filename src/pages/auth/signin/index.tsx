@@ -56,6 +56,7 @@ const SignInPage: FC = () => {
                         rules={[{ required: true, message: 'Please input your username!' }]}
                     >
                         <Input
+                            size='large'
                             width={100}
                             placeholder="Username"
                             prefix={<UserOutlined />}
@@ -67,6 +68,7 @@ const SignInPage: FC = () => {
                         rules={[{ required: true, message: 'Please input your password!' }]}
                     >
                         <Input.Password
+                            size='large'
                             width={100}
                             placeholder="Password"
                             prefix={<LockOutlined />} // Add lock icon
@@ -82,7 +84,13 @@ const SignInPage: FC = () => {
                     </div>
 
                     <Form.Item>
-                        <BaseButton shape="round" type="primary" htmlType="submit" loading={loading}>
+                        <BaseButton
+                            size='large'
+                            className="auth-submit-button"
+                            shape="round"
+                            type="primary"
+                            htmlType="submit"
+                            loading={loading}>
                             Login
                         </BaseButton>
                     </Form.Item>
@@ -94,7 +102,12 @@ const SignInPage: FC = () => {
                     </span>
                 </Divider>
 
-                <BaseButton shape="round" className="btn-google" disabled={loading}>
+                <BaseButton
+                    size='large'
+                    variant="outlined"
+                    shape="round"
+                    className="btn-google"
+                    disabled={loading}>
                     <img src={GooglIcon}></img>
                     <span>Google</span>
                 </BaseButton>
@@ -105,7 +118,12 @@ const SignInPage: FC = () => {
                     </p>
                 </div>
 
-                <BaseButton shape="round" className="btn-registration" disabled={loading}>
+                <BaseButton
+                    size="large"
+                    variant="outlined"
+                    shape="round"
+                    className="btn-registration"
+                    disabled={loading}>
                     <Link to={PATHS.SIGNUP}>
                         <span>Registration</span>
                     </Link>

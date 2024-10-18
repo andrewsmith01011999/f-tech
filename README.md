@@ -8,7 +8,6 @@
 - [ ] Create new password
 - [ ] Wallet
 - [ ] Notification page
-- [ ] Point shop
 
 #### Minh Đức
 - [ ] Home page
