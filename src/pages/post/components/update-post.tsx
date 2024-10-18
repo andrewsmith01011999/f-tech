@@ -4,33 +4,39 @@ import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
 import { OnAction } from '@/types';
 import { FC } from 'react';
-import { useCreatePost } from '@/hooks/mutate/post/use-create-post';
 import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
-import { CreatePostPayload } from '@/types/post/post';
+import { UpdatePostPayload } from '@/types/post/post';
 import { useMessage } from '@/hooks/use-message';
-import { useCreateDraftPost } from '@/hooks/mutate/post/use-create-draft-post';
+import { useUpdatePost } from '@/hooks/mutate/post/use-update-post';
+import { useGetPost } from '@/hooks/query/post/use-get-post';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
 
-interface CreatePostProps {
+interface UpdatePostProps {
     onCancel?: OnAction;
 }
 
-export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
+export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const [form] = Form.useForm();
 
     const queryClient = useQueryClient();
     const { success } = useMessage();
+    const id = useSelector((state: RootState) => state.post.id);
 
-    const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
-    const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();
+    const {data: detail} = useGetPost(id ?? '');
+    const { mutate: updatePost, isPending: isPendingUpdatePost } = useUpdatePost(id ?? '', {
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+        },
+    });
 
-    const onFinish = (values: CreatePostPayload) => {
-        createPost(values, {
+    const onFinish = (values: UpdatePostPayload) => {
+        updatePost(values, {
             onSuccess: () => {
-                success('Post created successfully!');
-                queryClient.invalidateQueries({
-                    queryKey: postKeys.listing(),
-                });
+                success('Post updated successfully!');
                 onCancel && onCancel();
                 form.resetFields();
             },
@@ -40,31 +46,18 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
         });
     };
 
-    const handleSaveDraft = () => {
-        form.validateFields().then(values => {
-            createDraftPost(values, {
-                onSuccess: () => {
-                    success('Post saved as draft successfully!');
-                    queryClient.invalidateQueries({
-                        queryKey: postKeys.listing(),
-                    });
-                    onCancel && onCancel();
-                    form.resetFields();
-                },
-                onError: error => {
-                    message.error(error.message);
-                },
-            });
-        });
-    };
+    const initialValues = {
+        title: detail?.title,
+        content: detail?.content,
+    }
 
     return (
         <Card>
             <Flex vertical gap={10}>
                 <UserInfo />
 
-                <Form<CreatePostPayload> layout="vertical" form={form} name="createPost" onFinish={onFinish}>
-                    <Form.Item<CreatePostPayload>
+                <Form<UpdatePostPayload> layout="vertical" form={form} name="updatePost" onFinish={onFinish} initialValues={initialValues}>
+                    <Form.Item<UpdatePostPayload>
                         name="title"
                         label="Title"
                         rules={[{ required: true, message: 'Please enter post title!' }]}
@@ -72,7 +65,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                         <Input size="large" placeholder="Post title goes here..." />
                     </Form.Item>
 
-                    <Form.Item<CreatePostPayload> name="content" label="Description">
+                    <Form.Item<UpdatePostPayload> name="content" label="Description">
                         <Input.TextArea size="large" rows={5} placeholder="Let's share what going on your mind..." />
                     </Form.Item>
                 </Form>
@@ -86,12 +79,10 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                     </Space>
 
                     <Space>
-                        <Button loading={isPendingCreateDraftPost} htmlType="button" onClick={handleSaveDraft}>
-                            Draft
-                        </Button>
+                        <Button form="updatePost">Complete Draft</Button>
 
-                        <Button loading={isPendingCreatePost} form="createPost" type="primary" htmlType="submit">
-                            Post
+                        <Button loading={isPendingUpdatePost} form="updatePost" type="primary" htmlType="submit">
+                            Update
                         </Button>
                     </Space>
                 </Flex>

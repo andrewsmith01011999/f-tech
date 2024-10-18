@@ -34,7 +34,7 @@ const MainLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
                             <PageMenu />
                         </CardMenu>
 
-                        <CardMenu>
+                        <CardMenu title="Popular Topic">
                             <PopularMenu />
                         </CardMenu>
 

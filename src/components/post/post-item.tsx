@@ -1,4 +1,4 @@
-import { Button, Card, Dropdown, Flex, Image, Typography } from 'antd';
+import { Button, Card, Dropdown, Flex, Image, Modal, Typography } from 'antd';
 import { UserInfo } from '../user/user-info';
 import { PostTag } from './post-tag';
 import {
@@ -14,8 +14,45 @@ import {
     ShareAltOutlined,
 } from '@ant-design/icons';
 import { IconButton } from './icon-button';
+import { useDispatch } from 'react-redux';
+import { setPost } from '@/stores/post';
+import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
+import { Post } from '@/types/post/post';
+import { FC } from 'react';
+import dayjsConfig from '@/utils/dayjs';
 
-export const PostItem = () => {
+
+const { confirm } = Modal;
+
+interface PostItemProps {
+    data: Post;
+}
+
+export const PostItem: FC<PostItemProps> = ({ data }) => {
+    const dispatch = useDispatch();
+
+    const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost('1');
+
+    const handleUpdate = () => {
+        dispatch(setPost({ modal: { open: true, type: 'update' }, id: '1' }));
+    };
+
+    const handleDelete = () => {
+        dispatch(setPost({ id: '1' }));
+        confirm({
+            title: 'Are you sure you want to delete this post?',
+            content: 'This action cannot be undone',
+            onOk() {
+                deletePost();
+            },
+            okButtonProps: {
+                disabled: isPendingDeletePost,
+            },
+        });
+    };
+
+    const { title, content, createdDate  } = data;
+
     return (
         <Card>
             <Flex vertical gap={8}>
@@ -53,11 +90,13 @@ export const PostItem = () => {
                                     key: '2',
                                     icon: <DeleteOutlined />,
                                     label: <span>Delete post</span>,
+                                    onClick: handleDelete,
                                 },
                                 {
                                     key: '3',
                                     icon: <EditOutlined />,
                                     label: <span>Edit post</span>,
+                                    onClick: handleUpdate,
                                 },
                             ],
                         }}
@@ -73,7 +112,7 @@ export const PostItem = () => {
                         cursor: 'pointer',
                     }}
                 >
-                    How to create a new project?
+                    {title}
                 </Typography.Title>
 
                 <Typography.Paragraph
@@ -83,14 +122,7 @@ export const PostItem = () => {
                         symbol: <Button type="link">more</Button>,
                     }}
                 >
-                    The iPhone 16 Pro and its bigger 16 Pro Max are now official. Apple's latest flagship smartphone
-                    features larger 6.3-inch and 6.9-inch displays (both models are now 0.2-inch bigger), better battery
-                    life, a new color, the Apple A18 Pro processor, and more. Like the standard iPhone 16, this year's
-                    pro lineup features Apple's new Camera Control—a special element that combines a physical button
-                    with a touch-capacitive surface for advanced camera controls. The Camera Control makes it easier to
-                    launch the camera, take a photo, start video recording, and adjust zoom, exposure, or depth of
-                    field. In addition, Apple promises to update Camera Control with a two-stage shutter for focus and
-                    exposure-locking.
+                    {content}
                 </Typography.Paragraph>
 
                 <Image
@@ -102,7 +134,7 @@ export const PostItem = () => {
                         objectFit: 'contain',
                     }}
                 />
-                <Typography.Text type="secondary">Posted 2 days ago</Typography.Text>
+                <Typography.Text type="secondary">Posted {dayjsConfig(createdDate).fromNow()}</Typography.Text>
 
                 <Flex justify="end" gap={20}>
                     <IconButton icon={<LikeOutlined />} children="Like" />

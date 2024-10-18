@@ -1,7 +1,7 @@
 import axiosInstance from '@/apis/request';
 import { postKeys } from '@/consts/factory/post';
 import { PaginationParams, Response } from '@/types';
-import { Topic } from '@/types/topic/topic';
+import { Post } from '@/types/post/post';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 export type PostListingParams = PaginationParams;
@@ -11,15 +11,15 @@ type PostListingProps = {
 };
 
 export const usePostsListing = ({ params }: PostListingProps) => {
-    const fetchPosts = async (): Promise<Response<Topic>> => {
-        const { data } = await axiosInstance.get<Response<Topic>>('/post/getall', {
+    const fetchPosts = async (): Promise<Response<Post[]>> => {
+        const { data } = await axiosInstance.get<Response<Post[]>>('/post/getall', {
             params,
         });
 
         return data;
     };
 
-    return useQuery<Response<Topic>>({
+    return useQuery<Response<Post[]>>({
         queryKey: postKeys.listing(params),
         queryFn: fetchPosts,
         placeholderData: keepPreviousData,

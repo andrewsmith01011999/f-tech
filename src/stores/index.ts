@@ -2,10 +2,18 @@ import { combineReducers, configureStore, Dispatch } from '@reduxjs/toolkit';
 
 import globalReducer from './global';
 import userReducer from "./user";
+import postReducer from "./post";
+
+export type RootState = {
+  user: ReturnType<typeof userReducer>;
+  global: ReturnType<typeof globalReducer>;
+  post: ReturnType<typeof postReducer>;
+}
 
 const rootReducer = combineReducers({
   user: userReducer,
   global: globalReducer,
+  post: postReducer,
 });
 
 

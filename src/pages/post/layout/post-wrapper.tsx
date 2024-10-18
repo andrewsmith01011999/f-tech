@@ -1,10 +1,14 @@
 import { SecondaryButton } from '@/components/core/secondary-button';
 import { Avatar, Divider, Dropdown, Flex, Input, Modal, Space, Tag } from 'antd';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { CreatePost } from '../components/create-post';
 import { CaretDownFilled } from '@ant-design/icons';
-import { TagListingParams, useTagsListing } from '@/hooks/query/use-tags-listing';
+import { TagListingParams, useTagsListing } from '@/hooks/query/tag/use-tags-listing';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { PostModalType, setPost } from '@/stores/post';
+import { RootState } from '@/stores';
 
 interface PostWrapperProps {
     children: React.ReactNode;
@@ -16,16 +20,17 @@ const initialParams: TagListingParams = {
 };
 
 export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const dispatch = useDispatch()
+    const { type, open } = useSelector((state: RootState) => state.post.modal);
 
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
 
-    const handleCancel = () => {
-        setIsOpen(false);
+    const handleCancel = (type: PostModalType) => {
+        dispatch(setPost({ modal: { open: false, type } }));
     };
 
-    const handleOpen = () => {
-        setIsOpen(true);
+    const handleOpen = (type: PostModalType) => {
+        dispatch(setPost({ modal: { open: true, type } }));
     };
 
     return (
@@ -50,7 +55,6 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                                         >
                                             All
                                         </Tag>
-                                       
                                     </Space>
                                 ),
                             },
@@ -70,10 +74,10 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                     <Input
                         size="large"
                         placeholder="Let's share what going on your mind..."
-                        onClick={handleOpen}
+                        onClick={() => handleOpen('create')}
                         readOnly
                     />
-                    <SecondaryButton onClick={handleOpen}>Create Post</SecondaryButton>
+                    <SecondaryButton onClick={() => handleOpen('create')}>Create Post</SecondaryButton>
                 </Flex>
             </Flex>
 
@@ -83,9 +87,23 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                 {children}
             </Flex>
 
-            <Modal title="Create Post" open={isOpen} onCancel={handleCancel} footer={null} width={'80vw'}>
-                <CreatePost onCancel={handleCancel} />
+            <Modal
+                title="Create Post"
+                open={type === 'create' && open}
+                onCancel={() => handleCancel('create')}
+                footer={null}
+                width={'80vw'}
+            >
+                <CreatePost onCancel={() => handleCancel('create')} />
             </Modal>
+
+            <Modal
+                title="Update Post"
+                open={type === 'update' && open}
+                onCancel={() => handleCancel('update')}
+                footer={null}
+                width={'80vw'}
+            ></Modal>
         </Flex>
     );
 };

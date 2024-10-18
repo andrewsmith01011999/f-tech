@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { PostSummary } from './components/post-summary';
 import { PostWrapper } from './layout/post-wrapper';
-import { useTopicsListing } from '@/hooks/query/use-topics-listing';
+import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
 import { Spin } from 'antd';
 
 const HomePage: FC = props => {
