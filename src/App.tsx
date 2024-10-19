@@ -2,18 +2,14 @@ import 'dayjs/locale/zh-cn';
 
 import { Flex, Spin } from 'antd';
 import { Suspense } from 'react';
-import { useSelector } from 'react-redux';
 
 import { history, HistoryRouter } from '@/routes/history';
 
-import RenderRouter from './routes';
-import MainLayout from './layout/main-layout';
 import QueryProvider from './components/provider/query-provider';
-import { RootState } from './stores';
+import MainLayout from './layout/main-layout';
+import RenderRouter from './routes';
 
 const App: React.FC = () => {
-    const { loading } = useSelector((state: RootState) => state.global);
-
     return (
         <QueryProvider>
             <HistoryRouter history={history}>

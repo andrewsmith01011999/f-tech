@@ -1,12 +1,10 @@
 import { LocalStorageKeys } from '@/consts/local-storage';
+import { AccountStatus } from '@/types/account';
 import { Device } from '@/types/layout';
-import { MenuChild } from '@/types/layout/menu';
-import type { Permission } from '@/types/user/user';
-import { PATHS } from '@/utils/paths';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-export interface UserState {
-  accountId?: number;
+export interface AccountState {
+  accountId?: string;
 
   username?: string; 
 
@@ -18,7 +16,7 @@ export interface UserState {
 
   createdDate?: string;
 
-  status?: string;
+  status?: AccountStatus;
 
   role?: string;
 
@@ -37,23 +35,23 @@ export interface UserState {
   selectedKeys: string[];
 }
 
-const initialStates: UserState = {
+const initialStates: AccountState = {
   logged: localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN_KEY) ? true : false,
   noticeCount: 0,
   selectedKeys: []
 };
 
-const userSlice = createSlice({
-  name: 'user',
+const accountSlice = createSlice({
+  name: 'account',
   initialState: initialStates,
   reducers: {
-    setUserState(state, action: PayloadAction<Partial<UserState>>) {
+    setAccountState(state, action: PayloadAction<Partial<AccountState>>) {
       Object.assign(state, action.payload);
     },
   },
 });
 
-export const { setUserState } = userSlice.actions;
+export const { setAccountState } = accountSlice.actions;
 
-export default userSlice.reducer;
+export default accountSlice.reducer;
 

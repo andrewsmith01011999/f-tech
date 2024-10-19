@@ -8,14 +8,14 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '@/utils/paths';
 import { RootState } from '@/stores';
-import { setUserState } from '@/stores/user';
+import { setAccountState } from '@/stores/account';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const PageMenu = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const selectedKeys = useSelector((state: RootState) => state.user.selectedKeys);
+    const selectedKeys = useSelector((state: RootState) => state.account.selectedKeys);
 
     const items: MenuItem[] = [
         {
@@ -36,7 +36,7 @@ export const PageMenu = () => {
     ];
 
     const onChangeSelectedKey = (path: string) => {
-        dispatch(setUserState({ selectedKeys: [path] }));
+        dispatch(setAccountState({ selectedKeys: [path] }));
     };
 
     const onMenuClick = (path: string) => {

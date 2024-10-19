@@ -1,4 +1,4 @@
-import type { LogoutParams, LogoutResult, SignInRequest, SignInResponse, SignUpRequest } from '../types/user/auth';
+import type { LogoutParams, LogoutResult, SignInRequest, SignInResponse, SignUpRequest } from '../types/auth';
 
 import { AxiosRequestConfig } from 'axios';
 
@@ -22,7 +22,14 @@ export const apiSignUp = (data: SignUpRequest) => request<SignInResponse>(
     }
   })
 
-export const apiRefreshToken = (config: AxiosRequestConfig) =>
-  request<SignInResponse>('get', '/api/v1/auth/refreshToken', {}, config);
+export const apiRefreshToken = (config: AxiosRequestConfig) => request<SignInResponse>(
+  'get',
+  '/api/v1/auth/refreshToken',
+  {},
+  config);
 
-export const apiLogout = (data: LogoutParams) => request<LogoutResult>('post', '/api/v1/auth/logout', data);
+
+export const apiLogout = (data: LogoutParams) => request<LogoutResult>(
+  'post',
+  '/api/v1/auth/logout',
+  data);

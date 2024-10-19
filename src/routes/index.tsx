@@ -72,7 +72,7 @@ const routes: RouteObject[] = [
 const RenderRouter: FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { logged } = useSelector((state: RootState) => state.user);
+    const { logged } = useSelector((state: RootState) => state.account);
 
     historyNavigation.navigate = useNavigate();
     historyNavigation.location = useLocation();

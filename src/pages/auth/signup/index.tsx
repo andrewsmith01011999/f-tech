@@ -1,14 +1,15 @@
-import { apiSignUp } from '@/apis/user.api';
 import GooglIcon from '@/assets/icons/Google.svg';
 import AuthFormWrapper from "@/components/authen/form-wrapper";
 import AuthPageLayout from "@/components/authen/layout";
 import BaseButton from "@/components/core/button";
+import { useSignUp } from '@/hooks/mutate/auth/use-signup';
+import { useMessage } from '@/hooks/use-message';
 import { RootState } from '@/stores';
-import { SignUpRequest } from '@/types/user/auth';
+import { SignUpRequest } from '@/types/auth';
 import { PATHS } from "@/utils/paths";
 import { LockOutlined, MailOutlined, UserOutlined, } from "@ant-design/icons";
 import { css } from "@emotion/react";
-import { Divider, Form, FormProps, Input, message } from "antd";
+import { Divider, Form, FormProps, Input } from "antd";
 import { FC } from "react";
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
@@ -24,6 +25,8 @@ const SignUpPage: FC = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const { loading } = useSelector((state: RootState) => state.global);
+    const { mutate: signup } = useSignUp();
+    const message = useMessage();
 
     // Function to validate password confirmation 
     const validateConfirmPassword = (_: any, value: string) => {
@@ -42,18 +45,20 @@ const SignUpPage: FC = () => {
             password: values.password,
             confirmPassword: values.confirmPassword,
             address: "",
-            // avatar: "",
-            // coverImage: "",
             gender: "",
             roleName: "",
             categoryList: []
         }
 
-        const { success, message: mess } = await apiSignUp(req);
-        if (success) {
-            message.success("Registration account successfully")
-            navigate(PATHS.SIGNIN)
-        }
+        signup(req, {
+            onSuccess: result => {
+                if (result) {
+                    message.success("Registration account successfully")
+
+                    navigate(PATHS.SIGNIN)
+                }
+            }
+        })
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {

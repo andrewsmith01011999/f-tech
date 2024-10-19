@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import '../index.less';
 
-import { theme as antTheme, Avatar, Dropdown, Layout } from 'antd';
+import { theme as antTheme, Avatar, Dropdown, Flex, Layout, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Logo from '/public/ftech-logo.svg';
-import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
+import { CaretDownFilled, DownCircleFilled, DownOutlined, DownSquareFilled, DownSquareTwoTone, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
 import BaseInput from '@/components/core/input';
 import { PATHS } from '@/utils/paths';
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
@@ -20,7 +20,7 @@ interface HeaderProps {
 }
 
 const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
-    const { logged, device, username } = useSelector((state: RootState )=> state.user);
+    const { logged, device, username } = useSelector((state: RootState) => state.account);
     const navigate = useNavigate();
     const token = antTheme.useToken();
     const dispatch = useDispatch();
@@ -79,7 +79,11 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                             }}
                         >
                             <span className="user-action">
-                                <Avatar size={42} src={BackgroundPlaceholder} className="user-avator" alt="avator" />
+                                <Flex align='center' gap={5}>
+                                    <Avatar size={42} src={BackgroundPlaceholder} className="user-avator" alt="avator" />
+                                    <Typography.Text style={{ fontWeight: 500 }}>{username}</Typography.Text>
+                                    <CaretDownFilled />
+                                </Flex>
                             </span>
                         </Dropdown>
                     ) : (

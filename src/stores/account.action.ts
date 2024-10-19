@@ -1,8 +1,8 @@
-import { apiSignIn } from "@/apis/user.api";
+import { apiSignIn } from "@/apis/auth.api";
 import { LocalStorageKeys } from "@/consts/local-storage";
-import { SignInRequest } from "@/types/user/auth";
+import { SignInRequest } from "@/types/auth";
+import { setAccountState } from "./account";
 import { createAsyncAction } from "./action";
-import { setUserState } from "./user";
 
 export const loginAsync = createAsyncAction<SignInRequest, boolean>(payload => {
     return async dispatch => {
@@ -13,7 +13,7 @@ export const loginAsync = createAsyncAction<SignInRequest, boolean>(payload => {
             localStorage.setItem(LocalStorageKeys.REFRESH_TOKEN_KEY, entity?.refreshToken);
     
             dispatch(
-                setUserState({
+                setAccountState({
                     logged: true,
                 }),
             );

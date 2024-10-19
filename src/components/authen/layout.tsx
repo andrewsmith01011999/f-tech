@@ -1,14 +1,18 @@
 import { Logo } from "@/utils/asset";
+import { PATHS } from "@/utils/paths";
 import { css } from "@emotion/react";
 import { Col, Row } from "antd";
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 const AuthPageLayout: FC = (props) => {
     return <Row css={styles}>
         <Col span={24} className="left" md={{ span: 15 }}>
             <Row className="left-inner" align={"middle"} gutter={{ md: 6 }}>
                 <Col span={24}>
-                    <img className="left-image" src={Logo} />
+                    <Link to={PATHS.HOME}>
+                        <img className="left-image" src={Logo} />
+                    </Link>
                 </Col>
                 <Col className="left-text" span={24}>
                     <h1>

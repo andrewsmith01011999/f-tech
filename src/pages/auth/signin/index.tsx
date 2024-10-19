@@ -1,42 +1,51 @@
+import GooglIcon from '@/assets/icons/Google.svg';
 import AuthFormWrapper from "@/components/authen/form-wrapper";
 import AuthPageLayout from "@/components/authen/layout";
 import BaseButton from "@/components/core/button";
+import { authKeys } from '@/consts/factory/auth';
+import { useSignIn } from "@/hooks/mutate/auth/use-signin";
+import { useMessage } from '@/hooks/use-message';
+import { RootState } from "@/stores";
+import { SignInRequest } from '@/types/auth';
 import { PATHS } from "@/utils/paths";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { css } from "@emotion/react";
-import { Button, Checkbox, Divider, Form, FormProps, Input } from "antd";
+import { useQueryClient } from '@tanstack/react-query';
+import { Divider, Form, FormProps, Input } from "antd";
 import { FC } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import GooglIcon from '@/assets/icons/Google.svg'
-import { useDispatch } from "react-redux";
-import { loginAsync } from "@/stores/user.action";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 type FieldType = {
     username?: string;
     password?: string;
 };
 
-
-
 const SignInPage: FC = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { loading } = useSelector(state => state.global);
+    const { mutate: signIn, isPending } = useSignIn();
+    const queryClient = useQueryClient();
+    const message = useMessage();
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        var username = values.username ?? "";
-        var password = values.password ?? "";
-
-        // Do something
-        const res = await dispatch(await loginAsync({
-            username,
-            password
-        }))
-
-        if (!!res) {
-            navigate(PATHS.HOME)
+        const payload: SignInRequest = {
+            username: values.username ?? "",
+            password: values.password ?? ""
         }
+
+        signIn(payload, {
+            onSuccess: result => {
+                if (result) {
+                    navigate(PATHS.HOME)
+                    
+                    message.success("Login successfully!")
+
+                    queryClient.invalidateQueries({
+                        queryKey: authKeys.profile()
+                    })
+                }
+            }
+        })
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
@@ -90,7 +99,7 @@ const SignInPage: FC = () => {
                             shape="round"
                             type="primary"
                             htmlType="submit"
-                            loading={loading}>
+                            loading={isPending}>
                             Login
                         </BaseButton>
                     </Form.Item>
@@ -107,7 +116,7 @@ const SignInPage: FC = () => {
                     variant="outlined"
                     shape="round"
                     className="btn-google"
-                    disabled={loading}>
+                    disabled={isPending}>
                     <img src={GooglIcon}></img>
                     <span>Google</span>
                 </BaseButton>
@@ -123,7 +132,7 @@ const SignInPage: FC = () => {
                     variant="outlined"
                     shape="round"
                     className="btn-registration"
-                    disabled={loading}>
+                    disabled={isPending}>
                     <Link to={PATHS.SIGNUP}>
                         <span>Registration</span>
                     </Link>

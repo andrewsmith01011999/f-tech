@@ -1,4 +1,4 @@
-import { RoleCode } from "../role";
+import { RoleName } from "../role";
 
 interface MenuItem {
   id: string;
@@ -11,7 +11,7 @@ interface MenuItem {
 
   children?: MenuItem[];
 
-  permittedRoles?: RoleCode[];
+  permittedRoles?: RoleName[];
 }
 
 export type MenuChild = Omit<MenuItem, 'children'>;
