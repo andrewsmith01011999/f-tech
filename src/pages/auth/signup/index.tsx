@@ -42,8 +42,8 @@ const SignUpPage: FC = () => {
             password: values.password,
             confirmPassword: values.confirmPassword,
             address: "",
-            avatar: "",
-            coverImage: "",
+            // avatar: "",
+            // coverImage: "",
             gender: "",
             roleName: "",
             categoryList: []

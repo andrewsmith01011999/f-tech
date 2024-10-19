@@ -18,8 +18,8 @@ export interface SignUpRequest {
   confirmPassword: string;
   gender: string;
   address: string;
-  avatar: string;
-  coverImage: string;
+  avatar?: string;
+  coverImage?: string;
   roleName: string;
   categoryList: string[];
 }
