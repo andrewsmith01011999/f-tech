@@ -1,13 +1,15 @@
-import { apiSignUp } from '@/apis/user.api';
 import GooglIcon from '@/assets/icons/Google.svg';
 import AuthFormWrapper from "@/components/authen/form-wrapper";
 import AuthPageLayout from "@/components/authen/layout";
 import BaseButton from "@/components/core/button";
-import { SignUpRequest } from '@/types/user/auth';
+import { useSignUp } from '@/hooks/mutate/auth/use-signup';
+import { useMessage } from '@/hooks/use-message';
+import { RootState } from '@/stores';
+import { SignUpRequest } from '@/types/auth';
 import { PATHS } from "@/utils/paths";
 import { LockOutlined, MailOutlined, UserOutlined, } from "@ant-design/icons";
 import { css } from "@emotion/react";
-import { Divider, Form, FormProps, Input, message } from "antd";
+import { Divider, Form, FormProps, Input } from "antd";
 import { FC } from "react";
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
@@ -22,9 +24,11 @@ type FieldType = {
 const SignUpPage: FC = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
-    const { loading } = useSelector(state => state.global);
+    const { loading } = useSelector((state: RootState) => state.global);
+    const { mutate: signup } = useSignUp();
+    const message = useMessage();
 
-    // Function to validate password confirmation
+    // Function to validate password confirmation 
     const validateConfirmPassword = (_: any, value: string) => {
         const password = form.getFieldValue('password');
 
@@ -39,20 +43,22 @@ const SignUpPage: FC = () => {
             email: values.email,
             username: values.username,
             password: values.password,
+            confirmPassword: values.confirmPassword,
             address: "",
-            avatar: "",
-            bio: "",
             gender: "",
             roleName: "",
-            handle: "",
             categoryList: []
         }
 
-        const { success, message: mess } = await apiSignUp(req);
-        if (success) {
-            message.success("Registration account successfully")
-            navigate(PATHS.SIGNIN)
-        }
+        signup(req, {
+            onSuccess: result => {
+                if (result) {
+                    message.success("Registration account successfully")
+
+                    navigate(PATHS.SIGNIN)
+                }
+            }
+        })
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
@@ -70,9 +76,14 @@ const SignUpPage: FC = () => {
                 >
                     <Form.Item<FieldType>
                         name="username"
-                        rules={[{ required: true, message: 'Please input your username!' }]}
+                        rules={[
+                            { required: true, message: 'Please input your username!' },
+                            { min: 8, message: 'Username must be at least 8 characters' },
+                            { max: 20, message: 'Username cannot exceed 20 characters' },
+                        ]}
                     >
                         <Input
+                            size='large'
                             width={100}
                             placeholder="Username"
                             prefix={<UserOutlined />}
@@ -87,6 +98,7 @@ const SignUpPage: FC = () => {
                         ]}
                     >
                         <Input
+                            size='large'
                             width={100}
                             placeholder="Email"
                             prefix={<MailOutlined />}
@@ -95,9 +107,14 @@ const SignUpPage: FC = () => {
 
                     <Form.Item<FieldType>
                         name="password"
-                        rules={[{ required: true, message: 'Please input your password!' }]}
+                        rules={[
+                            { required: true, message: 'Please input your password!' },
+                            { min: 8, message: 'Password must be at least 8 characters' },
+                            { max: 20, message: 'Passowrd cannot exceed 20 characters' },
+                        ]}
                     >
                         <Input.Password
+                            size='large'
                             width={100}
                             placeholder="Password"
                             prefix={<LockOutlined />}
@@ -114,6 +131,7 @@ const SignUpPage: FC = () => {
                         ]}
                     >
                         <Input.Password
+                            size='large'
                             width={100}
                             placeholder="Confirm Password"
                             prefix={<LockOutlined />}
@@ -121,7 +139,13 @@ const SignUpPage: FC = () => {
                     </Form.Item>
 
                     <Form.Item>
-                        <BaseButton shape="round" type="primary" htmlType="submit" loading={loading}>
+                        <BaseButton
+                            size='large'
+                            className="auth-submit-button"
+                            shape="round"
+                            type="primary"
+                            htmlType="submit"
+                            loading={loading}>
                             Create a new account
                         </BaseButton>
                     </Form.Item>
@@ -133,7 +157,12 @@ const SignUpPage: FC = () => {
                     </span>
                 </Divider>
 
-                <BaseButton shape="round" className="btn-google" disabled={loading}>
+                <BaseButton
+                    size='large'
+                    variant="outlined"
+                    shape="round"
+                    className="btn-google"
+                    disabled={loading}>
                     <img src={GooglIcon}></img>
                     <span>Google</span>
                 </BaseButton>
@@ -144,7 +173,12 @@ const SignUpPage: FC = () => {
                     </p>
                 </div>
 
-                <BaseButton shape="round" className="btn-registration" disabled={loading}>
+                <BaseButton
+                    size='large'
+                    variant="outlined"
+                    shape="round"
+                    className="btn-registration"
+                    disabled={loading}>
                     <Link to={PATHS.SIGNIN}>
                         <span>Signin</span>
                     </Link>

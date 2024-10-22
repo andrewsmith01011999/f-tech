@@ -1,11 +1,8 @@
 export interface Role {
-  id: string;
+  roleID: string;
   name: string;
-  code: string;
 }
 
-export type RoleStatus = 'enabled' | 'disabled';
+export type RoleName = "ADMIN" | "USER";
 
-export type RoleCode = "ROLE_ADMIN" | "ROLE_LEADER" | "ROLE_SELLER" | "ROLE_CS";
-
-export type GetRoleResult = Role[];
+export type Roles = Role[];

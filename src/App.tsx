@@ -2,13 +2,13 @@ import 'dayjs/locale/zh-cn';
 
 import { Flex, Spin } from 'antd';
 import { Suspense } from 'react';
-import { useSelector } from 'react-redux';
 
 import { history, HistoryRouter } from '@/routes/history';
 
-import RenderRouter from './routes';
-import MainLayout from './layout/main-layout';
 import QueryProvider from './components/provider/query-provider';
+import MainLayout from './layout/main-layout';
+import RenderRouter from './routes';
+import { useSelector } from 'react-redux';
 
 const App: React.FC = () => {
     const { loading } = useSelector(state => state.global);
