@@ -44,7 +44,7 @@ export const PostSummary : FC<PostSummaryProps> = ({data}) => {
                     preview={false}
                 />
 
-                <Flex vertical justify="space-between">
+                <Flex vertical justify="space-between" gap={10}>
                     <Flex vertical gap={10}>
                         <Flex justify="space-between" align="center">
                             <Typography.Title level={4} style={{ textTransform: 'uppercase' }}>

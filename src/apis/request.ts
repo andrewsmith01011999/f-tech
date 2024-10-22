@@ -40,16 +40,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (axiosResponse: AxiosResponse) => {
         setLoadingState(false);
-        const { code, entity } = axiosResponse?.data;
-
-        const response: Response<unknown> = {
-            success: code === ApiConfigs.API_SUCCESS_CODE,
-            message: 'Success',
-            code: code,
-            entity: entity,
-        };
-
-        return response;
+         return axiosResponse;
     },
 
     (err: AxiosError) => {

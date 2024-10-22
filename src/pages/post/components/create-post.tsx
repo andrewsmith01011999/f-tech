@@ -1,5 +1,5 @@
 import { UserInfo } from '@/components/user/user-info';
-import { Button, Card, Flex, Form, Input, message, Space, Upload, UploadFile, UploadProps } from 'antd';
+import { Button, Card, Flex, Form, Input, message, Select, Space, Upload, UploadFile, UploadProps, Image } from 'antd';
 import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
 import { OnAction } from '@/types';
@@ -12,10 +12,18 @@ import { useMessage } from '@/hooks/use-message';
 import { useCreateDraftPost } from '@/hooks/mutate/post/use-create-draft-post';
 import { useSearchParams } from 'react-router-dom';
 import { useUploadFile } from '@/hooks/use-upload-file';
+import { TopicListingParams, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
 
 interface CreatePostProps {
     onCancel?: OnAction;
 }
+
+const initialParams: TopicListingParams = {
+    page: DEFAULT_PAGE,
+    perPage: DEFAULT_PAGE_SIZE,
+};
 
 export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const [form] = Form.useForm();
@@ -28,50 +36,69 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
 
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
+    const { data: topics, isLoading: isLoadingTopics } = useTopicsListing({ params: initialParams });
+    const { data: tags, isLoading: isLoadingTags } = useTagsListing({ params: initialParams });
     const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
     const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();
 
     const onFinish = (values: CreatePostPayload) => {
-        createPost({
+        console.log({
             ...values,
-            imageUrlList: fileList.map(file => ({
-                url: file.url as string,
-            })),
-        }, {
-            onSuccess: () => {
-                success('Post created successfully!');
-                queryClient.invalidateQueries({
-                    queryKey: postKeys.listing(),
-                });
-                onCancel && onCancel();
-                form.resetFields();
-            },
-            onError: error => {
-                message.error(error.message);
-            },
-        });
-    };
-
-    const handleSaveDraft = () => {
-        form.validateFields().then(values => {
-            createDraftPost({
-                ...values,
+            ...(fileList.length > 0 && {
                 imageUrlList: fileList.map(file => ({
                     url: file.url as string,
                 })),
-            }, {
+            }),
+        });
+        createPost(
+            {
+                ...values,
+                ...(fileList.length > 0 && {
+                    imageUrlList: fileList.map(file => ({
+                        url: file.url as string,
+                    })),
+                }),
+            },
+            {
                 onSuccess: () => {
-                    success('Post saved as draft successfully!');
+                    success('Post created successfully!');
                     queryClient.invalidateQueries({
                         queryKey: postKeys.listing(),
                     });
                     onCancel && onCancel();
                     form.resetFields();
+                    setImgUrlList([]);
                 },
                 onError: error => {
                     message.error(error.message);
                 },
-            });
+            },
+        );
+    };
+
+    const handleSaveDraft = () => {
+        form.validateFields().then(values => {
+            createDraftPost(
+                {
+                    ...values,
+                    imageUrlList: fileList.map(file => ({
+                        url: file.url as string,
+                    })),
+                },
+                {
+                    onSuccess: () => {
+                        success('Post saved as draft successfully!');
+                        queryClient.invalidateQueries({
+                            queryKey: postKeys.listing(),
+                        });
+                        onCancel && onCancel();
+                        form.resetFields();
+                    },
+                    onError: error => {
+                        message.error(error.message);
+                    },
+                },
+            );
         });
     };
 
@@ -94,9 +121,9 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                 ...file,
                 url: imgUrlList[index],
             };
-        })
+        });
         setFileList(appendFieldFileList);
-    }, [imgUrlList])
+    }, [imgUrlList]);
 
     return (
         <Card>
@@ -112,18 +139,63 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                         <Input size="large" placeholder="Post title goes here..." />
                     </Form.Item>
 
-                    <Form.Item<CreatePostPayload> name="content" label="Description">
+                    <Form.Item<CreatePostPayload>
+                        name="topicId"
+                        label="Topic"
+                        rules={[{ required: true, message: 'Please select a topic!' }]}
+                    >
+                        <Select
+                            size="large"
+                            loading={isLoadingTopics}
+                            placeholder="Select a topic"
+                            options={topics?.entity.map(topic => ({
+                                label: topic.name,
+                                value: topic.topicId,
+                            }))}
+                        />
+                    </Form.Item>
+
+                    <Form.Item<CreatePostPayload>
+                        name="tagId"
+                        label="Tags"
+                        rules={[{ required: true, message: 'Please select a tag!' }]}
+                    >
+                        <Select
+                            size="large"
+                            loading={isLoadingTags}
+                            placeholder="Select tags"
+                            options={tags?.entity.map(tag => ({
+                                label: tag.name,
+                                value: tag.tagId,
+                            }))}
+                        />
+                    </Form.Item>
+
+                    <Form.Item<CreatePostPayload>
+                        name="content"
+                        label="Description"
+                        rules={[{ required: true, message: 'Please add some description!' }]}
+                    >
                         <Input.TextArea size="large" rows={5} placeholder="Let's share what going on your mind..." />
                     </Form.Item>
                 </Form>
+
+                <Flex gap={10} wrap>
+                    {fileList.map(file => (
+                        <div className="ant-upload" key={file.uid}>
+                            <Image src={file.url} alt={file.url} width={100} height={100} />
+                        </div>
+                    ))}
+                </Flex>
 
                 <Flex align="center" justify="space-between">
                     <Space size="large">
                         <Upload
                             customRequest={uploadFile}
                             onChange={onChangeFile}
-                            fileList={fileList}
                             onRemove={onRemoveFile}
+                            showUploadList={false}
+                            fileList={fileList}
                         >
                             <Button type="text" icon={<img src={GallerySvg} />} />
                         </Upload>

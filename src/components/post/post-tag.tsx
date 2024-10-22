@@ -4,9 +4,11 @@ import { FC } from 'react';
 
 interface PostTagProps {
     children: React.ReactNode;
+    backgroundColor?: string;
+    textColor?: string;
 }
 
-export const PostTag: FC<PostTagProps> = ({ children }) => {
+export const PostTag: FC<PostTagProps> = ({ children, backgroundColor = '#518EF8', textColor = 'white' }) => {
     return (
         <ConfigProvider
             theme={{
@@ -15,8 +17,8 @@ export const PostTag: FC<PostTagProps> = ({ children }) => {
                     ...themeConfig.components,
                     Tag: {
                         ...themeConfig.components!.Tag,
-                        colorBgContainer: '#518EF8',
-                        colorText: 'white',
+                        colorBgContainer: backgroundColor,
+                        colorText: textColor,
                         fontSizeSM: 14,
                     },
                 },

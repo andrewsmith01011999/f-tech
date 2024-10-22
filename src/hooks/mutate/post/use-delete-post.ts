@@ -7,7 +7,7 @@ export const useDeletePost = (
     options: UseMutationOptions<unknown, AxiosError<unknown>> = {},
 ) => {
     const deletePost = async () => {
-        const { data } = await axiosInstance.post(`/post/update/${postId}/status/hidden`);
+        const { data } = await axiosInstance.put(`/post/update/${postId}/status/hidden`);
     };
 
     return useMutation<unknown, AxiosError<unknown>>({

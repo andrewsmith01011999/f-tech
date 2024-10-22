@@ -4,6 +4,7 @@ import { PaginationParams } from '@/types';
 import { PostWrapper } from '../layout/post-wrapper';
 import { PostItem } from '@/components/post/post-item';
 import { PostStatus } from '@/types/post/post';
+import { Empty } from 'antd';
 
 export const HomePostList = () => {
     const initialParams: PaginationParams = {
@@ -15,29 +16,15 @@ export const HomePostList = () => {
         params: initialParams,
     });
 
-    // if (!data || data.entity.length === 0) {
-    //     return <Empty />;
-    // }
+    if (!data || data.entity.length === 0) {
+        return <Empty />;
+    }
 
     return (
         <PostWrapper>
-            {/* {data.entity.map(post => (
+            {data.entity.map(post => (
                 <PostItem data={post} key={post.postId} />
-            ))} */}
-            <PostItem
-                data={{
-                    postId: '1',
-                    title: 'Title',
-                    content: 'Content',
-                    createdDate: '2021-09-01',
-                    status: PostStatus.PUBLIC,
-                    topic: {
-                        name: 'Topic',
-                        topicId: '1',
-                    },
-                    lastModifiedDate: '2021-09-01',
-                }}
-            />
+            ))}
         </PostWrapper>
     );
 };

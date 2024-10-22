@@ -21,7 +21,9 @@ import { Post } from '@/types/post/post';
 import { FC } from 'react';
 import dayjsConfig from '@/utils/dayjs';
 import { useSearchParams } from 'react-router-dom';
-
+import { useQueryClient } from '@tanstack/react-query';
+import { postKeys } from '@/consts/factory/post';
+import { useMessage } from '@/hooks/use-message';
 
 const { confirm } = Modal;
 
@@ -30,14 +32,26 @@ interface PostItemProps {
 }
 
 export const PostItem: FC<PostItemProps> = ({ data }) => {
+    const { title, content, createdDate, imageList, tag, postId } = data;
+
     const dispatch = useDispatch();
+    const queryClient = useQueryClient();
+      const { success } = useMessage();
 
-    const [searchParams] = useSearchParams()
+    const [searchParams] = useSearchParams();
 
-    const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost('1');
+    const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+                
+            });
+            success('Post deleted successfully!');
+        },
+    });
 
     const handleUpdate = () => {
-        dispatch(setPost({ modal: { open: true, type: 'update' }, id: '1' }));
+        dispatch(setPost({ modal: { open: true, type: 'update' }, id: postId }));
     };
 
     const handleDelete = () => {
@@ -54,15 +68,15 @@ export const PostItem: FC<PostItemProps> = ({ data }) => {
         });
     };
 
-    const { title, content, createdDate  } = data;
-
     return (
         <Card>
             <Flex vertical gap={8}>
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
                         <UserInfo />
-                        <PostTag>Inquiry</PostTag>
+                        <PostTag backgroundColor={tag?.backgroundColorHex} textColor={tag?.textColorHex}>
+                            {tag?.name}
+                        </PostTag>
                     </Flex>
                     <Dropdown
                         menu={{
@@ -128,15 +142,14 @@ export const PostItem: FC<PostItemProps> = ({ data }) => {
                     {content}
                 </Typography.Paragraph>
 
-                <Image
-                    src="/placeholder.svg"
-                    alt="iPhone 16 Pro"
-                    width={400}
-                    height={400}
-                    style={{
-                        objectFit: 'contain',
-                    }}
-                />
+                <Flex gap={10} wrap>
+                    {imageList?.map(file => (
+                        <div className="ant-upload" key={file.imageId}>
+                            <Image src={file.url} alt={file.url} width={200} height={200} />
+                        </div>
+                    ))}
+                </Flex>
+
                 <Typography.Text type="secondary">Posted {dayjsConfig(createdDate).fromNow()}</Typography.Text>
 
                 <Flex justify="end" gap={20}>

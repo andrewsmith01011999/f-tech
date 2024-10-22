@@ -1,4 +1,5 @@
 import { ImageResponse } from '..';
+import { Tag } from '../tag/tag';
 import { Topic } from '../topic/topic';
 
 export enum PostStatus {
@@ -15,7 +16,8 @@ export type Post = {
     topic: Topic;
     createdDate: string;
     lastModifiedDate: string;
-    imageUrlList?: ImageResponse[];
+    imageList?: ImageResponse[];
+    tag: Tag
 };
 
 export type CreatePostPayload = {
@@ -29,5 +31,7 @@ export type CreatePostPayload = {
 export type UpdatePostPayload = {
     title: string;
     content: string;
+    topicId: string;
+    tagId: string;
     imageUrlList: { url: string }[];
-}
+};

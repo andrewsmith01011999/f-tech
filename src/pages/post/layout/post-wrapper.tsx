@@ -11,6 +11,7 @@ import { PostModalType, setPost } from '@/stores/post';
 import { RootState } from '@/stores';
 import TagXSvg from '/public/tag-x.svg';
 import { Link, useNavigate } from 'react-router-dom';
+import { UpdatePost } from '../components/update-post';
 
 interface PostWrapperProps {
     children: React.ReactNode;
@@ -132,6 +133,8 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
+                                                backgroundColor: tag.backgroundColorHex,
+                                                color: tag.textColorHex,
                                             }}
                                         >
                                             {tag.name}
@@ -185,7 +188,9 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                 onCancel={() => handleCancel('update')}
                 footer={null}
                 width={'80vw'}
-            ></Modal>
+            >
+                <UpdatePost onCancel={() => handleCancel('update')} />
+            </Modal>
         </Flex>
     );
 };

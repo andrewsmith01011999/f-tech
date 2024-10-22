@@ -4,13 +4,13 @@ import { PaginationParams, Response } from '@/types';
 import { Topic } from '@/types/topic/topic';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-export type AlertListingParams = PaginationParams;
+export type TopicListingParams = PaginationParams;
 
-type AlertListingProps = {
-    params: AlertListingParams;
+type TopicListingProps = {
+    params: TopicListingParams;
 };
 
-export const useTopicsListing = ({ params }: AlertListingProps) => {
+export const useTopicsListing = ({ params }: TopicListingProps) => {
     const fetchTopics = async (): Promise<Response<Topic[]>> => {
         const { data } = await axiosInstance.get('/topic/getall', {
             params,

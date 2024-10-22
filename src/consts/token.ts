@@ -14,6 +14,12 @@ export const themeConfig: ThemeConfig = {
             borderRadius: 6,
             colorBgContainer: '#2C353D',
         },
+        Select: {
+            algorithm: true,
+            colorBorder: 'transparent',
+            borderRadius: 6,
+            colorBgContainer: '#2C353D',
+        },
         Menu: {
             algorithm: true,
             itemSelectedBg: '#2C353D',

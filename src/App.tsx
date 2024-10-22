@@ -12,6 +12,7 @@ import QueryProvider from './components/provider/query-provider';
 
 const App: React.FC = () => {
     const { loading } = useSelector(state => state.global);
+
     return (
         <QueryProvider>
             <HistoryRouter history={history}>
