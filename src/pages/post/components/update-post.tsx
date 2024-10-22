@@ -1,5 +1,5 @@
 import { UserInfo } from '@/components/user/user-info';
-import { Button, Card, Flex, Form, Input, message, Select, Space, Upload, UploadFile, UploadProps } from 'antd';
+import { Button, Card, Flex, Form, Image, Input, message, Select, Space, Upload, UploadFile, UploadProps } from 'antd';
 import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
 import { OnAction } from '@/types';
@@ -144,6 +144,14 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                         <Input.TextArea size="large" rows={5} placeholder="Let's share what going on your mind..." />
                     </Form.Item>
                 </Form>
+
+                <Flex gap={10} wrap>
+                    {fileList.map(file => (
+                        <div className="ant-upload" key={file.uid}>
+                            <Image src={file.url} alt={file.url} width={100} height={100} />
+                        </div>
+                    ))}
+                </Flex>
 
                 <Flex align="center" justify="space-between">
                     <Space size="large">
