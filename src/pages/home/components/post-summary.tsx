@@ -31,7 +31,7 @@ export const PostSummary : FC<PostSummaryProps> = ({data}) => {
     const {image, name, categoryId} = data
 
     const toPost = () => {
-         navigate(`${PATHS.POSTS}?tag=${categoryId}`);
+         navigate(`${PATHS.POSTS}?category=${categoryId}`);
     }
 
     return (
