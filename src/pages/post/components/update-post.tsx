@@ -76,9 +76,9 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
 
     useEffect(() => {
         if (detail) {
-            setImgUrlList(detail?.imageList?.map(image => image.url) || []);
+            setImgUrlList(detail?.entity?.imageList?.map(image => image.url) || []);
             setFileList(
-                detail?.imageList?.map(image => ({
+                detail?.entity?.imageList?.map(image => ({
                     uid: image.imageId,
                     name: image.url,
                     url: image.url,
@@ -86,13 +86,15 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                 })) || [],
             );
             form.setFieldsValue({
-                title: detail.title,
-                content: detail.content,
-                topicId: detail.topic.topicId,
-                tagId: detail.tag.tagId,
+                title: detail?.entity?.title,
+                content: detail?.entity?.content,
+                topicId: detail?.entity?.topic?.topicId,
+                tagId: detail?.entity?.tag?.tagId,
             });
         }
     }, [detail]);
+
+    console.log(fileList)
 
     return (
         <Card>

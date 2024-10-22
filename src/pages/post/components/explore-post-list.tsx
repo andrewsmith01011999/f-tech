@@ -25,20 +25,6 @@ export const ExplorePostList = () => {
             {data.entity.map(post => (
                 <PostItem data={post} key={post.postId} />
             ))}
-            <PostItem
-                data={{
-                    postId: '1',
-                    title: 'Title',
-                    content: 'Content',
-                    createdDate: '2021-09-01',
-                    status: PostStatus.PUBLIC,
-                    topic: {
-                        name: 'Topic',
-                        topicId: '1',
-                    },
-                    lastModifiedDate: '2021-09-01',
-                }}
-            />
         </PostWrapper>
     );
 }

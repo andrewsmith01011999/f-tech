@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 
 export const useUpdatePost = (postId: string, options: UseMutationOptions<unknown, AxiosError<unknown>, UpdatePostPayload> = {}) => {
       const updatePost = async (payload: UpdatePostPayload) => {
-        const { data } = await axiosInstance.post(`/post/update/${postId}`, payload);
+        const { data } = await axiosInstance.put(`/post/update/${postId}`, payload);
     };
 
     return useMutation<unknown, AxiosError<unknown>, UpdatePostPayload>({

@@ -5,6 +5,8 @@ import { PostWrapper } from '../layout/post-wrapper';
 import { PostItem } from '@/components/post/post-item';
 import { PostStatus } from '@/types/post/post';
 import { Empty } from 'antd';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
 
 export const HomePostList = () => {
     const initialParams: PaginationParams = {
@@ -12,8 +14,13 @@ export const HomePostList = () => {
         perPage: DEFAULT_PAGE_SIZE,
     };
 
+    const tagId = useSelector((state: RootState) => state.post.tagId)
+
     const { data } = usePostsListing({
-        params: initialParams,
+        params: {
+            ...initialParams,
+            tagId
+        },
     });
 
     if (!data || data.entity.length === 0) {

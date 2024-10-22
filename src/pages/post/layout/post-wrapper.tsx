@@ -80,7 +80,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
         dispatch(setPost({ modal: { open: true, type } }));
     };
 
-    const handleSelectTag = (id: string) => {
+    const handleSelectTag = (id: string | undefined) => {
         dispatch(setPost({ tagId: id }));
     };
 
@@ -100,49 +100,50 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                 <Flex gap={10} style={{ width: '100%' }} align="center">
                     <Dropdown
                         menu={{
-                            // items: [
-                            //     {
-                            //         key: '1',
-                            //         label: (
-                            //             <Space align="center">
-                            //                 <Tag
-                            //                     style={{
-                            //                         minHeight: 32,
-                            //                         minWidth: 100,
-                            //                         fontSize: 14,
-                            //                         display: 'flex',
-                            //                         alignItems: 'center',
-                            //                         justifyContent: 'center',
-                            //                     }}
-                            //                 >
-                            //                     All
-                            //                 </Tag>
-                            //             </Space>
-                            //         ),
-                            //     },
-                            // ],
-                            items: tagsData?.entity.map(tag => ({
-                                key: tag.tagId,
-                                label: (
-                                    <Space align="center">
-                                        <Tag
-                                            style={{
-                                                minHeight: 32,
-                                                minWidth: 100,
-                                                fontSize: 14,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                backgroundColor: tag.backgroundColorHex,
-                                                color: tag.textColorHex,
-                                            }}
-                                        >
-                                            {tag.name}
-                                        </Tag>
-                                    </Space>
-                                ),
-                                onClick: () => handleSelectTag(tag.tagId),
-                            })),
+                            items: [
+                                {
+                                    key: '1',
+                                    label: (
+                                        <Space align="center">
+                                            <Tag
+                                                style={{
+                                                    minHeight: 32,
+                                                    minWidth: 100,
+                                                    fontSize: 14,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}
+                                            >
+                                                All
+                                            </Tag>
+                                        </Space>
+                                    ),
+                                    onClick: () => handleSelectTag(undefined),
+                                },
+                                ...(tagsData?.entity.map(tag => ({
+                                    key: tag.tagId,
+                                    label: (
+                                        <Space align="center">
+                                            <Tag
+                                                style={{
+                                                    minHeight: 32,
+                                                    minWidth: 100,
+                                                    fontSize: 14,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: tag.backgroundColorHex,
+                                                    color: tag.textColorHex,
+                                                }}
+                                            >
+                                                {tag.name}
+                                            </Tag>
+                                        </Space>
+                                    ),
+                                    onClick: () => handleSelectTag(tag.tagId),
+                                })) || []),
+                            ],
                         }}
                     >
                         <SecondaryButton icon={<CaretDownFilled />} loading={loadingTags}>
