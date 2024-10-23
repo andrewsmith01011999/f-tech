@@ -202,15 +202,9 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                         <Button type="text" icon={<img src={EmojiSvg} />} />
                     </Space>
 
-                    <Space>
-                        <Button loading={isPendingCreateDraftPost} htmlType="button" onClick={handleSaveDraft}>
-                            Draft
-                        </Button>
-
-                        <Button loading={isPendingCreatePost} form="createPost" type="primary" htmlType="submit">
-                            Post
-                        </Button>
-                    </Space>
+                    <Button loading={isPendingCreatePost} form="createPost" type="primary" htmlType="submit">
+                        Post
+                    </Button>
                 </Flex>
             </Flex>
         </Card>

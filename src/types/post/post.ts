@@ -5,7 +5,8 @@ import { Topic } from '../topic/topic';
 export enum PostStatus {
     PUBLIC = 'PUBLIC',
     PRIVATE = 'PRIVATE',
-    DELETED = 'DELETED',
+    HIDDEN = 'HIDDEN',
+    DRAFT = 'DRAFT',
 }
 
 export type Post = {

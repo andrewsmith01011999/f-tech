@@ -47,7 +47,7 @@ axiosInstance.interceptors.response.use(
         setLoadingState(false);
 
         const { response } = err;
-        const { code, message, data } = response?.data || {};
+        const { code, message, data } = response?.data as any || {};
 
         const errorResponse: Response<unknown> = {
             success: code === ApiConfigs.API_SUCCESS_CODE,

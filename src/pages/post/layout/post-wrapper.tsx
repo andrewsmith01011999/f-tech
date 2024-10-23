@@ -12,6 +12,7 @@ import { RootState } from '@/stores';
 import TagXSvg from '/public/tag-x.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { UpdatePost } from '../components/update-post';
+import DraftList from '../components/draft-list';
 
 interface PostWrapperProps {
     children: React.ReactNode;
@@ -29,6 +30,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
     const { type, open } = useSelector((state: RootState) => state.post.modal);
 
     const [history, setHistory] = useState<string>('');
+    const [openDraft, setOpenDraft] = useState<boolean>(false);
 
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
     const pathSnippets = location.pathname.split('/').filter(i => i);
@@ -174,7 +176,12 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
             </Flex>
 
             <Modal
-                title="Create Post"
+                title={
+                    <Flex justify="space-between">
+                        Create Post
+                        <Button onClick={() => setOpenDraft(true)}>Drafts</Button>
+                    </Flex>
+                }
                 open={type === 'create' && open}
                 onCancel={() => handleCancel('create')}
                 footer={null}
@@ -191,6 +198,23 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                 width={'80vw'}
             >
                 <UpdatePost onCancel={() => handleCancel('update')} />
+            </Modal>
+
+            <Modal
+                title={
+                    <Flex justify="space-between">
+                        Drafts List
+                        <Button htmlType="submit" form="draft">
+                            Done
+                        </Button>
+                    </Flex>
+                }
+                open={openDraft}
+                onCancel={() => setOpenDraft(false)}
+                width={'80vw'}
+                footer={null}
+            >
+                <DraftList />
             </Modal>
         </Flex>
     );

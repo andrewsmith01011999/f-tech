@@ -1,4 +1,4 @@
-import { Button, Card, Dropdown, Flex, Image, Modal, Typography } from 'antd';
+import { Button, Card, Checkbox, Dropdown, Flex, Form, FormListFieldData, Image, Modal, Typography } from 'antd';
 import { UserInfo } from '../user/user-info';
 import { PostTag } from './post-tag';
 import {
@@ -29,14 +29,17 @@ const { confirm } = Modal;
 
 interface PostItemProps {
     data: Post;
+    showActions?: boolean;
+    showCheckbox?: boolean;
+    field?: FormListFieldData;
 }
 
-export const PostItem: FC<PostItemProps> = ({ data }) => {
+export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showCheckbox = false, field }) => {
     const { title, content, createdDate, imageList, tag, postId } = data;
 
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
-      const { success } = useMessage();
+    const { success } = useMessage();
 
     const [searchParams] = useSearchParams();
 
@@ -44,7 +47,6 @@ export const PostItem: FC<PostItemProps> = ({ data }) => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: postKeys.listing(),
-                
             });
             success('Post deleted successfully!');
         },
@@ -55,7 +57,6 @@ export const PostItem: FC<PostItemProps> = ({ data }) => {
     };
 
     const handleDelete = () => {
-        dispatch(setPost({ id: '1' }));
         confirm({
             title: 'Are you sure you want to delete this post?',
             content: 'This action cannot be undone',
@@ -78,48 +79,55 @@ export const PostItem: FC<PostItemProps> = ({ data }) => {
                             {tag?.name}
                         </PostTag>
                     </Flex>
-                    <Dropdown
-                        menu={{
-                            items: [
-                                {
-                                    key: '1',
-                                    icon: <GlobalOutlined />,
-                                    label: <span>Public</span>,
-                                    children: [
-                                        {
-                                            key: '1.1',
-                                            icon: <GlobalOutlined />,
-                                            label: <span>Public</span>,
-                                        },
-                                        {
-                                            key: '1.2',
-                                            icon: <KeyOutlined />,
-                                            label: <span>Private</span>,
-                                        },
-                                        {
-                                            key: '1.3',
-                                            icon: <EyeInvisibleOutlined />,
-                                            label: <span>Hide</span>,
-                                        },
-                                    ],
-                                },
-                                {
-                                    key: '2',
-                                    icon: <DeleteOutlined />,
-                                    label: <span>Delete post</span>,
-                                    onClick: handleDelete,
-                                },
-                                {
-                                    key: '3',
-                                    icon: <EditOutlined />,
-                                    label: <span>Edit post</span>,
-                                    onClick: handleUpdate,
-                                },
-                            ],
-                        }}
-                    >
-                        <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
-                    </Dropdown>
+                    {showActions && (
+                        <Dropdown
+                            menu={{
+                                items: [
+                                    {
+                                        key: '1',
+                                        icon: <GlobalOutlined />,
+                                        label: <span>Public</span>,
+                                        children: [
+                                            {
+                                                key: '1.1',
+                                                icon: <GlobalOutlined />,
+                                                label: <span>Public</span>,
+                                            },
+                                            {
+                                                key: '1.2',
+                                                icon: <KeyOutlined />,
+                                                label: <span>Private</span>,
+                                            },
+                                            {
+                                                key: '1.3',
+                                                icon: <EyeInvisibleOutlined />,
+                                                label: <span>Hide</span>,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        key: '2',
+                                        icon: <DeleteOutlined />,
+                                        label: <span>Delete post</span>,
+                                        onClick: handleDelete,
+                                    },
+                                    {
+                                        key: '3',
+                                        icon: <EditOutlined />,
+                                        label: <span>Edit post</span>,
+                                        onClick: handleUpdate,
+                                    },
+                                ],
+                            }}
+                        >
+                            <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                        </Dropdown>
+                    )}
+                    {showCheckbox && field && (
+                        <Form.Item name={[field.name, 'checked']} valuePropName='checked'>
+                            <Checkbox />
+                        </Form.Item>
+                    )}
                 </Flex>
 
                 <Typography.Title
