@@ -1,9 +1,12 @@
-import { ApiConfigs } from '@/consts/apis';
+import { ApiConfigs, ApiPaths } from '@/consts/apis';
 import { LocalStorageKeys } from '@/consts/local-storage';
 import store from '@/stores';
 import { setGlobalState } from '@/stores/global';
 import { Response } from '@/types';
+import { RefreshTokenResponse } from '@/types/auth';
+import { historyNavigation } from '@/utils/common';
 import { API_PATH } from '@/utils/env';
+import { PATHS } from '@/utils/paths';
 import { message as $message } from 'antd';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 import axios from 'axios';
@@ -37,6 +40,8 @@ axiosInstance.interceptors.request.use(
     },
 );
 
+let isRefreshToken = false;
+
 axiosInstance.interceptors.response.use(
     (axiosResponse: AxiosResponse) => {
         setLoadingState(false);
@@ -53,11 +58,43 @@ axiosInstance.interceptors.response.use(
         return response;
     },
 
-    (err: AxiosError) => {
+
+    async (err: AxiosError) => {
         setLoadingState(false);
 
+        const originalConfig = err.config;
         const { response } = err;
-        const { code, message, data } = response?.data as any || {};
+        let { code, message, data } = response?.data || {};
+
+        if (originalConfig.url !== ApiPaths.REFRESH_TOKEN && response && response.status === 401 && !isRefreshToken) {
+            isRefreshToken = true
+
+            // clear previous access token;
+            localStorage.removeItem(LocalStorageKeys.ACCESS_TOKEN_KEY);
+
+            // Generating new access token
+            const refreshToken = localStorage.getItem(LocalStorageKeys.REFRESH_TOKEN_KEY);
+            const username = localStorage.getItem(LocalStorageKeys.USERNAME_KEY);
+
+            if (refreshToken && username) {
+                const res: Response<RefreshTokenResponse> = await axiosInstance.post(ApiPaths.REFRESH_TOKEN, undefined, {
+                    params: { refreshToken, username }
+                });
+
+                const { success, entity } = res;
+
+                isRefreshToken = false;
+                if (success && entity && entity.accessToken) {
+                    const { accessToken } = entity;
+                    localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN_KEY, accessToken);
+                    return axiosInstance(originalConfig);
+                } else {
+                    message = "Session has been expired"
+                    localStorage.clear();
+                    historyNavigation.navigate(PATHS.SIGNIN);
+                }
+            }
+        }
 
         const errorResponse: Response<unknown> = {
             success: code === ApiConfigs.API_SUCCESS_CODE,
@@ -66,7 +103,6 @@ axiosInstance.interceptors.response.use(
         };
 
         errorResponse.message && $message.error(errorResponse.message);
-
         return errorResponse;
     },
 );

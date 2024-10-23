@@ -57,3 +57,7 @@ export interface LogoutParams {
 export interface LogoutResult {
 
 }
+
+export interface RefreshTokenResponse {
+  accessToken: string
+}

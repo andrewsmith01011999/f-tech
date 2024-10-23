@@ -17,3 +17,4 @@
 - [ ] Event detail page
 - [ ] Help + Content policies + About
 - [ ] Profile [Posts, Medias, Replies]
+ 

@@ -12,7 +12,6 @@ export const useSignIn = (options: UseMutationOptions<boolean, DefaultError, Sig
         const { username } = payload;
 
         const response = await apiSignIn(payload);
-        console.log(response);
 
         if (response.success && response.entity) {
             const entity = response.entity;

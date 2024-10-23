@@ -1,6 +1,7 @@
 const ApiPaths = {
     SIGNIN: "authenticate/login",
     SIGNUP: "authenticate/sign-up",
+    REFRESH_TOKEN: "authenticate/refresh",
     
     GET_ACCOUNT_BY_USERNAME: "/account/find/by-username",
 
