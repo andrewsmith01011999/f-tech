@@ -64,7 +64,6 @@ axiosInstance.interceptors.response.use(
 
         const originalConfig = err.config;
         const { response } = err;
-        let { code, message, data } = response?.data || {};
 
         if (originalConfig.url !== ApiPaths.REFRESH_TOKEN && response && response.status === 401 && !isRefreshToken) {
             isRefreshToken = true
@@ -86,16 +85,20 @@ axiosInstance.interceptors.response.use(
                 isRefreshToken = false;
                 if (success && entity && entity.accessToken) {
                     const { accessToken } = entity;
+                    
+                    // set new access token
                     localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN_KEY, accessToken);
+
                     return axiosInstance(originalConfig);
                 } else {
-                    message = "Session has been expired"
+                    $message.error("Session has been expired")
                     localStorage.clear();
                     historyNavigation.navigate(PATHS.SIGNIN);
                 }
             }
         }
 
+        const { code, message, data } = response?.data || {};
         const errorResponse: Response<unknown> = {
             success: code === ApiConfigs.API_SUCCESS_CODE,
             message: message || 'An error ocurred',
