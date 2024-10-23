@@ -1,5 +1,5 @@
 import { LocalStorageKeys } from '@/consts/local-storage';
-import { AccountStatus } from '@/types/account';
+import { AccountStatus, Wallet } from '@/types/account';
 import { Device } from '@/types/layout';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
@@ -33,6 +33,12 @@ export interface AccountState {
   noticeCount: number;
 
   selectedKeys: string[];
+
+  token?: string;
+
+  refreshToken?: string;
+
+  wallet?: Wallet
 }
 
 const initialStates: AccountState = {
@@ -47,11 +53,22 @@ const accountSlice = createSlice({
   reducers: {
     setAccountState(state, action: PayloadAction<Partial<AccountState>>) {
       Object.assign(state, action.payload);
+      localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN_KEY, state.token ?? "");
+      localStorage.setItem(LocalStorageKeys.REFRESH_TOKEN_KEY, state.refreshToken ?? "");
+      localStorage.setItem(LocalStorageKeys.USERNAME_KEY, state.username ?? "");
     },
+
+    loggout(state, action: PayloadAction<undefined>) {
+      state = initialStates;
+      localStorage.clear();
+    }
   },
 });
 
-export const { setAccountState } = accountSlice.actions;
+export const { 
+  setAccountState, 
+  loggout 
+} = accountSlice.actions;
 
 export default accountSlice.reducer;
 

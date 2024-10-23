@@ -20,3 +20,8 @@ export interface Account {
   status: AccountStatus;  // Enum for status
   role: Role;
 }
+
+export interface Wallet {
+  walletId: string;
+  balance: number; 
+}

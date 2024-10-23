@@ -1,5 +1,6 @@
 import { themeConfig } from '@/consts/token';
 import { useProfile } from '@/hooks/query/auth/use-profile';
+import { useWallet } from '@/hooks/query/auth/use-wallet';
 import { CardMenu } from '@/pages/home/components/card-menu';
 import { EventList } from '@/pages/home/components/events-list';
 import { PageMenu } from '@/pages/home/components/page-menu';
@@ -20,7 +21,8 @@ interface MainLayoutProps {
 
 const MainLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
     // load profile
-    const { data, isLoading } = useProfile();
+    const { data: profileData, isLoading: isProfileLoading } = useProfile();
+    const {data: walletData, isLoading: isWalletLoading} = useWallet();
 
     return (
         <ConfigProvider theme={themeConfig}>

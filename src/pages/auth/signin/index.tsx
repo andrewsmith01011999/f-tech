@@ -4,16 +4,13 @@ import AuthPageLayout from "@/components/authen/layout";
 import BaseButton from "@/components/core/button";
 import { authKeys } from '@/consts/factory/auth';
 import { useSignIn } from "@/hooks/mutate/auth/use-signin";
-import { useMessage } from '@/hooks/use-message';
-import { RootState } from "@/stores";
 import { SignInRequest } from '@/types/auth';
 import { PATHS } from "@/utils/paths";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { css } from "@emotion/react";
 import { useQueryClient } from '@tanstack/react-query';
-import { Divider, Form, FormProps, Input } from "antd";
+import { App, Divider, Form, FormProps, Input } from "antd";
 import { FC } from "react";
-import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 type FieldType = {
@@ -25,7 +22,7 @@ const SignInPage: FC = () => {
     const navigate = useNavigate();
     const { mutate: signIn, isPending } = useSignIn();
     const queryClient = useQueryClient();
-    const message = useMessage();
+    const {message} = App.useApp();
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const payload: SignInRequest = {

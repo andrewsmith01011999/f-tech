@@ -7,5 +7,6 @@ export const PATHS = {
   OTP_VERIFICATION: '/otp',
   POSTS: '/posts',
   PROFILE: '/profile',  
-  WALLET: '/wallet'
+  WALLET: '/wallet',
+  NOTIFICATION: '/notification'
 }

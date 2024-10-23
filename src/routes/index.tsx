@@ -8,17 +8,19 @@ import WrapperRouteComponent from './config';
 import { PATHS } from '@/utils/paths';
 import MainLayout from '@/layout/main-layout';
 import { RootState } from '@/stores';
+import { title } from 'process';
 
-const SignInPage =lazy(() => import ('@/pages/auth/signin'));
-const SignUpPage =lazy(() => import ('@/pages/auth/signup'));
-const ForgotPasswordPage =lazy(() => import ('@/pages/auth/forgot-password'));
-const CreateNewPasswordPage =lazy(() => import ('@/pages/auth/create-new-password'));
-const OTPVerificationPage =lazy(() => import ('@/pages/auth/otp'));
+const SignInPage = lazy(() => import('@/pages/auth/signin'));
+const SignUpPage = lazy(() => import('@/pages/auth/signup'));
+const ForgotPasswordPage = lazy(() => import('@/pages/auth/forgot-password'));
+const CreateNewPasswordPage = lazy(() => import('@/pages/auth/create-new-password'));
+const OTPVerificationPage = lazy(() => import('@/pages/auth/otp'));
 const HomePage = lazy(() => import('@/pages/home'));
 const PostPage = lazy(() => import('@/pages/post'));
 const ProfilePage = lazy(() => import('@/pages/profile'));
 const NotFoundPage = lazy(() => import('@/pages/404'));
 const WalletPage = lazy(() => import('@/pages/wallet'))
+const NotificationPage = lazy(() => import('@/pages/notification'))
 
 const routes: RouteObject[] = [
     {
@@ -40,31 +42,35 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.WALLET,
                 element: <WrapperRouteComponent element={<WalletPage />} title="Wallet" />,
+            },
+            {
+                path: PATHS.NOTIFICATION,
+                element: <WrapperRouteComponent element={<NotificationPage />} title='Notification' />
             }
-        ],
+],
     },
-    {
-        path: PATHS.SIGNIN,
+{
+    path: PATHS.SIGNIN,
         element: <WrapperRouteComponent element={<SignInPage />} title="Signin Page" />,
     },
-    {
-        path: PATHS.SIGNUP,
+{
+    path: PATHS.SIGNUP,
         element: <WrapperRouteComponent element={<SignUpPage />} title="Signup Page" />,
     },
-    {
-        path: PATHS.FORGOT_PASSWORD,
+{
+    path: PATHS.FORGOT_PASSWORD,
         element: <WrapperRouteComponent element={<ForgotPasswordPage />} title="Forgot password" />,
     },
-    {
-        path: PATHS.CREATE_NEW_PASSWORD,
+{
+    path: PATHS.CREATE_NEW_PASSWORD,
         element: <WrapperRouteComponent element={<CreateNewPasswordPage />} title="Create new password" />,
     },
-    {
-        path: PATHS.OTP_VERIFICATION,
+{
+    path: PATHS.OTP_VERIFICATION,
         element: <WrapperRouteComponent element={<OTPVerificationPage />} title="OTP Verification" />,
     },
-    {
-        path: '*',
+{
+    path: '*',
         element: <WrapperRouteComponent element={<NotFoundPage />} title="Not Found Page" />,
     },
 ];

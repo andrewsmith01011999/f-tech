@@ -6,11 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Logo from '/public/ftech-logo.svg';
-import { CaretDownFilled, DownCircleFilled, DownOutlined, DownSquareFilled, DownSquareTwoTone, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, CaretDownFilled, DownCircleFilled, DownOutlined, DownSquareFilled, DownSquareTwoTone, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
 import BaseInput from '@/components/core/input';
 import { PATHS } from '@/utils/paths';
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
 import { RootState } from '@/stores';
+import { loggout } from '@/stores/account';
+import NotificationIcon from './components/notification';
 
 const { Header } = Layout;
 
@@ -26,8 +28,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     const dispatch = useDispatch();
 
     const onLogout = async () => {
-        localStorage.clear();
-
+        dispatch(loggout())
         navigate(PATHS.SIGNIN);
     };
 
@@ -62,30 +63,33 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
 
                 <div className="actions">
                     {logged ? (
-                        <Dropdown
-                            menu={{
-                                items: [
-                                    {
-                                        key: '0',
-                                        icon: <UserOutlined />,
-                                        label: <span onClick={toProfile}>Profile</span>,
-                                    },
-                                    {
-                                        key: '1',
-                                        icon: <LogoutOutlined />,
-                                        label: <span onClick={onLogout}>Logout</span>,
-                                    },
-                                ],
-                            }}
-                        >
-                            <span className="user-action">
-                                <Flex align='center' gap={5}>
-                                    <Avatar size={42} src={BackgroundPlaceholder} className="user-avator" alt="avator" />
-                                    <Typography.Text style={{ fontWeight: 500 }}>{username}</Typography.Text>
-                                    <CaretDownFilled />
-                                </Flex>
-                            </span>
-                        </Dropdown>
+                        <Flex gap={20} align='center'>
+                            <NotificationIcon />
+                            <Dropdown
+                                menu={{
+                                    items: [
+                                        {
+                                            key: '0',
+                                            icon: <UserOutlined />,
+                                            label: <span onClick={toProfile}>Profile</span>,
+                                        },
+                                        {
+                                            key: '1',
+                                            icon: <LogoutOutlined />,
+                                            label: <span onClick={onLogout}>Logout</span>,
+                                        },
+                                    ],
+                                }}
+                            >
+                                <span className="user-action">
+                                    <Flex align='center' gap={5}>
+                                        <Avatar size={42} src={BackgroundPlaceholder} className="user-avator" alt="avator" />
+                                        <Typography.Text style={{ fontWeight: 500 }}>{username}</Typography.Text>
+                                        <CaretDownFilled />
+                                    </Flex>
+                                </span>
+                            </Dropdown>
+                        </Flex>
                     ) : (
                         <span style={{ cursor: 'pointer' }} onClick={toLogin}>
                             Login

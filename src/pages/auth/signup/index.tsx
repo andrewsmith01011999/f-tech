@@ -3,13 +3,12 @@ import AuthFormWrapper from "@/components/authen/form-wrapper";
 import AuthPageLayout from "@/components/authen/layout";
 import BaseButton from "@/components/core/button";
 import { useSignUp } from '@/hooks/mutate/auth/use-signup';
-import { useMessage } from '@/hooks/use-message';
 import { RootState } from '@/stores';
 import { SignUpRequest } from '@/types/auth';
 import { PATHS } from "@/utils/paths";
 import { LockOutlined, MailOutlined, UserOutlined, } from "@ant-design/icons";
 import { css } from "@emotion/react";
-import { Divider, Form, FormProps, Input } from "antd";
+import { App, Divider, Form, FormProps, Input } from "antd";
 import { FC } from "react";
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
@@ -26,7 +25,7 @@ const SignUpPage: FC = () => {
     const navigate = useNavigate();
     const { loading } = useSelector((state: RootState) => state.global);
     const { mutate: signup } = useSignUp();
-    const message = useMessage();
+    const {message} = App.useApp();
 
     // Function to validate password confirmation 
     const validateConfirmPassword = (_: any, value: string) => {

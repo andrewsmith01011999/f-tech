@@ -8,13 +8,12 @@ import { history, HistoryRouter } from '@/routes/history';
 import QueryProvider from './components/provider/query-provider';
 import MainLayout from './layout/main-layout';
 import RenderRouter from './routes';
-import { useSelector } from 'react-redux';
+import {App as AntApp} from 'antd'
 
 const App: React.FC = () => {
-    const { loading } = useSelector(state => state.global);
-
     return (
-        <QueryProvider>
+        <AntApp>
+            <QueryProvider>
             <HistoryRouter history={history}>
                 <Suspense
                     fallback={
@@ -29,6 +28,7 @@ const App: React.FC = () => {
                 </Suspense>
             </HistoryRouter>
         </QueryProvider>
+        </AntApp>
     );
 };
 

@@ -1,8 +1,10 @@
 const ApiPaths = {
     SIGNIN: "authenticate/login",
     SIGNUP: "authenticate/sign-up",
+    
+    GET_ACCOUNT_BY_USERNAME: "/account/find/by-username",
 
-    GET_ACCOUNT_BY_ID: "/account/find/by-username?"
+    GET_WALLET_BY_ACCOUNT_ID: "wallet/get-by-account-id",
 }
 
 const ApiConfigs = {
