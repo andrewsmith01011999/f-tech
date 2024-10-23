@@ -22,12 +22,13 @@ interface HeaderProps {
 }
 
 const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
-    const { logged, device, username } = useSelector((state: RootState) => state.account);
+    const { logged, device, accountInfo } = useSelector((state: RootState) => state.account);
     const navigate = useNavigate();
     const token = antTheme.useToken();
     const dispatch = useDispatch();
 
     const onLogout = async () => {
+        localStorage.clear();
         dispatch(loggout())
         navigate(PATHS.SIGNIN);
     };
@@ -62,7 +63,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                 </div>
 
                 <div className="actions">
-                    {logged ? (
+                    {logged && accountInfo ? (
                         <Flex gap={20} align='center'>
                             <NotificationIcon />
                             <Dropdown
@@ -84,7 +85,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                                 <span className="user-action">
                                     <Flex align='center' gap={5}>
                                         <Avatar size={42} src={BackgroundPlaceholder} className="user-avator" alt="avator" />
-                                        <Typography.Text style={{ fontWeight: 500 }}>{username}</Typography.Text>
+                                        <Typography.Text style={{ fontWeight: 500 }}>{accountInfo.username}</Typography.Text>
                                         <CaretDownFilled />
                                     </Flex>
                                 </span>

@@ -10,9 +10,10 @@ import { useDispatch } from "react-redux";
 
 export const useProfile = () => {
     const dispatch = useDispatch();
-    const {username} = useSelector((state: RootState) => state.account);
+    const { logged } = useSelector((state: RootState) => state.account);
 
     const getProfile = async (): Promise<Account | undefined> => {
+        const username = localStorage.getItem(LocalStorageKeys.USERNAME_KEY)
         if (!username) {
             return undefined;
         }
@@ -23,29 +24,22 @@ export const useProfile = () => {
 
         if (response.success && response.entity) {
             const { entity } = response;
-            
+
             dispatch(
                 setAccountState({
-                    logged: true,
-                    accountId: entity.accountId,
-                    avatar: entity.avatar,
-                    coverImage: entity.coverImage,
-                    username: entity.username,
-                    createdDate: entity.createdDate,
-                    status: entity.status,
-                    role: entity.role?.name
+                    accountInfo: entity
                 })
             )
             return entity;
         }
 
-        return ;
+        return;
     }
 
     return useQuery<Account | undefined>({
         queryKey: authKeys.profile(),
         queryFn: getProfile,
         placeholderData: keepPreviousData,
-        enabled: !!username
+        enabled: !!logged
     });
 }

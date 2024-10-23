@@ -8,21 +8,24 @@ import { useDispatch, useSelector } from "react-redux";
 
 export const useWallet = () => {
     const dispatch = useDispatch();
-    const { accountId } = useSelector((state: RootState) => state.account)
+    const { accountInfo } = useSelector((state: RootState) => state.account)
 
     const getwallet = async (): Promise<Wallet | undefined> => {
-        if (!accountId) {
+        if (!accountInfo || !accountInfo.accountId) {
             return undefined;
         }
 
-        const response = await apiGetWalletByAccountId(accountId)
+        const response = await apiGetWalletByAccountId(accountInfo.accountId)
 
         if (response.success && response.entity) {
             const { entity } = response;
 
             dispatch(
                 setAccountState({
-                    wallet: entity
+                    accountInfo: {
+                        ...accountInfo,
+                        wallet: entity
+                    }
                 })
             )
 
@@ -36,6 +39,6 @@ export const useWallet = () => {
         queryKey: authKeys.profile(),
         queryFn: getwallet,
         placeholderData: keepPreviousData,
-        enabled: !!accountId
+        enabled: !!accountInfo
     });
 }

@@ -1,32 +1,16 @@
 import { LocalStorageKeys } from '@/consts/local-storage';
-import { AccountStatus, Wallet } from '@/types/account';
+import { Account, AccountStatus, Wallet } from '@/types/account';
 import { Device } from '@/types/layout';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface AccountState {
-  accountId?: string;
-
-  username?: string; 
-
-  email?: string;
-
-  avatar?: string;
-
-  coverImage?: string;
-
-  createdDate?: string;
-
-  status?: AccountStatus;
-
-  role?: string;
-
   /** login status */
   logged: boolean;
 
   /** user's device */
   device?: Device;
 
-  /** menu collapsed status */ 
+  /** menu collapsed status */
   collapsed?: boolean;
 
   /** notification count */
@@ -34,11 +18,7 @@ export interface AccountState {
 
   selectedKeys: string[];
 
-  token?: string;
-
-  refreshToken?: string;
-
-  wallet?: Wallet
+  accountInfo?: Account
 }
 
 const initialStates: AccountState = {
@@ -52,22 +32,18 @@ const accountSlice = createSlice({
   initialState: initialStates,
   reducers: {
     setAccountState(state, action: PayloadAction<Partial<AccountState>>) {
-      Object.assign(state, action.payload);
-      localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN_KEY, state.token ?? "");
-      localStorage.setItem(LocalStorageKeys.REFRESH_TOKEN_KEY, state.refreshToken ?? "");
-      localStorage.setItem(LocalStorageKeys.USERNAME_KEY, state.username ?? "");
+      Object.assign(state, action.payload)
     },
 
     loggout(state, action: PayloadAction<undefined>) {
-      state = initialStates;
-      localStorage.clear();
+      state = { ...initialStates }
     }
   },
 });
 
-export const { 
-  setAccountState, 
-  loggout 
+export const {
+  setAccountState,
+  loggout
 } = accountSlice.actions;
 
 export default accountSlice.reducer;

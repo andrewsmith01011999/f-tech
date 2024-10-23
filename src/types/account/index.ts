@@ -13,12 +13,13 @@ export interface Account {
   username: string;
   email: string;
   password: string;
-  handle: string | null;
-  avatar: string;
-  coverImage: string;
+  handle?: string;
+  avatar?: string;
+  coverImage?: string;
   createdDate: string;  // Date in ISO 8601 format
   status: AccountStatus;  // Enum for status
   role: Role;
+  wallet?: Wallet
 }
 
 export interface Wallet {

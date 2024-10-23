@@ -47,31 +47,31 @@ const routes: RouteObject[] = [
                 path: PATHS.NOTIFICATION,
                 element: <WrapperRouteComponent element={<NotificationPage />} title='Notification' />
             }
-],
+        ],
     },
-{
-    path: PATHS.SIGNIN,
+    {
+        path: PATHS.SIGNIN,
         element: <WrapperRouteComponent element={<SignInPage />} title="Signin Page" />,
     },
-{
-    path: PATHS.SIGNUP,
+    {
+        path: PATHS.SIGNUP,
         element: <WrapperRouteComponent element={<SignUpPage />} title="Signup Page" />,
     },
-{
-    path: PATHS.FORGOT_PASSWORD,
+    {
+        path: PATHS.FORGOT_PASSWORD,
         element: <WrapperRouteComponent element={<ForgotPasswordPage />} title="Forgot password" />,
     },
-{
-    path: PATHS.CREATE_NEW_PASSWORD,
+    {
+        path: PATHS.CREATE_NEW_PASSWORD,
         element: <WrapperRouteComponent element={<CreateNewPasswordPage />} title="Create new password" />,
     },
-{
-    path: PATHS.OTP_VERIFICATION,
+    {
+        path: PATHS.OTP_VERIFICATION,
         element: <WrapperRouteComponent element={<OTPVerificationPage />} title="OTP Verification" />,
     },
-{
-    path: '*',
-        element: <WrapperRouteComponent element={<NotFoundPage />} title="Not Found Page" />,
+    {
+        path: '*',
+        element: <NotFoundPage />,
     },
 ];
 
