@@ -1,5 +1,19 @@
 import { UserInfo } from '@/components/user/user-info';
-import { Button, Card, Flex, Form, Input, message, Select, Space, Upload, UploadFile, UploadProps, Image } from 'antd';
+import {
+    Button,
+    Card,
+    Flex,
+    Form,
+    Input,
+    message,
+    Select,
+    Space,
+    Upload,
+    UploadFile,
+    UploadProps,
+    Image,
+    Modal,
+} from 'antd';
 import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
 import { OnAction } from '@/types';
@@ -15,9 +29,13 @@ import { useUploadFile } from '@/hooks/use-upload-file';
 import { TopicListingParams, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
+import { useDispatch } from 'react-redux';
+import { setPost } from '@/stores/post';
 
 interface CreatePostProps {
-    onCancel?: OnAction;
+    onCancel: OnAction;
 }
 
 const initialParams: TopicListingParams = {
@@ -28,6 +46,8 @@ const initialParams: TopicListingParams = {
 export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const [form] = Form.useForm();
 
+    const { type, open } = useSelector((state: RootState) => state.post.modal);
+    const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
     const queryClient = useQueryClient();
     const { success } = useMessage();
@@ -42,14 +62,6 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();
 
     const onFinish = (values: CreatePostPayload) => {
-        console.log({
-            ...values,
-            ...(fileList.length > 0 && {
-                imageUrlList: fileList.map(file => ({
-                    url: file.url as string,
-                })),
-            }),
-        });
         createPost(
             {
                 ...values,
@@ -125,88 +137,120 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
         setFileList(appendFieldFileList);
     }, [imgUrlList]);
 
+    const handleCloseModal = () => {
+        handleSaveDraft();
+        onCancel && onCancel();
+    };
+
+    const handleOpenDraft = () => {
+        dispatch(setPost({ modal: { open: true, type: 'draft' } }));
+    };
+
     return (
-        <Card>
-            <Flex vertical gap={10}>
-                <UserInfo />
-
-                <Form<CreatePostPayload> layout="vertical" form={form} name="createPost" onFinish={onFinish}>
-                    <Form.Item<CreatePostPayload>
-                        name="title"
-                        label="Title"
-                        rules={[{ required: true, message: 'Please enter post title!' }]}
-                    >
-                        <Input size="large" placeholder="Post title goes here..." />
-                    </Form.Item>
-
-                    <Form.Item<CreatePostPayload>
-                        name="topicId"
-                        label="Topic"
-                        rules={[{ required: true, message: 'Please select a topic!' }]}
-                    >
-                        <Select
-                            size="large"
-                            loading={isLoadingTopics}
-                            placeholder="Select a topic"
-                            options={topics?.map(topic => ({
-                                label: topic.name,
-                                value: topic.topicId,
-                            }))}
-                        />
-                    </Form.Item>
-
-                    <Form.Item<CreatePostPayload>
-                        name="tagId"
-                        label="Tags"
-                        rules={[{ required: true, message: 'Please select a tag!' }]}
-                    >
-                        <Select
-                            size="large"
-                            loading={isLoadingTags}
-                            placeholder="Select tags"
-                            options={tags?.map(tag => ({
-                                label: tag.name,
-                                value: tag.tagId,
-                            }))}
-                        />
-                    </Form.Item>
-
-                    <Form.Item<CreatePostPayload>
-                        name="content"
-                        label="Description"
-                        rules={[{ required: true, message: 'Please add some description!' }]}
-                    >
-                        <Input.TextArea size="large" rows={5} placeholder="Let's share what going on your mind..." />
-                    </Form.Item>
-                </Form>
-
-                <Flex gap={10} wrap>
-                    {fileList.map(file => (
-                        <div className="ant-upload" key={file.uid}>
-                            <Image src={file.url} alt={file.url} width={100} height={100} />
-                        </div>
-                    ))}
+        <Modal
+            title={
+                <Flex justify="space-between">
+                    Create Post
+                    <Button onClick={handleOpenDraft}>Drafts</Button>
                 </Flex>
+            }
+            open={type === 'create' && open}
+            onCancel={handleCloseModal}
+            footer={null}
+            width={'80vw'}
+        >
+            <Card>
+                <Flex vertical gap={10}>
+                    <UserInfo />
 
-                <Flex align="center" justify="space-between">
-                    <Space size="large">
-                        <Upload
-                            customRequest={uploadFile}
-                            onChange={onChangeFile}
-                            onRemove={onRemoveFile}
-                            showUploadList={false}
-                            fileList={fileList}
+                    <Form<CreatePostPayload> layout="vertical" form={form} name="createPost" onFinish={onFinish}>
+                        <Form.Item<CreatePostPayload>
+                            name="title"
+                            label="Title"
+                            rules={[{ required: true, message: 'Please enter post title!' }]}
                         >
-                            <Button type="text" icon={<img src={GallerySvg} />} />
-                        </Upload>
-                        <Button type="text" icon={<img src={EmojiSvg} />} />
-                    </Space>
+                            <Input size="large" placeholder="Post title goes here..." />
+                        </Form.Item>
 
-                    <Button loading={isPendingCreatePost} form="createPost" type="primary" htmlType="submit">
-                        Post
-                    </Button>
+                        <Form.Item<CreatePostPayload>
+                            name="topicId"
+                            label="Topic"
+                            rules={[{ required: true, message: 'Please select a topic!' }]}
+                        >
+                            <Select
+                                size="large"
+                                loading={isLoadingTopics}
+                                placeholder="Select a topic"
+                                options={topics?.map(topic => ({
+                                    label: topic.name,
+                                    value: topic.topicId,
+                                }))}
+                            />
+                        </Form.Item>
+
+                        <Form.Item<CreatePostPayload>
+                            name="tagId"
+                            label="Tags"
+                            rules={[{ required: true, message: 'Please select a tag!' }]}
+                        >
+                            <Select
+                                size="large"
+                                loading={isLoadingTags}
+                                placeholder="Select tags"
+                                options={tags?.map(tag => ({
+                                    label: tag.name,
+                                    value: tag.tagId,
+                                }))}
+                            />
+                        </Form.Item>
+
+                        <Form.Item<CreatePostPayload>
+                            name="content"
+                            label="Description"
+                            rules={[{ required: true, message: 'Please add some description!' }]}
+                        >
+                            <Input.TextArea
+                                size="large"
+                                rows={5}
+                                placeholder="Let's share what going on your mind..."
+                            />
+                        </Form.Item>
+                    </Form>
+
+                    <Flex gap={10} wrap>
+                        {fileList.map(file => (
+                            <div className="ant-upload" key={file.uid}>
+                                <Image src={file.url} alt={file.url} width={100} height={100} />
+                            </div>
+                        ))}
+                    </Flex>
+
+                    <Flex align="center" justify="space-between">
+                        <Space size="large">
+                            <Upload
+                                customRequest={uploadFile}
+                                onChange={onChangeFile}
+                                onRemove={onRemoveFile}
+                                showUploadList={false}
+                                fileList={fileList}
+                            >
+                                <Button type="text" icon={<img src={GallerySvg} />} />
+                            </Upload>
+                            <Button type="text" icon={<img src={EmojiSvg} />} />
+                        </Space>
+
+                        <Button
+                            disabled={isPendingCreateDraftPost}
+                            loading={isPendingCreatePost}
+                            form="createPost"
+                            type="primary"
+                            htmlType="submit"
+                        >
+                            Post
+                        </Button>
+                    </Flex>
                 </Flex>
-            </Flex>
-        </Card>
+            </Card>
+        </Modal>
     );
 };

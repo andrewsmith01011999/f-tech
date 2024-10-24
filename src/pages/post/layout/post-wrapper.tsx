@@ -86,6 +86,10 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
         dispatch(setPost({ tagId: id }));
     };
 
+    const handleOpenDraft = () => {
+        setOpenDraft(true);
+    };
+
     return (
         <Flex vertical gap={10}>
             <Card>
@@ -175,30 +179,11 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                 {children}
             </Flex>
 
-            <Modal
-                title={
-                    <Flex justify="space-between">
-                        Create Post
-                        <Button onClick={() => setOpenDraft(true)}>Drafts</Button>
-                    </Flex>
-                }
-                open={type === 'create' && open}
-                onCancel={() => handleCancel('create')}
-                footer={null}
-                width={'80vw'}
-            >
-                <CreatePost onCancel={() => handleCancel('create')} />
-            </Modal>
+            <CreatePost onCancel={() => handleCancel('create')} />
 
-            <Modal
-                title="Update Post"
-                open={type === 'update' && open}
-                onCancel={() => handleCancel('update')}
-                footer={null}
-                width={'80vw'}
-            >
-                <UpdatePost onCancel={() => handleCancel('update')} />
-            </Modal>
+            <UpdatePost onCancel={() => handleCancel('update')} />
+
+            <DraftList onCancel={() => handleCancel('draft')} />
 
             <Modal
                 title={
@@ -214,7 +199,6 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                 width={'80vw'}
                 footer={null}
             >
-                <DraftList />
             </Modal>
         </Flex>
     );
