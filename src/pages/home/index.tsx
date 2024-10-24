@@ -13,14 +13,14 @@ const initialParams : CategoryListingParams = {
 const HomePage: FC = props => {
     const { data, isLoading } = useCategoriesListing({ params: initialParams });
 
-    if (!data || data.entity.length === 0) {
+    if (!data || data.length === 0) {
         return <Empty />;
     }
 
     return (
         <Spin spinning={isLoading}>
             <PostWrapper>
-                {data.entity.map(category => (
+                {data.map(category => (
                     <PostSummary key={category.categoryId} data={category} />
                 ))}
             </PostWrapper>

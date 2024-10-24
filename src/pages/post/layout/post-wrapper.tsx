@@ -123,7 +123,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                                     ),
                                     onClick: () => handleSelectTag(undefined),
                                 },
-                                ...(tagsData?.entity.map(tag => ({
+                                ...(tagsData?.map(tag => ({
                                     key: tag.tagId,
                                     label: (
                                         <Space align="center">

@@ -1,4 +1,4 @@
-import axiosInstance from '@/apis/request';
+import axiosInstance, { request } from '@/apis/request';
 import { postKeys } from '@/consts/factory/post';
 import { PaginationParams, Response } from '@/types';
 import { Post, PostStatus } from '@/types/post/post';
@@ -15,18 +15,17 @@ type PostListingProps = {
 };
 
 export const usePostsListing = ({ params }: PostListingProps) => {
-    const fetchPosts = async (): Promise<Response<Post[]>> => {
-        const { data } = await axiosInstance.get<Response<Post[]>>('/post/getall', {
-            params,
+    const fetchPosts = async (): Promise<Post[]> => {
+        const { entity } = await request<Post[]>('get', '/post/getall', params, {
             paramsSerializer: {
-                indexes: null
-            }
+                indexes: null,
+            },
         });
 
-        return data;
+        return entity;
     };
 
-    return useQuery<Response<Post[]>>({
+    return useQuery<Post[]>({
         queryKey: postKeys.listing(params),
         queryFn: fetchPosts,
         placeholderData: keepPreviousData,

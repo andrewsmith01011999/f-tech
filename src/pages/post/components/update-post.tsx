@@ -76,9 +76,9 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
 
     useEffect(() => {
         if (detail) {
-            setImgUrlList(detail?.entity?.imageList?.map(image => image.url) || []);
+            setImgUrlList(detail?.imageList?.map(image => image.url) || []);
             setFileList(
-                detail?.entity?.imageList?.map(image => ({
+                detail?.imageList?.map(image => ({
                     uid: image.imageId,
                     name: image.url,
                     url: image.url,
@@ -86,15 +86,13 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                 })) || [],
             );
             form.setFieldsValue({
-                title: detail?.entity?.title,
-                content: detail?.entity?.content,
-                topicId: detail?.entity?.topic?.topicId,
-                tagId: detail?.entity?.tag?.tagId,
+                title: detail?.title,
+                content: detail?.content,
+                topicId: detail?.topic?.topicId,
+                tagId: detail?.tag?.tagId,
             });
         }
     }, [detail]);
-
-    console.log(fileList)
 
     return (
         <Card>
@@ -119,7 +117,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                             size="large"
                             loading={isLoadingTopics}
                             placeholder="Select a topic"
-                            options={topics?.entity.map(topic => ({
+                            options={topics?.map(topic => ({
                                 label: topic.name,
                                 value: topic.topicId,
                             }))}
@@ -135,7 +133,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                             size="large"
                             loading={isLoadingTags}
                             placeholder="Select tags"
-                            options={tags?.entity.map(tag => ({
+                            options={tags?.map(tag => ({
                                 label: tag.name,
                                 value: tag.tagId,
                             }))}

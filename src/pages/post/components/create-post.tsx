@@ -148,7 +148,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                             size="large"
                             loading={isLoadingTopics}
                             placeholder="Select a topic"
-                            options={topics?.entity.map(topic => ({
+                            options={topics?.map(topic => ({
                                 label: topic.name,
                                 value: topic.topicId,
                             }))}
@@ -164,7 +164,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                             size="large"
                             loading={isLoadingTags}
                             placeholder="Select tags"
-                            options={tags?.entity.map(tag => ({
+                            options={tags?.map(tag => ({
                                 label: tag.name,
                                 value: tag.tagId,
                             }))}

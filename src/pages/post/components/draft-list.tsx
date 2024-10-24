@@ -30,20 +30,20 @@ const DraftList = () => {
         },
     });
 
-    if (!data || data.entity.length === 0) {
+    if (!data || data.length === 0) {
         return <Empty />;
     }
 
     const handleSelectAll = () => {
         console.log(
-            sortBy(data.entity, 'createdDate').map(post => ({
+            sortBy(data, 'createdDate').map(post => ({
                 postId: post.postId,
                 checked: true,
             })),
         );
         form.setFieldValue(
             'post',
-            sortBy(data.entity, 'createdDate').map(post => ({
+            sortBy(data, 'createdDate').map(post => ({
                 postId: post.postId,
                 checked: true,
             })),
@@ -56,12 +56,12 @@ const DraftList = () => {
 
     return (
         <PostWrapper>
-            {/* {data.entity.map(post => ( */}
+            {/* {data.map(post => ( */}
             <Form<FormFieldValues>
                 name="draft"
                 form={form}
                 initialValues={{
-                    post: sortBy(data.entity, 'createdDate').map(post => ({
+                    post: sortBy(data, 'createdDate').map(post => ({
                         postId: post.postId,
                     })),
                 }}
@@ -72,7 +72,7 @@ const DraftList = () => {
                         <PostWrapper>
                             {fields.map((field, index) => (
                                 <PostItem
-                                    data={data.entity[index]}
+                                    data={data[index]}
                                     key={field.key}
                                     showActions={false}
                                     showCheckbox

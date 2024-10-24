@@ -1,4 +1,4 @@
-import axiosInstance from '@/apis/request';
+import axiosInstance, { request } from '@/apis/request';
 import { tagKeys } from '@/consts/factory/tag';
 import { PaginationParams, Response } from '@/types';
 import { Tag } from '@/types/tag/tag';
@@ -11,15 +11,17 @@ type TagListingProps = {
 };
 
 export const useTagsListing = ({ params }: TagListingProps) => {
-    const fetchTags = async (): Promise<Response<Tag[]>> => {
-        const { data } = await axiosInstance.get('/tag/getall', {
-            params,
+    const fetchTags = async (): Promise<Tag[]> => {
+        const { entity } = await request<Tag[]>('get', '/tag/getall', params, {
+            paramsSerializer: {
+                indexes: null,
+            },
         });
 
-        return data;
+        return entity;
     };
 
-    return useQuery<Response<Tag[]>>({
+    return useQuery<Tag[]>({
         queryKey: tagKeys.listing(params),
         queryFn: fetchTags,
         placeholderData: keepPreviousData,
