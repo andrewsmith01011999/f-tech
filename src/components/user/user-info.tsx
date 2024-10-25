@@ -1,12 +1,16 @@
+import { RootState } from '@/stores';
 import { Avatar, Flex, Typography } from 'antd';
+import { useSelector } from 'react-redux';
 
 export const UserInfo = () => {
+    const { accountInfo } = useSelector((state: RootState) => state.account);
+
     return (
-        <Flex align='center'>
+        <Flex align="center">
             <Avatar size={40} shape="circle" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
             <Flex vertical>
-                <Typography.Text>Crypto Miner VN</Typography.Text>
-                <Typography.Text type="secondary">@cryptominervn</Typography.Text>
+                <Typography.Text>{accountInfo?.username}</Typography.Text>
+                <Typography.Text type="secondary">@{accountInfo?.username?.toLowerCase()}</Typography.Text>
             </Flex>
         </Flex>
     );
