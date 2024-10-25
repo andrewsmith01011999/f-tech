@@ -13,6 +13,7 @@ import {
     UploadProps,
     Image,
     Modal,
+    GetProp,
 } from 'antd';
 import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
@@ -43,6 +44,16 @@ const initialParams: TopicListingParams = {
     perPage: DEFAULT_PAGE_SIZE,
 };
 
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+const getBase64 = (file: FileType): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+    });
+
 export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const [form] = Form.useForm();
 
@@ -51,6 +62,8 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const [searchParams] = useSearchParams();
     const queryClient = useQueryClient();
     const { success } = useMessage();
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
 
     const { imgUrl, imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
 
@@ -60,6 +73,15 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const { data: tags, isLoading: isLoadingTags } = useTagsListing({ params: initialParams });
     const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
     const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();
+
+    const handlePreview = async (file: UploadFile) => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj as FileType);
+        }
+
+        setPreviewImage(file.url || (file.preview as string));
+        setPreviewOpen(true);
+    };
 
     const onFinish = (values: CreatePostPayload) => {
         createPost(
@@ -128,6 +150,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
             const newImgUrlList = imgUrlList.slice();
             newImgUrlList.splice(index, 1);
             setImgUrlList(newImgUrlList);
+            setFileList(fileList.filter(item => item.uid !== file.uid));
         }
     };
 
@@ -221,11 +244,18 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                     </Form>
 
                     <Flex gap={10} wrap>
-                        {fileList.map(file => (
-                            <div className="ant-upload" key={file.uid}>
-                                <Image src={file.url} alt={file.url} width={100} height={100} />
-                            </div>
-                        ))}
+                        <Upload listType="picture-card" fileList={fileList} onRemove={onRemoveFile} />
+                        {previewImage && (
+                            <Image
+                                wrapperStyle={{ display: 'none' }}
+                                preview={{
+                                    visible: previewOpen,
+                                    onVisibleChange: visible => setPreviewOpen(visible),
+                                    afterOpenChange: visible => !visible && setPreviewImage(''),
+                                }}
+                                src={previewImage}
+                            />
+                        )}
                     </Flex>
 
                     <Flex align="center" justify="space-between">
