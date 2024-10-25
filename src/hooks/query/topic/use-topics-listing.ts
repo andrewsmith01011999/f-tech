@@ -1,4 +1,4 @@
-import axiosInstance from '@/apis/request';
+import axiosInstance, { request } from '@/apis/request';
 import { topicKeys } from '@/consts/factory/topic';
 import { PaginationParams, Response } from '@/types';
 import { Topic } from '@/types/topic/topic';
@@ -11,15 +11,17 @@ type TopicListingProps = {
 };
 
 export const useTopicsListing = ({ params }: TopicListingProps) => {
-    const fetchTopics = async (): Promise<Response<Topic[]>> => {
-        const { data } = await axiosInstance.get('/topic/getall', {
-            params,
+    const fetchTopics = async (): Promise<Topic[]> => {
+        const { entity } = await request<Topic[]>('get', '/topic/getall', params, {
+            paramsSerializer: {
+                indexes: null,
+            },
         });
 
-        return data;
+        return entity;
     };
 
-    return useQuery<Response<Topic[]>>({
+    return useQuery<Topic[]>({
         queryKey: topicKeys.listing(params),
         queryFn: fetchTopics,
         placeholderData: keepPreviousData,

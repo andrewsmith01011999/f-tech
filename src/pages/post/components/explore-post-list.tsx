@@ -16,13 +16,13 @@ export const ExplorePostList = () => {
         params: initialParams,
     });
 
-    if (!data || data.entity.length === 0) {
+    if (!data || data.length === 0) {
         return <Empty />;
     }
 
     return (
         <PostWrapper>
-            {data.entity.map(post => (
+            {data.map(post => (
                 <PostItem data={post} key={post.postId} />
             ))}
         </PostWrapper>

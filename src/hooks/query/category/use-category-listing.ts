@@ -1,4 +1,4 @@
-import axiosInstance from '@/apis/request';
+import axiosInstance, { request } from '@/apis/request';
 import { categoryKeys } from '@/consts/factory/category';
 import { PaginationParams, Response } from '@/types';
 import { Category } from '@/types/category/category';
@@ -11,15 +11,17 @@ type CategoryListingProps = {
 };
 
 export const useCategoriesListing = ({ params }: CategoryListingProps) => {
-    const fetchCategories = async (): Promise<Response<Category[]>> => {
-        const { data } = await axiosInstance.get<Response<Category[]>>('/category/getall', {
-            params,
+    const fetchCategories = async (): Promise<Category[]> => {
+        const {entity} = await request<Category[]>('get', '/category/getall', params, {
+            paramsSerializer: {
+                indexes: null,
+            },
         });
 
-        return data;
+        return entity
     };
 
-    return useQuery<Response<Category[]>>({
+    return useQuery<Category[]>({
         queryKey: categoryKeys.listing(params),
         queryFn: fetchCategories,
         placeholderData: keepPreviousData,

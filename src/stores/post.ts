@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-export type PostModalType = 'update' | 'create';
+export type PostModalType = 'update' | 'create' | 'draft';
 
 export interface PostState {
     modal: {
