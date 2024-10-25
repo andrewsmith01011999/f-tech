@@ -261,6 +261,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                     <Flex align="center" justify="space-between">
                         <Space size="large">
                             <Upload
+                                accept="image/*"
                                 customRequest={uploadFile}
                                 onChange={onChangeFile}
                                 onRemove={onRemoveFile}
