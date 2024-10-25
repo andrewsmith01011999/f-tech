@@ -89,29 +89,33 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     };
 
     const handleSaveDraft = () => {
-        form.validateFields().then(values => {
-            createDraftPost(
-                {
-                    ...values,
-                    imageUrlList: fileList.map(file => ({
-                        url: file.url as string,
-                    })),
+        if (!form.getFieldValue('title')) {
+            onCancel && onCancel();
+            form.resetFields();
+            return;
+        }
+
+        createDraftPost(
+            {
+                ...form.getFieldsValue(),
+                imageUrlList: fileList.map(file => ({
+                    url: file.url as string,
+                })),
+            },
+            {
+                onSuccess: () => {
+                    success('Post saved as draft successfully!');
+                    queryClient.invalidateQueries({
+                        queryKey: postKeys.listing(),
+                    });
+                    onCancel && onCancel();
+                    form.resetFields();
                 },
-                {
-                    onSuccess: () => {
-                        success('Post saved as draft successfully!');
-                        queryClient.invalidateQueries({
-                            queryKey: postKeys.listing(),
-                        });
-                        onCancel && onCancel();
-                        form.resetFields();
-                    },
-                    onError: error => {
-                        message.error(error.message);
-                    },
+                onError: error => {
+                    message.error(error.message);
                 },
-            );
-        });
+            },
+        );
     };
 
     const onChangeFile: UploadProps['onChange'] = ({ file, fileList: newFileList }) => {
@@ -139,7 +143,6 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
 
     const handleCloseModal = () => {
         handleSaveDraft();
-        onCancel && onCancel();
     };
 
     const handleOpenDraft = () => {

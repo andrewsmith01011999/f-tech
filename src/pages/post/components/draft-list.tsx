@@ -37,7 +37,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
     const { data } = usePostsListing({
         params: {
             ...initialParams,
-            // statuses: [PostStatus.DRAFT],
+            statuses: [PostStatus.DRAFT],
         },
     });
     const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();

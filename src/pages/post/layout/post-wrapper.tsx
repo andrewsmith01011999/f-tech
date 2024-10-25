@@ -198,8 +198,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                 onCancel={() => setOpenDraft(false)}
                 width={'80vw'}
                 footer={null}
-            >
-            </Modal>
+            ></Modal>
         </Flex>
     );
 };

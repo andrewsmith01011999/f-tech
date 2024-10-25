@@ -75,9 +75,11 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
                         <UserInfo />
-                        <PostTag backgroundColor={tag?.backgroundColorHex} textColor={tag?.textColorHex}>
-                            {tag?.name}
-                        </PostTag>
+                        {tag && (
+                            <PostTag backgroundColor={tag?.backgroundColorHex} textColor={tag?.textColorHex}>
+                                {tag?.name}
+                            </PostTag>
+                        )}
                     </Flex>
                     {showActions && (
                         <Dropdown
@@ -124,7 +126,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                         </Dropdown>
                     )}
                     {showCheckbox && field && (
-                        <Form.Item name={[field.name, 'checked']} valuePropName='checked'>
+                        <Form.Item name={[field.name, 'checked']} valuePropName="checked">
                             <Checkbox />
                         </Form.Item>
                     )}
