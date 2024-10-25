@@ -120,9 +120,11 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
         createDraftPost(
             {
                 ...form.getFieldsValue(),
-                imageUrlList: fileList.map(file => ({
-                    url: file.url as string,
-                })),
+                ...(fileList.length > 0 && {
+                    imageUrlList: fileList.map(file => ({
+                        url: file.url as string,
+                    })),
+                }),
             },
             {
                 onSuccess: () => {
