@@ -10,9 +10,10 @@ import { useDispatch } from 'react-redux';
 import { PostModalType, setPost } from '@/stores/post';
 import { RootState } from '@/stores';
 import TagXSvg from '/public/tag-x.svg';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { UpdatePost } from '../components/update-post';
 import DraftList from '../components/draft-list';
+import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
 
 interface PostWrapperProps {
     children: React.ReactNode;
@@ -25,13 +26,15 @@ const initialParams: TagListingParams = {
 
 export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const dispatch = useDispatch();
-    const { type, open } = useSelector((state: RootState) => state.post.modal);
+    // const { topicId, tagId } = useSelector((state: RootState) => state.post);
 
     const [history, setHistory] = useState<string>('');
     const [openDraft, setOpenDraft] = useState<boolean>(false);
 
+    const { data: topics, isLoading } = useTopicsListing({ params: initialParams });
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
     const pathSnippets = location.pathname.split('/').filter(i => i);
     const extraBreadcrumbItems = pathSnippets.map((_, index) => {
@@ -83,12 +86,17 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
     };
 
     const handleSelectTag = (id: string | undefined) => {
-        dispatch(setPost({ tagId: id }));
+        // dispatch(setPost({ tagId: id }));
+        setSearchParams({ ...searchParams, tagId: id });
     };
 
-    const handleOpenDraft = () => {
-        setOpenDraft(true);
+    const handleSelectTopic = (id: string | undefined) => {
+        // dispatch(setPost({ topicId: id }));
+        setSearchParams({ ...searchParams, topicId: id });
     };
+
+    const topicId = searchParams.get('topicId');
+    const tagId = searchParams.get('tagId');
 
     return (
         <Flex vertical gap={10}>
@@ -150,6 +158,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                                     onClick: () => handleSelectTag(tag.tagId),
                                 })) || []),
                             ],
+                            selectedKeys: [tagId || '1'],
                         }}
                     >
                         <SecondaryButton icon={<CaretDownFilled />} loading={loadingTags}>
@@ -172,6 +181,29 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
                     </Flex>
                 </Flex>
             </Card>
+
+            <Divider />
+
+            <Flex gap={10} align="center">
+                {topics?.map(topic => (
+                    <Tag
+                        key={topic.topicId}
+                        style={{
+                            fontSize: 14,
+                            minHeight: 32,
+                            minWidth: 48,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            ...(topic.topicId === topicId && { backgroundColor: '#f0f0f0', color: '#000' }),
+                        }}
+                        onClick={() => handleSelectTopic(topic.topicId)}
+                    >
+                        {topic.name}
+                    </Tag>
+                ))}
+            </Flex>
 
             <Divider />
 
