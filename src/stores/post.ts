@@ -8,8 +8,6 @@ export interface PostState {
         type: PostModalType;
     };
     id?: string;
-    tagId?: string;
-    topicId?: string;
 }
 
 const initialStates: PostState = {
