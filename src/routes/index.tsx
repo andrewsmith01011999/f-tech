@@ -44,12 +44,12 @@ const routes: RouteObject[] = [
                 element: <WrapperRouteComponent element={<WalletPage />} title="Wallet" />,
             },
             {
-                path: PATHS.REWARDS,
+                path: PATHS.NOTIFICATION,
                 element: <WrapperRouteComponent element={<NotificationPage />} title="Notification" />,
             },
             {
                 path: PATHS.REWARDS,
-                element: <WrapperRouteComponent element={<RewardPage />} title="Rewad" />,
+                element: <WrapperRouteComponent element={<RewardPage />} title="Reward" />,
             },
         ],
     },

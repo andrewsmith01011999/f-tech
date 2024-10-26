@@ -1,4 +1,5 @@
 import { ImageResponse } from '..';
+import { Account } from '../account';
 import { Tag } from '../tag/tag';
 import { Topic } from '../topic/topic';
 
@@ -18,7 +19,8 @@ export type Post = {
     createdDate: string;
     lastModifiedDate: string;
     imageList?: ImageResponse[];
-    tag: Tag
+    tag: Tag;
+    account: Account;
 };
 
 export type CreatePostPayload = {

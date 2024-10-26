@@ -5,10 +5,18 @@ import WarningSvg from '/public/warning.svg';
 import QuestionMarkSvg from '/public/question-mark.svg';
 import OpenBookSvg from '/public/open-book.svg';
 import RewardSvg from '/public/reward.svg';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/utils/paths';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const ResourceMenu = () => {
+    const navigate = useNavigate();
+
+    const toReward = () => {
+        navigate(PATHS.REWARDS);
+    };
+
     const items: MenuItem[] = [
         {
             key: '1',
@@ -29,6 +37,7 @@ export const ResourceMenu = () => {
             key: '4',
             icon: <Icon component={() => <img src={RewardSvg} alt="reward" />} />,
             label: 'Reward',
+            onClick: toReward,
         },
     ];
 

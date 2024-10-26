@@ -47,8 +47,6 @@ const ProfilePage = () => {
         },
     ];
 
-    console.log('daata', data);
-
     return (
         <div>
             <ProfileInfo />

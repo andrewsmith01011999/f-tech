@@ -74,7 +74,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
             <Flex vertical gap={8}>
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
-                        <UserInfo />
+                        <UserInfo account={data.account} />
                         {tag && (
                             <PostTag backgroundColor={tag?.backgroundColorHex} textColor={tag?.textColorHex}>
                                 {tag?.name}
