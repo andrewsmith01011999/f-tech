@@ -15,6 +15,7 @@ import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
 
 interface PostWrapperProps {
     children: React.ReactNode;
+    showHeader?: boolean;
 }
 
 const initialParams: TagListingParams = {
@@ -22,17 +23,16 @@ const initialParams: TagListingParams = {
     perPage: DEFAULT_PAGE_SIZE,
 };
 
-export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
+export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true }) => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const dispatch = useDispatch();
-    // const { topicId, tagId } = useSelector((state: RootState) => state.post);
 
     const [history, setHistory] = useState<string>('');
     const [openDraft, setOpenDraft] = useState<boolean>(false);
 
-    const { data: topics, isLoading } = useTopicsListing({ params: initialParams });
+    const { data: topics } = useTopicsListing({ params: initialParams });
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
     const pathSnippets = location.pathname.split('/').filter(i => i);
     const extraBreadcrumbItems = pathSnippets.map((_, index) => {
@@ -84,12 +84,10 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
     };
 
     const handleSelectTag = (id: string | undefined) => {
-        // dispatch(setPost({ tagId: id }));
         setSearchParams({ ...searchParams, tagId: id });
     };
 
     const handleSelectTopic = (id: string | undefined) => {
-        // dispatch(setPost({ topicId: id }));
         setSearchParams({ ...searchParams, topicId: id });
     };
 
@@ -98,112 +96,116 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children }) => {
 
     return (
         <Flex vertical gap={10}>
-            <Card>
-                <Breadcrumb>
-                    {breadcrumbItems.map(item => (
-                        <React.Fragment key={item.path}>
-                            <Breadcrumb.Item>{item.breadcrumbName}</Breadcrumb.Item>
-                        </React.Fragment>
-                    ))}
-                </Breadcrumb>
+            {showHeader && (
+                <>
+                    <Card>
+                        <Breadcrumb>
+                            {breadcrumbItems.map(item => (
+                                <React.Fragment key={item.path}>
+                                    <Breadcrumb.Item>{item.breadcrumbName}</Breadcrumb.Item>
+                                </React.Fragment>
+                            ))}
+                        </Breadcrumb>
 
-                <Divider />
+                        <Divider />
 
-                <Flex gap={10} style={{ width: '100%' }} align="center">
-                    <Dropdown
-                        menu={{
-                            items: [
-                                {
-                                    key: '1',
-                                    label: (
-                                        <Space align="center">
-                                            <Tag
-                                                style={{
-                                                    minHeight: 32,
-                                                    minWidth: 100,
-                                                    fontSize: 14,
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                }}
-                                            >
-                                                All
-                                            </Tag>
-                                        </Space>
-                                    ),
-                                    onClick: () => handleSelectTag(undefined),
-                                },
-                                ...(tagsData?.map(tag => ({
-                                    key: tag.tagId,
-                                    label: (
-                                        <Space align="center">
-                                            <Tag
-                                                style={{
-                                                    minHeight: 32,
-                                                    minWidth: 100,
-                                                    fontSize: 14,
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    backgroundColor: tag.backgroundColorHex,
-                                                    color: tag.textColorHex,
-                                                }}
-                                            >
-                                                {tag.name}
-                                            </Tag>
-                                        </Space>
-                                    ),
-                                    onClick: () => handleSelectTag(tag.tagId),
-                                })) || []),
-                            ],
-                            selectedKeys: [tagId || '1'],
-                        }}
-                    >
-                        <SecondaryButton icon={<CaretDownFilled />} loading={loadingTags}>
-                            Tags
-                        </SecondaryButton>
-                    </Dropdown>
-                    <Flex gap={6} flex={1} align="center">
-                        <Avatar
-                            size={48}
-                            shape="circle"
-                            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                        />
-                        <Input
-                            size="large"
-                            placeholder="Let's share what going on your mind..."
-                            onClick={() => handleOpen('create')}
-                            readOnly
-                        />
-                        <SecondaryButton onClick={() => handleOpen('create')}>Create Post</SecondaryButton>
+                        <Flex gap={10} style={{ width: '100%' }} align="center">
+                            <Dropdown
+                                menu={{
+                                    items: [
+                                        {
+                                            key: '1',
+                                            label: (
+                                                <Space align="center">
+                                                    <Tag
+                                                        style={{
+                                                            minHeight: 32,
+                                                            minWidth: 100,
+                                                            fontSize: 14,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                        }}
+                                                    >
+                                                        All
+                                                    </Tag>
+                                                </Space>
+                                            ),
+                                            onClick: () => handleSelectTag(undefined),
+                                        },
+                                        ...(tagsData?.map(tag => ({
+                                            key: tag.tagId,
+                                            label: (
+                                                <Space align="center">
+                                                    <Tag
+                                                        style={{
+                                                            minHeight: 32,
+                                                            minWidth: 100,
+                                                            fontSize: 14,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            backgroundColor: tag.backgroundColorHex,
+                                                            color: tag.textColorHex,
+                                                        }}
+                                                    >
+                                                        {tag.name}
+                                                    </Tag>
+                                                </Space>
+                                            ),
+                                            onClick: () => handleSelectTag(tag.tagId),
+                                        })) || []),
+                                    ],
+                                    selectedKeys: [tagId || '1'],
+                                }}
+                            >
+                                <SecondaryButton icon={<CaretDownFilled />} loading={loadingTags}>
+                                    Tags
+                                </SecondaryButton>
+                            </Dropdown>
+                            <Flex gap={6} flex={1} align="center">
+                                <Avatar
+                                    size={48}
+                                    shape="circle"
+                                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                />
+                                <Input
+                                    size="large"
+                                    placeholder="Let's share what going on your mind..."
+                                    onClick={() => handleOpen('create')}
+                                    readOnly
+                                />
+                                <SecondaryButton onClick={() => handleOpen('create')}>Create Post</SecondaryButton>
+                            </Flex>
+                        </Flex>
+                    </Card>
+
+                    <Divider />
+
+                    <Flex gap={10} align="center">
+                        {topics?.map(topic => (
+                            <Tag
+                                key={topic.topicId}
+                                style={{
+                                    fontSize: 14,
+                                    minHeight: 32,
+                                    minWidth: 48,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    ...(topic.topicId === topicId && { backgroundColor: '#f0f0f0', color: '#000' }),
+                                }}
+                                onClick={() => handleSelectTopic(topic.topicId)}
+                            >
+                                {topic.name}
+                            </Tag>
+                        ))}
                     </Flex>
-                </Flex>
-            </Card>
 
-            <Divider />
-
-            <Flex gap={10} align="center">
-                {topics?.map(topic => (
-                    <Tag
-                        key={topic.topicId}
-                        style={{
-                            fontSize: 14,
-                            minHeight: 32,
-                            minWidth: 48,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            ...(topic.topicId === topicId && { backgroundColor: '#f0f0f0', color: '#000' }),
-                        }}
-                        onClick={() => handleSelectTopic(topic.topicId)}
-                    >
-                        {topic.name}
-                    </Tag>
-                ))}
-            </Flex>
-
-            <Divider />
+                    <Divider />
+                </>
+            )}
 
             <Flex vertical gap={20}>
                 {children}

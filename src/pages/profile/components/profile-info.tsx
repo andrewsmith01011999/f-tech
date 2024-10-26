@@ -1,13 +1,17 @@
 import { Avatar, Button, Flex, Image, Space, Typography } from 'antd';
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
 import AvatarPlaceholder from '/public/avatar-placeholder.svg';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
 
 export const ProfileInfo = () => {
+    const { accountInfo } = useSelector((state: RootState) => state.account);
+
     return (
         <Flex vertical gap={92}>
             <div style={{ position: 'relative' }}>
                 <Image
-                    src={BackgroundPlaceholder}
+                    src={accountInfo?.coverImage || BackgroundPlaceholder}
                     alt="logo"
                     width="100%"
                     height={260}
@@ -16,7 +20,7 @@ export const ProfileInfo = () => {
                 <Avatar
                     shape="circle"
                     size={136}
-                    src={AvatarPlaceholder}
+                    src={accountInfo?.avatar || AvatarPlaceholder}
                     style={{ position: 'absolute', top: 200, left: 20 }}
                 />
 
@@ -25,8 +29,8 @@ export const ProfileInfo = () => {
                 </Button>
             </div>
             <Flex vertical gap={8}>
-                <Typography.Title level={4}>John Doe</Typography.Title>
-                <Typography.Text type="secondary">@johndoe</Typography.Text>
+                <Typography.Title level={4}>{accountInfo?.username}</Typography.Title>
+                <Typography.Text type="secondary">@{accountInfo?.username}</Typography.Text>
                 <Typography.Text>#Beingnobody_goingnowhere.</Typography.Text>
                 <Flex gap={24}>
                     <Space size="small">
