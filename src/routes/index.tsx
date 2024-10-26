@@ -8,7 +8,6 @@ import WrapperRouteComponent from './config';
 import { PATHS } from '@/utils/paths';
 import MainLayout from '@/layout/main-layout';
 import { RootState } from '@/stores';
-import { title } from 'process';
 
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
@@ -19,8 +18,9 @@ const HomePage = lazy(() => import('@/pages/home'));
 const PostPage = lazy(() => import('@/pages/post'));
 const ProfilePage = lazy(() => import('@/pages/profile'));
 const NotFoundPage = lazy(() => import('@/pages/404'));
-const WalletPage = lazy(() => import('@/pages/wallet'))
-const NotificationPage = lazy(() => import('@/pages/notification'))
+const WalletPage = lazy(() => import('@/pages/wallet'));
+const NotificationPage = lazy(() => import('@/pages/notification'));
+const RewardPage = lazy(() => import('@/pages/reward'));
 
 const routes: RouteObject[] = [
     {
@@ -44,9 +44,13 @@ const routes: RouteObject[] = [
                 element: <WrapperRouteComponent element={<WalletPage />} title="Wallet" />,
             },
             {
-                path: PATHS.NOTIFICATION,
-                element: <WrapperRouteComponent element={<NotificationPage />} title='Notification' />
-            }
+                path: PATHS.REWARDS,
+                element: <WrapperRouteComponent element={<NotificationPage />} title="Notification" />,
+            },
+            {
+                path: PATHS.REWARDS,
+                element: <WrapperRouteComponent element={<RewardPage />} title="Rewad" />,
+            },
         ],
     },
     {

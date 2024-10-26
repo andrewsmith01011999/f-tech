@@ -83,16 +83,16 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
         dispatch(setPost({ modal: { open: true, type } }));
     };
 
+    const topicId = searchParams.get('topicId') || undefined;
+    const tagId = searchParams.get('tagId') || undefined;
+
     const handleSelectTag = (id: string | undefined) => {
-        setSearchParams({ ...searchParams, tagId: id });
+        setSearchParams(params => ({ ...params, ...(topicId && { topicId }), tagId: id }));
     };
 
     const handleSelectTopic = (id: string | undefined) => {
-        setSearchParams({ ...searchParams, topicId: id });
+        setSearchParams(params => ({ ...params, topicId: id, ...(tagId && { tagId }) }));
     };
-
-    const topicId = searchParams.get('topicId');
-    const tagId = searchParams.get('tagId');
 
     return (
         <Flex vertical gap={10}>
