@@ -6,6 +6,7 @@ import { isPending } from '@reduxjs/toolkit';
 import { Flex, Form, Input, Typography } from 'antd';
 import Card from 'antd/es/card/Card';
 import React from 'react';
+import FeedbackWrapper from './layout/feedback-wrapper';
 
 const FeedbackPage = () => {
     const [form] = Form.useForm();
@@ -24,7 +25,7 @@ const FeedbackPage = () => {
     };
 
     return (
-        <Card>
+        <FeedbackWrapper>
             <Flex justify="center" vertical gap={24}>
                 <Typography.Title level={3} style={{ textAlign: 'center' }}>
                     Fill the form to submit your feedback
@@ -72,7 +73,7 @@ const FeedbackPage = () => {
                     </Flex>
                 </Form>
             </Flex>
-        </Card>
+        </FeedbackWrapper>
     );
 };
 

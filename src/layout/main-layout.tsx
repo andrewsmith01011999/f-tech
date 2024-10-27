@@ -96,17 +96,7 @@ const MainLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
                         </CardMenu>
                     </MenuWrapper>
 
-                    <div style={{ minWidth: 760 }}>
-                        <Breadcrumb>
-                            {breadcrumbItems.map(item => (
-                                <React.Fragment key={item.path}>
-                                    <Breadcrumb.Item>{item.breadcrumbName}</Breadcrumb.Item>
-                                </React.Fragment>
-                            ))}
-                        </Breadcrumb>
-
-                        {children}
-                    </div>
+                    <div style={{ minWidth: 760 }}>{children}</div>
 
                     <EventsWrapper>
                         <EventList />
