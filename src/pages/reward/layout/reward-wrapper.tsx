@@ -1,9 +1,11 @@
 import { SecondaryButton } from '@/components/core/secondary-button';
 import SecondaryTag from '@/components/core/secondary-tag';
 import Balance from '@/pages/wallet/components/balance';
+import { RootState } from '@/stores';
 import { RightOutlined } from '@ant-design/icons';
 import { Breadcrumb, Button, Card, Divider, Flex, Tag } from 'antd';
 import React, { FC, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import TagXSvg from '/public/tag-x.svg';
 
@@ -13,6 +15,8 @@ interface RewardWrapperProps {
 
 const RewardWrapper: FC<RewardWrapperProps> = ({ children }) => {
     const navigate = useNavigate();
+
+    const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const [history, setHistory] = useState<string>('');
 
@@ -68,7 +72,7 @@ const RewardWrapper: FC<RewardWrapperProps> = ({ children }) => {
                     ))}
                 </Breadcrumb>
 
-                <SecondaryTag>Balance 1000000</SecondaryTag>
+                <SecondaryTag>Balance: {accountInfo?.wallet?.balance} MC</SecondaryTag>
             </Flex>
 
             <Divider />

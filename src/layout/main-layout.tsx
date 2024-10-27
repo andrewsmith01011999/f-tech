@@ -11,18 +11,65 @@ import { EventsWrapper } from '@/pages/home/layout/events-wrapper';
 import { MenuWrapper } from '@/pages/home/layout/menu-wrapper';
 import { PageWrapper } from '@/pages/home/layout/page-wrapper';
 import HeaderComponent from '@/pages/layout/header/header';
-import { ConfigProvider, Layout } from 'antd';
-import { FC } from 'react';
-import { Outlet } from 'react-router-dom';
+import { RightOutlined } from '@ant-design/icons';
+import { Breadcrumb, Button, ConfigProvider, Layout } from 'antd';
+import React, { FC, useState } from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import TagXSvg from '/public/tag-x.svg';
 
 interface MainLayoutProps {
     children?: React.ReactNode;
 }
 
 const MainLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
+    const navigate = useNavigate();
+
     // load profile
     const { data: profileData, isLoading: isProfileLoading } = useProfile();
-    const {data: walletData, isLoading: isWalletLoading} = useWallet();
+    const { data: walletData, isLoading: isWalletLoading } = useWallet();
+
+    const [history, setHistory] = useState<string>('');
+
+    const pathSnippets = location.pathname.split('/').filter(i => i);
+    const extraBreadcrumbItems = pathSnippets.map((_, index) => {
+        const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+
+        return {
+            path: url,
+            breadcrumbName: (
+                <Link to={url} onClick={() => setHistory(location.pathname)}>
+                    {url.split('/').splice(-1)?.[0]}
+                </Link>
+            ),
+        };
+    });
+
+    const breadcrumbItems = [
+        {
+            ...(location.pathname.split('/').length > 1 && {
+                path: '-1',
+                breadcrumbName: (
+                    <Button
+                        size="small"
+                        type="text"
+                        icon={<img src={TagXSvg} alt="tag-x" />}
+                        onClick={() => {
+                            setHistory(location.pathname);
+                            navigate(-1);
+                        }}
+                    />
+                ),
+            }),
+        },
+        ...extraBreadcrumbItems,
+        {
+            ...(location.pathname.length < history.length &&
+                history.includes(location.pathname) && {
+                    path: '1',
+                    breadcrumbName: <RightOutlined onClick={() => navigate(history)} />,
+                }),
+        },
+    ];
 
     return (
         <ConfigProvider theme={themeConfig}>
@@ -49,7 +96,17 @@ const MainLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
                         </CardMenu>
                     </MenuWrapper>
 
-                    <div style={{ minWidth: 760 }}>{children}</div>
+                    <div style={{ minWidth: 760 }}>
+                        <Breadcrumb>
+                            {breadcrumbItems.map(item => (
+                                <React.Fragment key={item.path}>
+                                    <Breadcrumb.Item>{item.breadcrumbName}</Breadcrumb.Item>
+                                </React.Fragment>
+                            ))}
+                        </Breadcrumb>
+
+                        {children}
+                    </div>
 
                     <EventsWrapper>
                         <EventList />

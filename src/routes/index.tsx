@@ -21,6 +21,7 @@ const NotFoundPage = lazy(() => import('@/pages/404'));
 const WalletPage = lazy(() => import('@/pages/wallet'));
 const NotificationPage = lazy(() => import('@/pages/notification'));
 const RewardPage = lazy(() => import('@/pages/reward'));
+const FeedbackPage = lazy(() => import('@/pages/feedback'));
 
 const routes: RouteObject[] = [
     {
@@ -50,6 +51,10 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.REWARDS,
                 element: <WrapperRouteComponent element={<RewardPage />} title="Reward" />,
+            },
+            {
+                path: PATHS.FEEDBACKS,
+                element: <WrapperRouteComponent element={<FeedbackPage />} title="Feedback" />,
             },
         ],
     },

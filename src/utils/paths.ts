@@ -10,4 +10,5 @@ export const PATHS = {
     WALLET: '/wallet',
     NOTIFICATION: '/notification',
     REWARDS: '/rewards',
+    FEEDBACKS: '/feedbacks',
 };

@@ -5,6 +5,7 @@ import WarningSvg from '/public/warning.svg';
 import QuestionMarkSvg from '/public/question-mark.svg';
 import OpenBookSvg from '/public/open-book.svg';
 import RewardSvg from '/public/reward.svg';
+import FeedbackSvg from '/public/feedback.svg';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
 
@@ -15,6 +16,10 @@ export const ResourceMenu = () => {
 
     const toReward = () => {
         navigate(PATHS.REWARDS);
+    };
+
+    const toFeedback = () => {
+        navigate(PATHS.FEEDBACKS);
     };
 
     const items: MenuItem[] = [
@@ -38,6 +43,12 @@ export const ResourceMenu = () => {
             icon: <Icon component={() => <img src={RewardSvg} alt="reward" />} />,
             label: 'Reward',
             onClick: toReward,
+        },
+        {
+            key: '5',
+            icon: <Icon component={() => <img src={FeedbackSvg} alt="feedback" />} />,
+            label: 'Feedback',
+            onClick: toFeedback,
         },
     ];
 
