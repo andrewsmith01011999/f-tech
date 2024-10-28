@@ -33,16 +33,15 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const {success} = useMessage();
+    const { success } = useMessage();
     const dispatch = useDispatch();
-    const {id} = useSelector((state: RootState) => state.post);
+    const { id, modal } = useSelector((state: RootState) => state.post);
 
     const [history, setHistory] = useState<string>('');
     const [openDraft, setOpenDraft] = useState<boolean>(false);
-     const [selectedReason, setSelectedReason] = useState<ReportAccountReasons>();
-     const [isShowReportReasons, setIsShowReportReasons] = useState(false);
+    const [selectedReason, setSelectedReason] = useState<ReportAccountReasons>();
 
-       const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReportPost(id || '');
+    const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReportPost(id || '');
     const { data: topics } = useTopicsListing({ params: initialParams });
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
     const pathSnippets = location.pathname.split('/').filter(i => i);
@@ -105,19 +104,18 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
         setSearchParams(params => ({ ...params, topicId: id, ...(tagId && { tagId }) }));
     };
 
-        const handleReportAccount = () => {
-            if (!selectedReason) {
-                return;
-            }
+    const handleReportAccount = () => {
+        if (!selectedReason) {
+            return;
+        }
 
-            createReport(selectedReason, {
-                onSuccess: () => {
-                    success('Reported successfully!');
-                    setIsShowReportReasons(false);
-                },
-            });
-        };
-
+        createReport(selectedReason, {
+            onSuccess: () => {
+                success('Reported successfully!');
+                dispatch(setPost({ modal: { open: false, type: 'report' } }));
+            },
+        });
+    };
 
     return (
         <Flex vertical gap={10}>
@@ -259,8 +257,8 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
 
             <Modal
                 title="Report"
-                open={isShowReportReasons}
-                onCancel={() => setIsShowReportReasons(false)}
+                open={modal.open && modal.type === 'report'}
+                onCancel={() => handleCancel('report')}
                 footer={null}
             >
                 {reportAccountReasons.map((reason, index) => (
