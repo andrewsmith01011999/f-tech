@@ -1,7 +1,7 @@
 import { UserInfo } from '@/components/user/user-info';
 import { FULL_TIME_FORMAT } from '@/consts/common';
 import { RootState } from '@/stores';
-import { Feedback } from '@/stores/feedback/feedback';
+import { Feedback } from '@/types/feedback/feedback';
 import dayjsConfig from '@/utils/dayjs';
 import { Button, Card, Dropdown, Flex, Space, Tag, Typography } from 'antd';
 import React from 'react';
@@ -43,7 +43,7 @@ const AdminFeedbackItem = ({ data }: AdminFeedbackItemProps) => {
             <Flex vertical gap={8}>
                 <Flex align="center" justify="space-between">
                     <Space size="large">
-                        <UserInfo account={accountInfo} />
+                        <UserInfo account={data?.account || accountInfo} />
                         <Typography.Text type="secondary">
                             {dayjsConfig(data?.createdDate)?.format(FULL_TIME_FORMAT)}
                         </Typography.Text>

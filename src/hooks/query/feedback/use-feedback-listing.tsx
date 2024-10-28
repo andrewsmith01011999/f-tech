@@ -1,6 +1,6 @@
 import  { request } from '@/apis/request';
 import { feedbackKeys } from '@/consts/factory/feedback';
-import { CreateFeedbackPayload, Feedback } from '@/stores/feedback/feedback';
+import { CreateFeedbackPayload, Feedback } from '@/types/feedback/feedback';
 import { PaginationParams } from '@/types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 

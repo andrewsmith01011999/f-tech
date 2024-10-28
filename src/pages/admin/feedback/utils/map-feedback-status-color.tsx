@@ -1,4 +1,4 @@
-import { FeedbackStatus } from "@/stores/feedback/feedback";
+import { FeedbackStatus } from "@/types/feedback/feedback";
 
 export const mapFeedbackStatusColor = (status: FeedbackStatus) => {
   switch (status) {

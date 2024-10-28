@@ -1,3 +1,5 @@
+import { Account } from "../account";
+
 export type FeedbackStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export type Feedback = {
@@ -6,6 +8,7 @@ export type Feedback = {
     content: string;
     status: FeedbackStatus;
     createdDate: string;
+    account: Account
 }
 
 export type CreateFeedbackPayload = {

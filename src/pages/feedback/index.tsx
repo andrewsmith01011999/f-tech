@@ -1,7 +1,7 @@
 import { SecondaryButton } from '@/components/core/secondary-button';
 import { useCreateFeedback } from '@/hooks/mutate/feedback/use-create-feedback';
 import { useMessage } from '@/hooks/use-message';
-import { CreateFeedbackPayload } from '@/stores/feedback/feedback';
+import { CreateFeedbackPayload } from '@/types/feedback/feedback';
 import { isPending } from '@reduxjs/toolkit';
 import { Flex, Form, Input, Typography } from 'antd';
 import Card from 'antd/es/card/Card';
