@@ -12,6 +12,12 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { UpdatePost } from '../components/update-post';
 import DraftList from '../components/draft-list';
 import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
+import { ReportAccountReasons, reportAccountReasons } from '@/types/report/report';
+import { useCreateReport, useCreateReportPost } from '@/hooks/mutate/report/use-create-report';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
+import { useMessage } from '@/hooks/use-message';
+import ReportReason from '@/pages/user-profile/components/report-reason';
 
 interface PostWrapperProps {
     children: React.ReactNode;
@@ -27,11 +33,16 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const {success} = useMessage();
     const dispatch = useDispatch();
+    const {id} = useSelector((state: RootState) => state.post);
 
     const [history, setHistory] = useState<string>('');
     const [openDraft, setOpenDraft] = useState<boolean>(false);
+     const [selectedReason, setSelectedReason] = useState<ReportAccountReasons>();
+     const [isShowReportReasons, setIsShowReportReasons] = useState(false);
 
+       const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReportPost(id || '');
     const { data: topics } = useTopicsListing({ params: initialParams });
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
     const pathSnippets = location.pathname.split('/').filter(i => i);
@@ -93,6 +104,20 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
     const handleSelectTopic = (id: string | undefined) => {
         setSearchParams(params => ({ ...params, topicId: id, ...(tagId && { tagId }) }));
     };
+
+        const handleReportAccount = () => {
+            if (!selectedReason) {
+                return;
+            }
+
+            createReport(selectedReason, {
+                onSuccess: () => {
+                    success('Reported successfully!');
+                    setIsShowReportReasons(false);
+                },
+            });
+        };
+
 
     return (
         <Flex vertical gap={10}>
@@ -231,6 +256,33 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
                 width={'80vw'}
                 footer={null}
             ></Modal>
+
+            <Modal
+                title="Report"
+                open={isShowReportReasons}
+                onCancel={() => setIsShowReportReasons(false)}
+                footer={null}
+            >
+                {reportAccountReasons.map((reason, index) => (
+                    <ReportReason
+                        key={index}
+                        reason={reason}
+                        selectedReason={selectedReason}
+                        setSelectedReason={setSelectedReason}
+                    />
+                ))}
+
+                <Flex justify="center">
+                    <Button
+                        type="primary"
+                        onClick={handleReportAccount}
+                        loading={isPendingCreateReport}
+                        disabled={!selectedReason}
+                    >
+                        Submit
+                    </Button>
+                </Flex>
+            </Modal>
         </Flex>
     );
 };

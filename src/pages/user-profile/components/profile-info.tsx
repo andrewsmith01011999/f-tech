@@ -4,12 +4,11 @@ import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
 import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-
 interface ProfileInfoProps {
     setIsShowReportReasons: (value: boolean) => void;
 }
 
-export const ProfileInfo = ({setIsShowReportReasons} : ProfileInfoProps) => {
+export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     return (

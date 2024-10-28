@@ -14,3 +14,18 @@ export const useCreateReport = (id: string, options: UseMutationOptions<unknown,
         ...options,
     });
 };
+
+
+export const useCreateReportPost = (id: string, options: UseMutationOptions<unknown, AxiosError<unknown>> = {}) => {
+    const createReport = async (reason: ReportAccountReasons) => {
+        return axiosInstance.post(`/report/create?reportReason=${reason}`, {
+            postId: id,
+        });
+    };
+
+    return useMutation<unknown, AxiosError<unknown>, any>({
+        mutationKey: ['feedback', 'update', id],
+        mutationFn: (payload: ReportAccountReasons) => createReport(payload),
+        ...options,
+    });
+}

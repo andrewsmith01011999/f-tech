@@ -5,13 +5,13 @@ import RewardItem from '../components/reward-item';
 const RewardList = () => {
     const { data } = useRedeemDocuments();
 
-    if (!data || !data.document || !data.document.length) {
+    if (!data || !data.length) {
         return <Empty />;
     }
 
     return (
         <Flex align="center" justify="space-between" wrap gap={10}>
-            {data.document.map(reward => (
+            {data.map(reward => (
                 <RewardItem reward={reward} key={reward.documentId} />
             ))}
         </Flex>

@@ -7,6 +7,7 @@ import {
     DeleteOutlined,
     EditOutlined,
     EllipsisOutlined,
+    ExclamationCircleOutlined,
     EyeInvisibleOutlined,
     GlobalOutlined,
     KeyOutlined,
@@ -69,6 +70,10 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
         });
     };
 
+    const handleReport = () => {
+        dispatch(setPost({ modal: { open: true, type: 'report' }, id: postId }));
+    }
+
     return (
         <Card>
             <Flex vertical gap={8}>
@@ -119,6 +124,12 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                                         label: <span>Edit post</span>,
                                         onClick: handleUpdate,
                                     },
+                                    {
+                                        key: '4',
+                                        icon: <ExclamationCircleOutlined />,
+                                        label: <span>Report</span>,
+                                        onClick: handleReport
+                                    }
                                 ],
                             }}
                         >
