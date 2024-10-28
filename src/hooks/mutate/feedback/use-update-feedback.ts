@@ -12,7 +12,7 @@ export const useUpdateFeedback = (
     };
 
     return useMutation<unknown, AxiosError<unknown>, any>({
-        mutationKey: ['feedback', 'update'],
+        mutationKey: ['feedback', 'update', id],
         mutationFn: (payload: FeedbackStatus) => updateFeedback(payload),
         ...options,
     });
