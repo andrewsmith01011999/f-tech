@@ -124,12 +124,6 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                                         label: <span>Edit post</span>,
                                         onClick: handleUpdate,
                                     },
-                                    {
-                                        key: '4',
-                                        icon: <ExclamationCircleOutlined />,
-                                        label: <span>Report</span>,
-                                        onClick: handleReport
-                                    }
                                 ],
                             }}
                         >
@@ -178,6 +172,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                     <IconButton icon={<CommentOutlined />} children="Comment" />
                     <IconButton icon={<BarChartOutlined />} children="1.9M" />
                     <IconButton icon={<ShareAltOutlined />} children="Share" />
+                    <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport}  />
                 </Flex>
             </Flex>
         </Card>
