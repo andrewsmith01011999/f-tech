@@ -1,6 +1,5 @@
 import axiosInstance from '@/apis/request';
 import { CreateFeedbackPayload } from '@/stores/feedback/feedback';
-import { CreatePostPayload } from '@/types/post/post';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 

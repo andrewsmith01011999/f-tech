@@ -8,6 +8,7 @@ import WrapperRouteComponent from './config';
 import { PATHS } from '@/utils/paths';
 import MainLayout from '@/layout/main-layout';
 import { RootState } from '@/stores';
+import AdminFeedbackPage from '@/pages/admin/feedback';
 
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
@@ -22,6 +23,7 @@ const WalletPage = lazy(() => import('@/pages/wallet'));
 const NotificationPage = lazy(() => import('@/pages/notification'));
 const RewardPage = lazy(() => import('@/pages/reward'));
 const FeedbackPage = lazy(() => import('@/pages/feedback'));
+const UserProfilePage = lazy(() => import('@/pages/user-profile'));
 
 const routes: RouteObject[] = [
     {
@@ -56,6 +58,14 @@ const routes: RouteObject[] = [
                 path: PATHS.FEEDBACKS,
                 element: <WrapperRouteComponent element={<FeedbackPage />} title="Feedback" />,
             },
+            {
+                path: PATHS.ADMIN_FEEDBACKS,
+                element: <WrapperRouteComponent element={<AdminFeedbackPage />} title="Admin Feedback" />,
+            },
+            {
+                path: PATHS.USER_PROFILE,
+                element: <WrapperRouteComponent element={<UserProfilePage />} title="User Profile" />,
+            }
         ],
     },
     {

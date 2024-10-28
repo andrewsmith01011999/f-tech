@@ -8,10 +8,13 @@ import RewardSvg from '/public/reward.svg';
 import FeedbackSvg from '/public/feedback.svg';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const ResourceMenu = () => {
+        const { accountInfo } = useSelector((state: RootState) => state.account);
     const navigate = useNavigate();
 
     const toReward = () => {
@@ -19,6 +22,11 @@ export const ResourceMenu = () => {
     };
 
     const toFeedback = () => {
+        if (accountInfo?.role?.name === 'STAFF') {
+            navigate(PATHS.ADMIN_FEEDBACKS);
+            return;
+        }
+
         navigate(PATHS.FEEDBACKS);
     };
 

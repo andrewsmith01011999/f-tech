@@ -11,4 +11,6 @@ export const PATHS = {
     NOTIFICATION: '/notification',
     REWARDS: '/rewards',
     FEEDBACKS: '/feedbacks',
+    ADMIN_FEEDBACKS: '/admin/feedbacks',
+    USER_PROFILE: '/user-profile/:id',
 };
