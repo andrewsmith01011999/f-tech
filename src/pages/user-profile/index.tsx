@@ -20,7 +20,7 @@ const UserProfilePage = () => {
     const [isShowReportReasons, setIsShowReportReasons] = useState(false);
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
-    const {success} = useMessage();
+    const { success } = useMessage();
 
     const initialParams: PaginationParams = {
         page: DEFAULT_PAGE,
@@ -38,7 +38,7 @@ const UserProfilePage = () => {
         return null;
     }
 
-    const {mutate: createReport} = useCreateReport(accountInfo?.accountId);
+    const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReport(accountInfo?.accountId);
 
     const items: TabsProps['items'] = [
         {
@@ -71,7 +71,7 @@ const UserProfilePage = () => {
             onSuccess: () => {
                 success('Reported successfully!');
                 setIsShowReportReasons(false);
-            }
+            },
         });
     };
 
@@ -96,7 +96,7 @@ const UserProfilePage = () => {
                 ))}
 
                 <Flex justify="center">
-                    <Button type="primary" onClick={handleReportAccount}>
+                    <Button type="primary" onClick={handleReportAccount} loading={isPendingCreateReport} disabled={!selectedReason}>
                         Submit
                     </Button>
                 </Flex>
