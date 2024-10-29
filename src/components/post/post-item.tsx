@@ -40,7 +40,7 @@ interface PostItemProps {
 export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showCheckbox = false, field }) => {
     const { title, content, createdDate, imageList, tag, postId } = data;
 
-    const {accountInfo} = useSelector((state : RootState) => state.account)
+    const { accountInfo } = useSelector((state: RootState) => state.account);
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const { success } = useMessage();
@@ -75,7 +75,16 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
 
     const handleReport = () => {
         dispatch(setPost({ modal: { open: true, type: 'report' }, id: postId }));
-    }
+    };
+
+    const isAllowShowActions =
+        accountInfo?.role?.name === 'ADMIN' ||
+        accountInfo?.role?.name === 'STAFF' ||
+        data?.account?.accountId === accountInfo?.accountId;
+    const isAllowShowReport =
+        accountInfo?.role?.name === 'ADMIN' ||
+        accountInfo?.role?.name === 'STAFF' ||
+        data?.account?.accountId !== accountInfo?.accountId;
 
     return (
         <Card>
@@ -89,7 +98,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                             </PostTag>
                         )}
                     </Flex>
-                    {showActions && data?.account?.accountId === accountInfo?.accountId && (
+                    {showActions && isAllowShowActions && (
                         <Dropdown
                             menu={{
                                 items: [
@@ -175,7 +184,9 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                     <IconButton icon={<CommentOutlined />} children="Comment" />
                     <IconButton icon={<BarChartOutlined />} children="1.9M" />
                     <IconButton icon={<ShareAltOutlined />} children="Share" />
-                    <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport} />
+                    {isAllowShowReport && (
+                        <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport} />
+                    )}
                 </Flex>
             </Flex>
         </Card>
