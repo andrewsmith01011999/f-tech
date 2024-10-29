@@ -22,13 +22,17 @@ export const ResourceMenu = () => {
     };
 
     const toFeedback = () => {
-        if (accountInfo?.role?.name === 'STAFF') {
+        if (accountInfo?.role?.name === 'STAFF' || accountInfo?.role?.name === 'ADMIN') {
             navigate(PATHS.ADMIN_FEEDBACKS);
             return;
         }
 
         navigate(PATHS.FEEDBACKS);
     };
+    
+    const toReport = () => {
+        navigate(PATHS.ADMIN_REPORTS);
+    }
 
     const items: MenuItem[] = [
         {
@@ -58,6 +62,12 @@ export const ResourceMenu = () => {
             label: 'Feedback',
             onClick: toFeedback,
         },
+        ...((accountInfo?.role?.name === 'STAFF' || accountInfo?.role?.name === 'ADMIN') ? [{
+            key: '6',
+            icon: <Icon component={() => <img src={FeedbackSvg} alt="feedback" />} />,
+            label: 'Report',
+            onClick: toReport,
+        }] : [])
     ];
 
     return (

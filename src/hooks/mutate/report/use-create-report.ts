@@ -18,7 +18,7 @@ export const useCreateReport = (id: string, options: UseMutationOptions<unknown,
 
 export const useCreateReportPost = (id: string, options: UseMutationOptions<unknown, AxiosError<unknown>> = {}) => {
     const createReport = async (reason: ReportAccountReasons) => {
-        return axiosInstance.post(`/report/create?reportReason=${reason}`, {
+        return axiosInstance.post(`/post-report/create?reportReason=${reason}`, {
             postId: id,
         });
     };

@@ -1,3 +1,6 @@
+import { Account } from "../account";
+import { FeedbackStatus } from "../feedback/feedback";
+
 export type ReportAccountReasons =
     | 'HATE'
     | 'ABUSE_AND_HARASSMENT'
@@ -82,3 +85,25 @@ export const reportReasons: ReportType[] = [
     'HARMFUL_CONTENT',
     'OTHER',
 ];
+
+export type PostReport = {
+    reportId: string;
+    title: string;
+    description: string;
+    reportTime: string;
+    status: FeedbackStatus;
+    postId: string;
+    postTitle: string;
+    postContent: string;
+    postCreatedDate: string;
+}
+
+export type AccountReport = {
+    reportAccountId: string;
+    title: string;
+    reason: string;
+    reportTime: string;
+    status: FeedbackStatus;
+    reporter: Account;
+    reported: Account;
+}

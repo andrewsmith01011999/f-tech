@@ -28,49 +28,6 @@ const MainLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
     const { data: profileData, isLoading: isProfileLoading } = useProfile();
     const { data: walletData, isLoading: isWalletLoading } = useWallet();
 
-    const [history, setHistory] = useState<string>('');
-
-    const pathSnippets = location.pathname.split('/').filter(i => i);
-    const extraBreadcrumbItems = pathSnippets.map((_, index) => {
-        const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
-
-        return {
-            path: url,
-            breadcrumbName: (
-                <Link to={url} onClick={() => setHistory(location.pathname)}>
-                    {url.split('/').splice(-1)?.[0]}
-                </Link>
-            ),
-        };
-    });
-
-    const breadcrumbItems = [
-        {
-            ...(location.pathname.split('/').length > 1 && {
-                path: '-1',
-                breadcrumbName: (
-                    <Button
-                        size="small"
-                        type="text"
-                        icon={<img src={TagXSvg} alt="tag-x" />}
-                        onClick={() => {
-                            setHistory(location.pathname);
-                            navigate(-1);
-                        }}
-                    />
-                ),
-            }),
-        },
-        ...extraBreadcrumbItems,
-        {
-            ...(location.pathname.length < history.length &&
-                history.includes(location.pathname) && {
-                    path: '1',
-                    breadcrumbName: <RightOutlined onClick={() => navigate(history)} />,
-                }),
-        },
-    ];
-
     return (
         <ConfigProvider theme={themeConfig}>
             <Layout>
