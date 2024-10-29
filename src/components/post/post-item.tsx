@@ -25,6 +25,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
 import { useMessage } from '@/hooks/use-message';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
 
 const { confirm } = Modal;
 
@@ -38,6 +40,7 @@ interface PostItemProps {
 export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showCheckbox = false, field }) => {
     const { title, content, createdDate, imageList, tag, postId } = data;
 
+    const {accountInfo} = useSelector((state : RootState) => state.account)
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const { success } = useMessage();
@@ -86,7 +89,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                             </PostTag>
                         )}
                     </Flex>
-                    {showActions && (
+                    {showActions && data?.account?.accountId === accountInfo?.accountId && (
                         <Dropdown
                             menu={{
                                 items: [
@@ -172,7 +175,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                     <IconButton icon={<CommentOutlined />} children="Comment" />
                     <IconButton icon={<BarChartOutlined />} children="1.9M" />
                     <IconButton icon={<ShareAltOutlined />} children="Share" />
-                    <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport}  />
+                    <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport} />
                 </Flex>
             </Flex>
         </Card>
