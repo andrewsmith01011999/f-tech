@@ -7,6 +7,7 @@ import { Flex, Space, Typography } from 'antd';
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import PlaceholderSvg from '/public/placeholder.svg';
+import { useMessage } from '@/hooks/use-message';
 
 interface RewardItemProps {
     reward: RedeemDocument;
@@ -17,10 +18,19 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
+    const { success } = useMessage();
+
     const { mutate: createRedeem, isPending: isPendingCreateRedeem } = useCreateRedeem();
 
     const handleCreateRedeem = () => {
-        createRedeem({ accountId: accountInfo?.accountId || '', documentId });
+        createRedeem(
+            { accountId: accountInfo?.accountId || '', documentId },
+            {
+                onSuccess: () => {
+                    success('Redeem successfully');
+                },
+            },
+        );
     };
 
     return (
