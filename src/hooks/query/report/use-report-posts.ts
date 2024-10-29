@@ -10,6 +10,7 @@ export type FeedbackListingParams = PaginationParams;
 
 export type PostReportParams = PaginationParams & {
     reportPostStatusList?: FeedbackStatus[];
+    username?: string;
 };
 
 type PostReportProps = {
@@ -20,7 +21,7 @@ export const useReportPostsListing = ({ params }: PostReportProps) => {
     const fetchPostReport = async () => {
         const { entity } = await request<PostReport[]>(
             'get',
-            '/post-report/filter',
+            '/post-report/getall',
             {},
             {
                 params,
