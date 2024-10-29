@@ -15,6 +15,7 @@ import ReportReason from './components/report-reason';
 import { useCreateReport } from '@/hooks/mutate/report/use-create-report';
 import { useMessage } from '@/hooks/use-message';
 import { useParams } from 'react-router-dom';
+import { PostStatus } from '@/types/post/post';
 
 const UserProfilePage = () => {
     const {id}= useParams<{id: string}>();
@@ -33,6 +34,7 @@ const UserProfilePage = () => {
         params: {
             ...initialParams,
             accountId: accountInfo?.accountId,
+            statuses: [PostStatus.PUBLIC],
         },
     });
 

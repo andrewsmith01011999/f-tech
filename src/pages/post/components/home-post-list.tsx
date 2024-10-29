@@ -5,6 +5,7 @@ import { PostWrapper } from '../layout/post-wrapper';
 import { PostItem } from '@/components/post/post-item';
 import { Empty } from 'antd';
 import { useSearchParams } from 'react-router-dom';
+import { PostStatus } from '@/types/post/post';
 
 export const HomePostList = () => {
     const initialParams: PaginationParams = {
@@ -22,6 +23,7 @@ export const HomePostList = () => {
             ...initialParams,
             tagId,
             topicId,
+            statuses: [PostStatus.PUBLIC],
         },
     });
 
