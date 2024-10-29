@@ -8,9 +8,9 @@ interface IconButtonProps {
     onClick?: OnAction
 }
 
-export const IconButton: FC<IconButtonProps> = ({ icon, children }) => {
+export const IconButton: FC<IconButtonProps> = ({ icon, children, onClick }) => {
     return (
-        <Button type="text" size="small">
+        <Button type="text" size="small" onClick={onClick}>
             <Space align="center">
                 {icon}
                 {children}
