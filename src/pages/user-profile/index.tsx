@@ -14,8 +14,10 @@ import { ReportAccountReasons, reportAccountReasons } from '@/types/report/repor
 import ReportReason from './components/report-reason';
 import { useCreateReport } from '@/hooks/mutate/report/use-create-report';
 import { useMessage } from '@/hooks/use-message';
+import { useParams } from 'react-router-dom';
 
 const UserProfilePage = () => {
+    const {id}= useParams<{id: string}>();
     const [selectedReason, setSelectedReason] = useState<ReportAccountReasons>();
     const [isShowReportReasons, setIsShowReportReasons] = useState(false);
 
@@ -38,7 +40,7 @@ const UserProfilePage = () => {
         return null;
     }
 
-    const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReport(accountInfo?.accountId);
+    const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReport(id as string);
 
     const items: TabsProps['items'] = [
         {
