@@ -25,15 +25,5 @@ export const ExplorePostList = () => {
         },
     });
 
-    if (!data || data.length === 0) {
-        return <Empty />;
-    }
-
-    return (
-        <PostWrapper>
-            {data.map(post => (
-                <PostItem data={post} key={post.postId} />
-            ))}
-        </PostWrapper>
-    );
+    return <PostWrapper>{data ? data.map(post => <PostItem data={post} key={post.postId} />) : <Empty />}</PostWrapper>;
 };

@@ -20,12 +20,8 @@ const AdminReportList = () => {
     const [params, setParams] = React.useState<PostReportParams>(initialParams);
 
     const { data: reportPosts } = useReportPostsListing({
-        params
+        params,
     });
-
-    if (!reportPosts || !reportPosts.length) {
-        return <Empty />;
-    }
 
     const optionsWithDisabled = [
         {
@@ -40,7 +36,7 @@ const AdminReportList = () => {
                     }}
                     color={mapFeedbackStatusColor('PENDING')}
                 >
-                    REJECTED
+                    PENDING
                 </Tag>
             ),
             value: 'PENDING',
@@ -122,9 +118,11 @@ const AdminReportList = () => {
                 </Popover>
             </Flex>
 
-            {reportPosts.map(reportPost => (
-                <AdminReportItem key={reportPost.reportId} data={reportPost} />
-            ))}
+            {reportPosts ? (
+                reportPosts.map(reportPost => <AdminReportItem key={reportPost.reportId} data={reportPost} />)
+            ) : (
+                <Empty />
+            )}
         </AdminFeedbackWrapper>
     );
 };
