@@ -11,6 +11,7 @@ import {
     EyeInvisibleOutlined,
     GlobalOutlined,
     KeyOutlined,
+    LikeFilled,
     LikeOutlined,
     ShareAltOutlined,
 } from '@ant-design/icons';
@@ -28,6 +29,8 @@ import { useMessage } from '@/hooks/use-message';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
 import { useToggleUpvote } from '@/hooks/mutate/upvote/use-toggle-upvote';
+import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
+import { upvoteKeys } from '@/consts/factory/upvote';
 
 const { confirm } = Modal;
 
@@ -48,6 +51,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
 
     const [searchParams] = useSearchParams();
 
+    const { data: upvotes } = useUpvoteListing();
     const { mutate: upvote, isPending: isPendingUpvote } = useToggleUpvote();
 
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
@@ -88,8 +92,11 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
     const handleUpvote = (id: string) => {
         upvote(id, {
             onSuccess: () => {
+                // queryClient.invalidateQueries({
+                //     queryKey: postKeys.listing(),
+                // });
                 queryClient.invalidateQueries({
-                    queryKey: postKeys.listing(),
+                    queryKey: upvoteKeys.listing(),
                 });
             },
         });
@@ -201,7 +208,17 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
 
                 <Flex justify="end" gap={20}>
                     <IconButton
-                        icon={<LikeOutlined />}
+                        icon={
+                            !upvotes?.find(
+                                upvote =>
+                                    upvote?.post?.postId === data?.postId &&
+                                    upvote?.account?.accountId === accountInfo?.accountId,
+                            ) ? (
+                                <LikeOutlined />
+                            ) : (
+                                <LikeFilled />
+                            )
+                        }
                         children="Like"
                         onClick={() => handleUpvote(data?.postId)}
                         disabled={isPendingUpvote}
