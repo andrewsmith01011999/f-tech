@@ -46,7 +46,7 @@ const AdminReportItem = ({ data }: AdminReportItemProps) => {
                     <Space size="large">
                         <UserInfo account={data?.account} />
                         <Typography.Text type="secondary">
-                            {dayjsConfig(data?.postCreatedDate)?.format(FULL_TIME_FORMAT)}
+                            {dayjsConfig(data?.postCreatedDate).add(7, 'hour')?.format(FULL_TIME_FORMAT)}
                         </Typography.Text>
                     </Space>
 

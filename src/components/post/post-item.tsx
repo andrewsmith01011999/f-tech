@@ -177,7 +177,9 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                     ))}
                 </Flex>
 
-                <Typography.Text type="secondary">Posted {dayjsConfig(createdDate).fromNow()}</Typography.Text>
+                <Typography.Text type="secondary">
+                    Posted {dayjsConfig(createdDate).add(7, 'hour').fromNow()}
+                </Typography.Text>
 
                 <Flex justify="end" gap={20}>
                     <IconButton icon={<LikeOutlined />} children="Like" />
