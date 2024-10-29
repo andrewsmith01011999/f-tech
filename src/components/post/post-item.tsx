@@ -77,6 +77,11 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
         dispatch(setPost({ modal: { open: true, type: 'report' }, id: postId }));
     };
 
+    const copyLink = () => {
+        navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
+        success('Link copied to clipboard!');
+    }
+
     const isAllowShowActions =
         accountInfo?.role?.name === 'ADMIN' ||
         accountInfo?.role?.name === 'STAFF' ||
@@ -185,7 +190,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                     <IconButton icon={<LikeOutlined />} children="Like" />
                     <IconButton icon={<CommentOutlined />} children="Comment" />
                     <IconButton icon={<BarChartOutlined />} children="1.9M" />
-                    <IconButton icon={<ShareAltOutlined />} children="Share" />
+                    <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
                     {isAllowShowReport && (
                         <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport} />
                     )}
