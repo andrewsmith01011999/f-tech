@@ -6,11 +6,12 @@ interface IconButtonProps {
     icon: React.ReactNode;
     children: React.ReactNode;
     onClick?: OnAction
+    disabled?: boolean
 }
 
-export const IconButton: FC<IconButtonProps> = ({ icon, children, onClick }) => {
+export const IconButton: FC<IconButtonProps> = ({ icon, children, onClick, disabled }) => {
     return (
-        <Button type="text" size="small" onClick={onClick}>
+        <Button type="text" size="small" onClick={onClick} disabled={disabled}>
             <Space align="center">
                 {icon}
                 {children}

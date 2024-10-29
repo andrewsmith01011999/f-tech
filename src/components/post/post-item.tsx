@@ -27,6 +27,7 @@ import { postKeys } from '@/consts/factory/post';
 import { useMessage } from '@/hooks/use-message';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
+import { useToggleUpvote } from '@/hooks/mutate/upvote/use-toggle-upvote';
 
 const { confirm } = Modal;
 
@@ -46,6 +47,8 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
     const { success } = useMessage();
 
     const [searchParams] = useSearchParams();
+
+    const { mutate: upvote, isPending: isPendingUpvote } = useToggleUpvote();
 
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
         onSuccess: () => {
@@ -80,7 +83,17 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
     const copyLink = () => {
         navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
         success('Link copied to clipboard!');
-    }
+    };
+
+    const handleUpvote = (id: string) => {
+        upvote(id, {
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: postKeys.listing(),
+                });
+            },
+        });
+    };
 
     const isAllowShowActions =
         accountInfo?.role?.name === 'ADMIN' ||
@@ -187,7 +200,12 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                 </Typography.Text>
 
                 <Flex justify="end" gap={20}>
-                    <IconButton icon={<LikeOutlined />} children="Like" />
+                    <IconButton
+                        icon={<LikeOutlined />}
+                        children="Like"
+                        onClick={() => handleUpvote(data?.postId)}
+                        disabled={isPendingUpvote}
+                    />
                     <IconButton icon={<CommentOutlined />} children="Comment" />
                     <IconButton icon={<BarChartOutlined />} children="1.9M" />
                     <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
