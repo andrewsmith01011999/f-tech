@@ -96,6 +96,7 @@ export type PostReport = {
     postTitle: string;
     postContent: string;
     postCreatedDate: string;
+    account: Account
 }
 
 export type AccountReport = {

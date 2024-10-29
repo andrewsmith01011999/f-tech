@@ -44,7 +44,7 @@ const AdminReportItem = ({ data }: AdminReportItemProps) => {
             <Flex vertical gap={8}>
                 <Flex align="center" justify="space-between">
                     <Space size="large">
-                        <UserInfo account={accountInfo} />
+                        <UserInfo account={data?.account} />
                         <Typography.Text type="secondary">
                             {dayjsConfig(data?.postCreatedDate)?.format(FULL_TIME_FORMAT)}
                         </Typography.Text>
