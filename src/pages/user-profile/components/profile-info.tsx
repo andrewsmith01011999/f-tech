@@ -9,13 +9,13 @@ interface ProfileInfoProps {
 }
 
 export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
-    const { accountInfo } = useSelector((state: RootState) => state.account);
+    const { accountInfo, userInfo } = useSelector((state: RootState) => state.account);
 
     return (
         <Flex vertical gap={92}>
             <div style={{ position: 'relative' }}>
                 <Image
-                    src={accountInfo?.coverImage || BackgroundPlaceholder}
+                    src={userInfo?.coverImage || accountInfo?.coverImage || BackgroundPlaceholder}
                     alt="logo"
                     width="100%"
                     height={260}
@@ -24,7 +24,7 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                 <Avatar
                     shape="circle"
                     size={136}
-                    src={accountInfo?.avatar || AvatarPlaceholder}
+                    src={userInfo?.avatar || accountInfo?.avatar || AvatarPlaceholder}
                     style={{ position: 'absolute', top: 200, left: 20 }}
                 />
 
@@ -48,8 +48,8 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                 </Dropdown>
             </div>
             <Flex vertical gap={8}>
-                <Typography.Title level={4}>{accountInfo?.username}</Typography.Title>
-                <Typography.Text type="secondary">@{accountInfo?.username}</Typography.Text>
+                <Typography.Title level={4}>{userInfo?.username || accountInfo?.username}</Typography.Title>
+                <Typography.Text type="secondary">@{userInfo?.username || accountInfo?.username}</Typography.Text>
                 <Typography.Text>#Beingnobody_goingnowhere.</Typography.Text>
                 <Flex gap={24}>
                     <Space size="small">
