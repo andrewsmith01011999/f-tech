@@ -13,14 +13,14 @@ interface RewardItemProps {
 }
 
 const RewardItem: FC<RewardItemProps> = ({ reward }) => {
-    const { name, type, image, price, status, sectionList } = reward;
+    const { name, type, image, price, status, sectionList, documentId } = reward;
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const { mutate: createRedeem, isPending: isPendingCreateRedeem } = useCreateRedeem();
 
     const handleCreateRedeem = () => {
-        createRedeem({ accountId: accountInfo?.accountId || '', sourceCodeId: '' });
+        createRedeem({ accountId: accountInfo?.accountId || '', documentId });
     };
 
     return (

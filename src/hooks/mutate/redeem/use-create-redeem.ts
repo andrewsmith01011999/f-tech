@@ -7,7 +7,7 @@ export const useCreateRedeem = (
     options: UseMutationOptions<unknown, AxiosError<unknown>, CreateRedeemPayload> = {},
 ) => {
     const createRedeem = async (payload: CreateRedeemPayload) => {
-        return axiosInstance.post('/post/create', payload);
+        return axiosInstance.post('/redeem/create', payload);
     };
 
     return useMutation<unknown, AxiosError<unknown>, CreateRedeemPayload>({

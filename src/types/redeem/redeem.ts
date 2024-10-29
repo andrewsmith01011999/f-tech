@@ -21,5 +21,5 @@ export type Section = {
 
 export type CreateRedeemPayload = {
     accountId: string;
-    sourceCodeId: string;
+    documentId: string;
 };
