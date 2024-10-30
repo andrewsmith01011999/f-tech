@@ -241,21 +241,6 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
             <DraftList onCancel={() => handleCancel('draft')} />
 
             <Modal
-                title={
-                    <Flex justify="space-between">
-                        Drafts List
-                        <Button htmlType="submit" form="draft">
-                            Done
-                        </Button>
-                    </Flex>
-                }
-                open={openDraft}
-                onCancel={() => setOpenDraft(false)}
-                width={'80vw'}
-                footer={null}
-            ></Modal>
-
-            <Modal
                 title="Report"
                 open={modal.open && modal.type === 'report'}
                 onCancel={() => handleCancel('report')}

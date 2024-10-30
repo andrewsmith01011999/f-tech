@@ -55,6 +55,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     });
 
 export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
+    const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
 
     const { type, open } = useSelector((state: RootState) => state.post.modal);
@@ -179,7 +180,14 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
             title={
                 <Flex justify="space-between">
                     Create Post
-                    <Button onClick={handleOpenDraft}>Drafts</Button>
+                    <Button
+                        onClick={handleOpenDraft}
+                        style={{
+                            marginRight: 24,
+                        }}
+                    >
+                        Drafts
+                    </Button>
                 </Flex>
             }
             open={type === 'create' && open}
@@ -189,7 +197,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
         >
             <Card>
                 <Flex vertical gap={10}>
-                    <UserInfo />
+                    <UserInfo account={accountInfo!} />
 
                     <Form<CreatePostPayload> layout="vertical" form={form} name="createPost" onFinish={onFinish}>
                         <Form.Item<CreatePostPayload>

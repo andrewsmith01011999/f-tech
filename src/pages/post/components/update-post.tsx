@@ -41,6 +41,7 @@ const initialParams: TopicListingParams = {
 };
 
 export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
+        const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
 
     const { type, open } = useSelector((state: RootState) => state.post.modal);
@@ -113,7 +114,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
         <Modal title="Update Post" open={type === 'update' && open} onCancel={onCancel} footer={null} width={'80vw'}>
             <Card>
                 <Flex vertical gap={10}>
-                    <UserInfo />
+                    <UserInfo account={accountInfo!} />
 
                     <Form<UpdatePostPayload> layout="vertical" form={form} name="updatePost" onFinish={onFinish}>
                         <Form.Item<UpdatePostPayload>

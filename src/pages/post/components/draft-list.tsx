@@ -81,7 +81,13 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             title={
                 <Flex justify="space-between">
                     Drafts List
-                    <Button htmlType="submit" form="draft">
+                    <Button
+                        htmlType="submit"
+                        form="draft"
+                        style={{
+                            marginRight: 24,
+                        }}
+                    >
                         Done
                     </Button>
                 </Flex>
