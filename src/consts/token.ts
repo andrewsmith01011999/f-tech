@@ -63,6 +63,9 @@ export const themeConfig: ThemeConfig = {
         Spin: {
             colorPrimary: '#007AFF',
         },
+        Breadcrumb: {
+            linkColor: '#fff',
+        }
     },
     algorithm: theme.darkAlgorithm,
 };

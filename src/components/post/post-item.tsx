@@ -224,7 +224,6 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                         disabled={isPendingUpvote}
                     />
                     <IconButton icon={<CommentOutlined />} children="Comment" />
-                    <IconButton icon={<BarChartOutlined />} children="1.9M" />
                     <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
                     {isAllowShowReport && (
                         <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport} />

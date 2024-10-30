@@ -41,7 +41,7 @@ const initialParams: TopicListingParams = {
 };
 
 export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
-        const { accountInfo } = useSelector((state: RootState) => state.account);
+    const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
 
     const { type, open } = useSelector((state: RootState) => state.post.modal);
@@ -52,6 +52,8 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const { imgUrl, imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
 
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
 
     const { data: topics, isLoading: isLoadingTopics } = useTopicsListing({ params: initialParams });
     const { data: tags, isLoading: isLoadingTags } = useTagsListing({ params: initialParams });
@@ -65,16 +67,26 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     });
 
     const onFinish = (values: UpdatePostPayload) => {
-        updatePost(values, {
-            onSuccess: () => {
-                success('Post updated successfully!');
-                onCancel && onCancel();
-                form.resetFields();
+        updatePost(
+            {
+                ...values,
+                ...(fileList.length > 0 && {
+                    imageUrlList: fileList.map(file => ({
+                        url: file.url as string,
+                    })),
+                }),
             },
-            onError: error => {
-                message.error(error.message);
+            {
+                onSuccess: () => {
+                    success('Post updated successfully!');
+                    onCancel && onCancel();
+                    form.resetFields();
+                },
+                onError: error => {
+                    message.error(error.message);
+                },
             },
-        });
+        );
     };
 
     const onChangeFile: UploadProps['onChange'] = ({ file, fileList: newFileList }) => {
@@ -167,11 +179,18 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                     </Form>
 
                     <Flex gap={10} wrap>
-                        {fileList.map(file => (
-                            <div className="ant-upload" key={file.uid}>
-                                <Image src={file.url} alt={file.url} width={100} height={100} />
-                            </div>
-                        ))}
+                        <Upload listType="picture-card" fileList={fileList} onRemove={onRemoveFile} />
+                        {previewImage && (
+                            <Image
+                                wrapperStyle={{ display: 'none' }}
+                                preview={{
+                                    visible: previewOpen,
+                                    onVisibleChange: visible => setPreviewOpen(visible),
+                                    afterOpenChange: visible => !visible && setPreviewImage(''),
+                                }}
+                                src={previewImage}
+                            />
+                        )}
                     </Flex>
 
                     <Flex align="center" justify="space-between">

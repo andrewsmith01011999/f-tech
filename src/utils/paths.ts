@@ -10,8 +10,8 @@ export const PATHS = {
     WALLET: '/wallet',
     NOTIFICATION: '/notification',
     REWARDS: '/rewards',
-    FEEDBACKS: '/feedbacks',
-    ADMIN_FEEDBACKS: '/admin/feedbacks',
+    FEEDBACKS: '/feedback',
+    ADMIN_FEEDBACKS: '/admin/feedback-manager',
     USER_PROFILE: '/user-profile/:id',
     ADMIN_REPORTS: '/admin/reports',
 };
