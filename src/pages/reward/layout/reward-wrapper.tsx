@@ -8,6 +8,7 @@ import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import TagXSvg from '/public/tag-x.svg';
+import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
 
 interface RewardWrapperProps {
     children: React.ReactNode;
@@ -17,6 +18,8 @@ const RewardWrapper: FC<RewardWrapperProps> = ({ children }) => {
     const navigate = useNavigate();
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
+
+    const {data: wallet} = useGetWalletByAccount(accountInfo?.accountId as string);
 
     const [history, setHistory] = useState<string>('');
 
@@ -72,7 +75,7 @@ const RewardWrapper: FC<RewardWrapperProps> = ({ children }) => {
                     ))}
                 </Breadcrumb>
 
-                <SecondaryTag>Balance: {accountInfo?.wallet?.balance} MC</SecondaryTag>
+                <SecondaryTag>Balance: {wallet?.balance} MC</SecondaryTag>
             </Flex>
 
             <Divider />
