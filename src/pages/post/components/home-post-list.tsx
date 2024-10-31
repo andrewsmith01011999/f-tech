@@ -17,13 +17,15 @@ export const HomePostList = () => {
 
     const topicId = searchParams.get('topicId') || undefined;
     const tagId = searchParams.get('tagId') || undefined;
-
+    const categoryId = searchParams.get('category') || undefined;
+    
     const { data } = usePostsListing({
         params: {
             ...initialParams,
             tagId,
             topicId,
             statuses: [PostStatus.PUBLIC],
+            categoryId
         },
     });
 

@@ -14,7 +14,7 @@ interface RewardItemProps {
 }
 
 const RewardItem: FC<RewardItemProps> = ({ reward }) => {
-    const { name, type, image, price, status, sectionList, documentId } = reward;
+    const { name, type, image, price, status, sectionList, rewardId } = reward;
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
@@ -24,7 +24,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
 
     const handleCreateRedeem = () => {
         createRedeem(
-            { accountId: accountInfo?.accountId || '', documentId },
+            { accountId: accountInfo?.accountId || '', rewardId },
             {
                 onSuccess: () => {
                     success('Redeem successfully');
@@ -34,7 +34,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
     };
 
     return (
-        <RewardCard hoverable style={{ width: 348 }} cover={<img alt="example" src={image || PlaceholderSvg} />}>
+        <RewardCard hoverable style={{ width: 348 }} cover={<img alt="example" src={image || PlaceholderSvg} style={{height: 180, objectFit: 'cover'}} />}>
             <Space direction="vertical" size={10}>
                 <Typography.Title level={4}>{name}</Typography.Title>
                 <Typography.Text style={{ color: '#FF6934' }}>{price} MC</Typography.Text>

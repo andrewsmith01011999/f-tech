@@ -17,6 +17,7 @@ export const ExplorePostList = () => {
 
     const topicId = searchParams.get('topicId') || undefined;
     const tagId = searchParams.get('tagId') || undefined;
+    const categoryId = searchParams.get('category') || undefined;
 
     const { data } = usePostsListing({
         params: {
@@ -24,6 +25,7 @@ export const ExplorePostList = () => {
             tagId,
             topicId,
             statuses: [PostStatus.PUBLIC],
+            categoryId
         },
     });
 

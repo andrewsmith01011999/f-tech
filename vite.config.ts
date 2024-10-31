@@ -16,6 +16,10 @@ export default defineConfig({
     },
   },
 
+  server: {
+    port: 5432,
+  },
+
   plugins: [
     react({
       jsxImportSource: '@emotion/react',

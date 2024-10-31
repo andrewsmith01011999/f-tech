@@ -9,6 +9,7 @@ export type PostListingParams = PaginationParams & {
     tagId?: string;
     statuses?: PostStatus[];
     accountId?: string;
+    categoryId?: string;
 };
 
 type PostListingProps = {

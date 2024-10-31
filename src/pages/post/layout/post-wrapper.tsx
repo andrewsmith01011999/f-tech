@@ -53,13 +53,24 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
 
     const topicId = searchParams.get('topicId') || undefined;
     const tagId = searchParams.get('tagId') || undefined;
+    const categoryId = searchParams.get('category') || undefined;
 
     const handleSelectTag = (id: string | undefined) => {
-        setSearchParams(params => ({ ...params, ...(topicId && { topicId }), tagId: id }));
+        setSearchParams(params => ({
+            ...params,
+            ...(categoryId && { category: categoryId }),
+            ...(topicId && { topicId }),
+            tagId: id,
+        }));
     };
 
     const handleSelectTopic = (id: string | undefined) => {
-        setSearchParams(params => ({ ...params, topicId: id, ...(tagId && { tagId }) }));
+        setSearchParams(params => ({
+            ...params,
+            ...(categoryId && { category: categoryId }),
+            topicId: id,
+            ...(tagId && { tagId }),
+        }));
     };
 
     const handleReportAccount = () => {

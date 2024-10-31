@@ -93,14 +93,25 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
         setFileList(newFileList);
     };
 
-    const onRemoveFile = (file: UploadFile) => {
-        const index = fileList.indexOf(file);
-        if (index > -1) {
-            const newImgUrlList = imgUrlList.slice();
-            newImgUrlList.splice(index, 1);
-            setImgUrlList(newImgUrlList);
-        }
-    };
+ const onRemoveFile = (file: UploadFile) => {
+     const index = fileList.indexOf(file);
+     if (index > -1) {
+         const newImgUrlList = imgUrlList.slice();
+         newImgUrlList.splice(index, 1);
+         setImgUrlList(newImgUrlList);
+         setFileList(fileList.filter(item => item.uid !== file.uid));
+     }
+ };
+
+  useEffect(() => {
+      const appendFieldFileList = fileList.map((file, index) => {
+          return {
+              ...file,
+              url: imgUrlList[index],
+          };
+      });
+      setFileList(appendFieldFileList);
+  }, [imgUrlList]);
 
     useEffect(() => {
         if (detail) {

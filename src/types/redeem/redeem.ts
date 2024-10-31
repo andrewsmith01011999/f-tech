@@ -3,7 +3,7 @@ export type Redeem = {
 };
 
 export type RedeemDocument = {
-    documentId: string;
+    rewardId: string;
     name: string;
     image: string;
     price: number;
@@ -21,5 +21,5 @@ export type Section = {
 
 export type CreateRedeemPayload = {
     accountId: string;
-    documentId: string;
+    rewardId: string;
 };
