@@ -4,9 +4,13 @@ import { Link } from 'react-router-dom';
 import TransactionItem from './transaction-item';
 import { css } from '@emotion/react';
 import { useRedeemHistory } from '@/hooks/query/redeem/use-redeem-documents';
+import { useTransactionsCurrentAccount } from '@/hooks/query/transaction/use-transactions-current-account';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
 
 const Transactions: FC = () => {
-    const { data } = useRedeemHistory();
+    const { accountInfo } = useSelector((state: RootState) => state.account);
+    const { data } = useTransactionsCurrentAccount();
 
     return (
         <div css={styles}>
@@ -34,9 +38,15 @@ const Transactions: FC = () => {
                 </p>
             </Flex>
             <Flex className="transaction-items" vertical gap={20}>
-                <TransactionItem image="" amount={-1000} description="Description" title="Netflix" />
-                <TransactionItem image="" amount={-1000} description="Description" title="Netflix" />
-                <TransactionItem image="" amount={1000} description="Description" title="Netflix" />
+                            {data?.map((transaction) => (
+
+                                <TransactionItem
+                                image={accountInfo?.avatar || ''}
+                                amount={transaction?.amount}
+                                description={transaction?.type}
+                                title="Reward"
+                                />
+                            ))}
             </Flex>
         </div>
     );
