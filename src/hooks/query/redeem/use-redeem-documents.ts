@@ -16,3 +16,17 @@ export const useRedeemDocuments = () => {
         placeholderData: keepPreviousData,
     });
 };
+
+export const useRedeemHistory = () => {
+    const fetchRedeemHistory = async (): Promise<Redeem> => {
+        const { entity } = await request<Redeem>('get', '/redeem/my-document');
+
+        return entity;
+    };
+
+    return useQuery<Redeem>({
+        queryKey: redeemKeys.history(),
+        queryFn: fetchRedeemHistory,
+        placeholderData: keepPreviousData,
+    });
+}

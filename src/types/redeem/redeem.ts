@@ -1,5 +1,5 @@
 export type Redeem = {
-    document: RedeemDocument[];
+    reward: RedeemDocument[];
 };
 
 export type RedeemDocument = {

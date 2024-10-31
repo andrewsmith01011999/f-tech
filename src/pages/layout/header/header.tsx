@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Logo from '/public/ftech-logo.svg';
-import { BellOutlined, CaretDownFilled, DownCircleFilled, DownOutlined, DownSquareFilled, DownSquareTwoTone, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, CaretDownFilled, DownCircleFilled, DownOutlined, DownSquareFilled, DownSquareTwoTone, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, MoneyCollectOutlined, UserOutlined } from '@ant-design/icons';
 import BaseInput from '@/components/core/input';
 import { PATHS } from '@/utils/paths';
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
@@ -45,6 +45,10 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         navigate(PATHS.HOME);
     }
 
+    const toWallet = () => {
+        navigate(PATHS.WALLET);
+    }
+
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
             {device !== 'MOBILE' && (
@@ -71,11 +75,16 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                                     items: [
                                         {
                                             key: '0',
+                                            icon: <MoneyCollectOutlined />,
+                                            label: <span onClick={toWallet}>Wallet</span>,
+                                        },
+                                        {
+                                            key: '1',
                                             icon: <UserOutlined />,
                                             label: <span onClick={toProfile}>Profile</span>,
                                         },
                                         {
-                                            key: '1',
+                                            key: '2',
                                             icon: <LogoutOutlined />,
                                             label: <span onClick={onLogout}>Logout</span>,
                                         },

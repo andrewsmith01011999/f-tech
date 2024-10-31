@@ -1,4 +1,4 @@
-import { useRedeemDocuments } from '@/hooks/query/redeem/useRedeemDocuments';
+import { useRedeemDocuments } from '@/hooks/query/redeem/use-redeem-documents';
 import { Empty, Flex } from 'antd';
 import RewardItem from '../components/reward-item';
 
@@ -12,7 +12,7 @@ const RewardList = () => {
     return (
         <Flex align="center" justify="space-between" wrap gap={10}>
             {data.map(reward => (
-                <RewardItem reward={reward} key={reward.documentId} />
+                <RewardItem reward={reward} key={reward.rewardId} />
             ))}
         </Flex>
     );
