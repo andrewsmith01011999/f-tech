@@ -8,6 +8,7 @@ export type TopicListingParams = PaginationParams;
 
 type TopicListingProps = {
     params: TopicListingParams;
+    categoryId?: string;
 };
 
 export const useTopicsListing = ({ params }: TopicListingProps) => {

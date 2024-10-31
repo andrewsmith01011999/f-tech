@@ -32,6 +32,10 @@ const initialParams: TagListingParams = {
 export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true }) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const topicId = searchParams.get('topicId') || undefined;
+    const tagId = searchParams.get('tagId') || undefined;
+    const categoryId = searchParams.get('category') || undefined;
+
     const { success } = useMessage();
     const dispatch = useDispatch();
     const { id, modal } = useSelector((state: RootState) => state.post);
@@ -40,7 +44,10 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
     const [selectedReason, setSelectedReason] = useState<ReportAccountReasons>();
 
     const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReportPost(id || '');
-    const { data: topics } = useTopicsListing({ params: initialParams });
+    const { data: topics } = useTopicsListing({ params: {
+        ...initialParams,
+        ...(categoryId && { categoryId })
+    } });
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
 
     const handleCancel = (type: PostModalType) => {
@@ -50,10 +57,6 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
     const handleOpen = (type: PostModalType) => {
         dispatch(setPost({ modal: { open: true, type } }));
     };
-
-    const topicId = searchParams.get('topicId') || undefined;
-    const tagId = searchParams.get('tagId') || undefined;
-    const categoryId = searchParams.get('category') || undefined;
 
     const handleSelectTag = (id: string | undefined) => {
         setSearchParams(params => ({
