@@ -8,6 +8,8 @@ import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import PlaceholderSvg from '/public/placeholder.svg';
 import { useMessage } from '@/hooks/use-message';
+import { useQueryClient } from '@tanstack/react-query';
+import { walletKeys } from '@/consts/factory/wallet';
 
 interface RewardItemProps {
     reward: RedeemDocument;
@@ -16,6 +18,7 @@ interface RewardItemProps {
 const RewardItem: FC<RewardItemProps> = ({ reward }) => {
     const { name, type, image, price, status, sectionList, rewardId } = reward;
 
+    const queryClient = useQueryClient();
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const { success } = useMessage();
@@ -26,7 +29,11 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
         createRedeem(
             { accountId: accountInfo?.accountId || '', rewardId },
             {
+                
                 onSuccess: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: walletKeys.getByAccount(accountInfo?.accountId || ''),
+                    });
                     success('Redeem successfully');
                 },
             },
