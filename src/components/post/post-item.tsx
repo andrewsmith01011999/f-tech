@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Dropdown, Flex, Form, FormListFieldData, Image, Modal, Typography } from 'antd';
+import { Button, Card, Checkbox, Dropdown, Flex, Form, FormListFieldData, Image, Modal, Tag, Typography } from 'antd';
 import { UserInfo } from '../user/user-info';
 import { PostTag } from './post-tag';
 import {
@@ -14,6 +14,7 @@ import {
     LikeFilled,
     LikeOutlined,
     ShareAltOutlined,
+    TagOutlined,
 } from '@ant-design/icons';
 import { IconButton } from './icon-button';
 import { useDispatch } from 'react-redux';
@@ -43,7 +44,7 @@ interface PostItemProps {
 }
 
 export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showCheckbox = false, field }) => {
-    const { title, content, createdDate, imageList, tag, postId } = data;
+    const { title, content, createdDate, imageList, tag, postId, topic } = data;
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const dispatch = useDispatch();
@@ -124,8 +125,22 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
                         <UserInfo account={data.account} />
+                        {
+                            topic && (
+                                <Tag style={{
+                                    padding: '0 10px',
+                                    fontSize: 16,
+                                    height: 24,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}>
+                                    {topic?.name}
+                                </Tag>
+                            )
+                        }
                         {tag && (
                             <PostTag backgroundColor={tag?.backgroundColorHex} textColor={tag?.textColorHex}>
+                                <TagOutlined style={{marginRight: 8}} />
                                 {tag?.name}
                             </PostTag>
                         )}
@@ -210,7 +225,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                 </Flex>
 
                 <Typography.Text type="secondary">
-                    Posted {dayjsConfig(createdDate).add(7, 'hour').fromNow()}
+                    Posted {dayjsConfig(createdDate).fromNow()}
                 </Typography.Text>
 
                 <Flex gap={32} vertical>

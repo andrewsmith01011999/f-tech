@@ -49,7 +49,7 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
             </div>
             <Flex vertical gap={8}>
                 <Typography.Title level={4}>{userInfo?.username || accountInfo?.username}</Typography.Title>
-                <Typography.Text type="secondary">@{userInfo?.username || accountInfo?.username}</Typography.Text>
+                <Typography.Text type="secondary">@{userInfo?.handle || accountInfo?.handle}</Typography.Text>
                 <Typography.Text>#Beingnobody_goingnowhere.</Typography.Text>
                 <Flex gap={24}>
                     <Space size="small">

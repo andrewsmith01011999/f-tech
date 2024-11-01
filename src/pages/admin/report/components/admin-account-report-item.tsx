@@ -116,7 +116,7 @@ const AdminAccountReportItem = ({ data }: AdminAccountReportItemProps) => {
                 </Flex>
 
                 <Typography.Text type="secondary">
-                    {dayjsConfig(data?.reportTime).add(7, 'hour')?.format(FULL_TIME_FORMAT)}
+                    {dayjsConfig(data?.reportTime)?.format(FULL_TIME_FORMAT)}
                 </Typography.Text>
 
                 <Typography.Title level={4}>{data?.title}</Typography.Title>

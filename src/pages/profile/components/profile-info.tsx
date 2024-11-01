@@ -30,7 +30,7 @@ export const ProfileInfo = () => {
             </div>
             <Flex vertical gap={8}>
                 <Typography.Title level={4}>{accountInfo?.username}</Typography.Title>
-                <Typography.Text type="secondary">@{accountInfo?.username}</Typography.Text>
+                <Typography.Text type="secondary">{accountInfo?.handle}</Typography.Text>
                 <Typography.Text>#Beingnobody_goingnowhere.</Typography.Text>
                 <Flex gap={24}>
                     <Space size="small">

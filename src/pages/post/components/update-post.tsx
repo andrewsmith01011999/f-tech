@@ -30,6 +30,8 @@ import { useUploadFile } from '@/hooks/use-upload-file';
 import { TopicListingParams, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
 import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { useDispatch } from 'react-redux';
+import { setPost } from '@/stores/post';
 
 interface UpdatePostProps {
     onCancel?: OnAction;
@@ -44,6 +46,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
 
+    const dispatch = useDispatch();
     const { type, open } = useSelector((state: RootState) => state.post.modal);
     const queryClient = useQueryClient();
     const { success } = useMessage();
@@ -80,6 +83,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                 onSuccess: () => {
                     success('Post updated successfully!');
                     onCancel && onCancel();
+                    dispatch(setPost({ id: undefined }));
                     form.resetFields();
                 },
                 onError: error => {
@@ -93,25 +97,25 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
         setFileList(newFileList);
     };
 
- const onRemoveFile = (file: UploadFile) => {
-     const index = fileList.indexOf(file);
-     if (index > -1) {
-         const newImgUrlList = imgUrlList.slice();
-         newImgUrlList.splice(index, 1);
-         setImgUrlList(newImgUrlList);
-         setFileList(fileList.filter(item => item.uid !== file.uid));
-     }
- };
+    const onRemoveFile = (file: UploadFile) => {
+        const index = fileList.indexOf(file);
+        if (index > -1) {
+            const newImgUrlList = imgUrlList.slice();
+            newImgUrlList.splice(index, 1);
+            setImgUrlList(newImgUrlList);
+            setFileList(fileList.filter(item => item.uid !== file.uid));
+        }
+    };
 
-  useEffect(() => {
-      const appendFieldFileList = fileList.map((file, index) => {
-          return {
-              ...file,
-              url: imgUrlList[index],
-          };
-      });
-      setFileList(appendFieldFileList);
-  }, [imgUrlList]);
+    useEffect(() => {
+        const appendFieldFileList = fileList.map((file, index) => {
+            return {
+                ...file,
+                url: imgUrlList[index],
+            };
+        });
+        setFileList(appendFieldFileList);
+    }, [imgUrlList]);
 
     useEffect(() => {
         if (detail) {

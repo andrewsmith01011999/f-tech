@@ -20,11 +20,11 @@ export const UserInfo: FC<UserInfoProps> = ({ account }) => {
     };
 
     return (
-        <Flex align="center" onClick={handleNavigate}>
+        <Flex align="center" onClick={handleNavigate} gap={8}>
             <Avatar size={40} shape="circle" src={account?.avatar || AvatarPlaceholder} />
             <Flex vertical>
                 <Typography.Text>{account?.username}</Typography.Text>
-                <Typography.Text type="secondary">@{account?.username?.toLowerCase()}</Typography.Text>
+                <Typography.Text type="secondary">{account?.handle?.toLowerCase()}</Typography.Text>
             </Flex>
         </Flex>
     );

@@ -45,7 +45,7 @@ const AdminFeedbackItem = ({ data }: AdminFeedbackItemProps) => {
                     <Space size="large">
                         <UserInfo account={data?.account || accountInfo} />
                         <Typography.Text type="secondary">
-                            {dayjsConfig(data?.createdDate).add(7, 'hour')?.format(FULL_TIME_FORMAT)}
+                            {dayjsConfig(data?.createdDate)?.format(FULL_TIME_FORMAT)}
                         </Typography.Text>
                     </Space>
 
