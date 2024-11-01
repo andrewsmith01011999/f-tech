@@ -1,13 +1,20 @@
-import { Button, Checkbox, Empty, Flex, GetProp, Input, Popover, Tag, Typography } from 'antd';
+import { Button, Checkbox, Dropdown, Empty, Flex, GetProp, Input, Modal, Popover, Tag, Typography } from 'antd';
 import React, { useEffect } from 'react';
 import AdminFeedbackWrapper from '../../feedback/layout/admin-feedback-wrapper';
 import { PostReportParams, useReportPostsListing } from '@/hooks/query/report/use-report-posts';
 import AdminReportItem from './admin-report-item';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { mapFeedbackStatusColor } from '../../feedback/utils/map-feedback-status-color';
 import { FeedbackStatus } from '@/types/feedback/feedback';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useGetPost } from '@/hooks/query/post/use-get-post';
+import { PostItem } from '@/components/post/post-item';
+import { PostReport } from '@/types/report/report';
+import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
+import { useQueryClient } from '@tanstack/react-query';
+import { useMessage } from '@/hooks/use-message';
+import { reportKeys } from '@/consts/factory/report';
 
 const AdminReportList = () => {
     const initialParams: PostReportParams = {
@@ -18,8 +25,15 @@ const AdminReportList = () => {
     const [selectedStatus, setSelectedStatus] = React.useState<string[]>([]);
     const [params, setParams] = React.useState<PostReportParams>(initialParams);
     const [search, setSearch] = React.useState<string>('');
+    const [postId, setPostId] = React.useState<string | null>(null);
+    const [report, setReport] = React.useState<PostReport | null>(null);
+
+    const queryClient = useQueryClient();
+    const { success } = useMessage();
 
     const searchDebounce = useDebounce(search, 500);
+
+    const { data: detail } = useGetPost(postId ?? '');
 
     useEffect(() => {
         setParams({
@@ -31,6 +45,17 @@ const AdminReportList = () => {
 
     const { data: reportPosts } = useReportPostsListing({
         params,
+    });
+
+    const { mutate: updatePostReport } = useUpdatePostReport(report?.reportId as string, {
+        onSuccess: () => {
+            success('Feedback updated successfully!');
+            setPostId(null);
+            setReport(null);
+            queryClient.invalidateQueries({
+                queryKey: reportKeys.reportPostListing(),
+            });
+        },
     });
 
     const optionsWithDisabled = [
@@ -150,9 +175,99 @@ const AdminReportList = () => {
             </Flex>
 
             {reportPosts ? (
-                reportPosts.map(reportPost => <AdminReportItem key={reportPost.reportId} data={reportPost} />)
+                reportPosts.map(reportPost => (
+                    <AdminReportItem
+                        key={reportPost.reportId}
+                        data={reportPost}
+                        setPostId={setPostId}
+                        setReport={setReport}
+                    />
+                ))
             ) : (
                 <Empty />
+            )}
+
+            {detail && (
+                <Modal
+                    title="Reported Post"
+                    open={!!postId}
+                    onCancel={() => {
+                        setPostId(null);
+                    }}
+                    footer={null}
+                    width="80vw"
+                >
+                    <PostItem
+                        data={detail}
+                        showActions={false}
+                        showLike={false}
+                        extra={
+                            <>
+                                <Flex gap={4} align="center">
+                                    <Tag
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: 24,
+                                            fontSize: 12,
+                                        }}
+                                        color={mapFeedbackStatusColor(report?.status as FeedbackStatus)}
+                                    >
+                                        {report?.status}
+                                    </Tag>
+
+                                    <Dropdown
+                                        menu={{
+                                            items: [
+                                                {
+                                                    key: '1',
+                                                    label: (
+                                                        <Tag
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                height: 24,
+                                                                fontSize: 12,
+                                                            }}
+                                                            color={mapFeedbackStatusColor('APPROVED')}
+                                                        >
+                                                            APPROVED
+                                                        </Tag>
+                                                    ),
+                                                    onClick: () => updatePostReport('APPROVED'),
+                                                    disabled: report?.status !== 'PENDING',
+                                                },
+                                                {
+                                                    key: '2',
+                                                    label: (
+                                                        <Tag
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                height: 24,
+                                                                fontSize: 12,
+                                                            }}
+                                                            color={mapFeedbackStatusColor('REJECTED')}
+                                                        >
+                                                            REJECTED
+                                                        </Tag>
+                                                    ),
+                                                    onClick: () => updatePostReport('REJECTED'),
+                                                    disabled: report?.status !== 'PENDING',
+                                                },
+                                            ],
+                                        }}
+                                    >
+                                        <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                                    </Dropdown>
+                                </Flex>
+                            </>
+                        }
+                    />
+                </Modal>
             )}
         </AdminFeedbackWrapper>
     );

@@ -4,7 +4,7 @@ import { RootState } from '@/stores';
 import { Feedback } from '@/types/feedback/feedback';
 import dayjsConfig from '@/utils/dayjs';
 import { Button, Card, Dropdown, Flex, Space, Tag, Typography } from 'antd';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { useSelector } from 'react-redux';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { useUpdateFeedback } from '@/hooks/mutate/feedback/use-update-feedback';
@@ -18,9 +18,11 @@ import { reportKeys } from '@/consts/factory/report';
 
 interface AdminReportItemProps {
     data: PostReport;
+    setPostId: Dispatch<SetStateAction<null| string>>;
+    setReport: Dispatch<SetStateAction<PostReport | null>>;
 }
 
-const AdminReportItem = ({ data }: AdminReportItemProps) => {
+const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const queryClient = useQueryClient();
@@ -40,7 +42,9 @@ const AdminReportItem = ({ data }: AdminReportItemProps) => {
     });
 
     return (
-        <Card>
+        <Card onClick={() => {setPostId(data?.postId)
+            setReport(data as PostReport)
+        }}>
             <Flex vertical gap={8}>
                 <Flex align="center" justify="space-between">
                     <Space size="large">

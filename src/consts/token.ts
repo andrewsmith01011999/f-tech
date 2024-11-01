@@ -66,9 +66,6 @@ export const themeConfig: ThemeConfig = {
         Breadcrumb: {
             linkColor: '#fff',
         },
-        Modal: {
-            contentBg: '#2C353D',
-        }
     },
     algorithm: theme.darkAlgorithm,
 };

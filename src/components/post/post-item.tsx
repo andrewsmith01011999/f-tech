@@ -41,9 +41,11 @@ interface PostItemProps {
     showActions?: boolean;
     showCheckbox?: boolean;
     field?: FormListFieldData;
+    showLike?: boolean;
+    extra?: React.ReactNode;
 }
 
-export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showCheckbox = false, field }) => {
+export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showCheckbox = false, showLike = true, field, extra }) => {
     const { title, content, createdDate, imageList, tag, postId, topic } = data;
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
@@ -125,22 +127,22 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
                         <UserInfo account={data.account} />
-                        {
-                            topic && (
-                                <Tag style={{
+                        {topic && (
+                            <Tag
+                                style={{
                                     padding: '0 10px',
                                     fontSize: 16,
                                     height: 24,
                                     display: 'flex',
                                     alignItems: 'center',
-                                }}>
-                                    {topic?.name}
-                                </Tag>
-                            )
-                        }
+                                }}
+                            >
+                                {topic?.name}
+                            </Tag>
+                        )}
                         {tag && (
                             <PostTag backgroundColor={tag?.backgroundColorHex} textColor={tag?.textColorHex}>
-                                <TagOutlined style={{marginRight: 8}} />
+                                <TagOutlined style={{ marginRight: 8 }} />
                                 {tag?.name}
                             </PostTag>
                         )}
@@ -194,6 +196,7 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                             <Checkbox />
                         </Form.Item>
                     )}
+                    {extra && extra}
                 </Flex>
 
                 <Typography.Title
@@ -224,34 +227,38 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                     ))}
                 </Flex>
 
-                <Typography.Text type="secondary">
-                    Posted {dayjsConfig(createdDate).fromNow()}
-                </Typography.Text>
+                <Typography.Text type="secondary">Posted {dayjsConfig(createdDate).fromNow()}</Typography.Text>
 
                 <Flex gap={32} vertical>
-                    <Flex justify="end" gap={20}>
-                        <IconButton
-                            icon={
-                                !upvotes?.find(
-                                    upvote =>
-                                        upvote?.post?.postId === data?.postId &&
-                                        upvote?.account?.accountId === accountInfo?.accountId,
-                                ) ? (
-                                    <LikeOutlined />
-                                ) : (
-                                    <LikeFilled />
-                                )
-                            }
-                            children="Like"
-                            onClick={() => handleUpvote(data?.postId)}
-                            disabled={isPendingUpvote}
-                        />
-                        <IconButton icon={<CommentOutlined />} children="Comment" onClick={handleComment} />
-                        <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
-                        {isAllowShowReport && (
-                            <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport} />
-                        )}
-                    </Flex>
+                    {showLike && (
+                        <Flex justify="end" gap={20}>
+                            <IconButton
+                                icon={
+                                    !upvotes?.find(
+                                        upvote =>
+                                            upvote?.post?.postId === data?.postId &&
+                                            upvote?.account?.accountId === accountInfo?.accountId,
+                                    ) ? (
+                                        <LikeOutlined />
+                                    ) : (
+                                        <LikeFilled />
+                                    )
+                                }
+                                children="Like"
+                                onClick={() => handleUpvote(data?.postId)}
+                                disabled={isPendingUpvote}
+                            />
+                            <IconButton icon={<CommentOutlined />} children="Comment" onClick={handleComment} />
+                            <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
+                            {isAllowShowReport && (
+                                <IconButton
+                                    icon={<ExclamationCircleOutlined />}
+                                    children="Report"
+                                    onClick={handleReport}
+                                />
+                            )}
+                        </Flex>
+                    )}
 
                     {isShowComment && <PostComment postId={data?.postId} isShown={isShowComment} />}
                 </Flex>
