@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import { SecondaryButton } from '../core/secondary-button';
 import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 import { useDeleteComment } from '@/hooks/mutate/comment/use-delete-comment';
+import { useQueryClient } from '@tanstack/react-query';
+import { commentKeys } from '@/consts/factory/comment';
 
 interface PostCommentProps {
     postId: string;
@@ -17,6 +19,7 @@ interface PostCommentProps {
 const PostComment = ({ postId, isShown }: PostCommentProps) => {
     const [form] = Form.useForm();
 
+    const queryClient = useQueryClient();
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const { mutate: createComment, isPending: isPendingCreateComment } = useCreateComment();
@@ -27,6 +30,9 @@ const PostComment = ({ postId, isShown }: PostCommentProps) => {
             {
                 onSuccess: () => {
                     form.resetFields();
+                    queryClient.invalidateQueries({
+                        queryKey: commentKeys.byPost(postId),
+                    });
                 },
             },
         );

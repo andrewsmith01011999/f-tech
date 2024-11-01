@@ -1,5 +1,5 @@
 import axiosInstance from '@/apis/request';
-import { CommentCreatePayload } from '@/types/comment/comment';
+import { CommentCreatePayload, CreateReplyPayload } from '@/types/comment/comment';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
@@ -16,3 +16,14 @@ export const useCreateComment = (
         ...options,
     });
 };
+
+export const useCreateReply = () => {
+    const createReply = async (payload: CreateReplyPayload) => {
+        return axiosInstance.post('/comment/create/reply', payload);
+    };
+
+    return useMutation<unknown, AxiosError<unknown>, CreateReplyPayload>({
+        mutationKey: ['comment', 'create', 'reply'],
+        mutationFn: payload => createReply(payload),
+    });
+}

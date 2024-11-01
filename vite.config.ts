@@ -17,7 +17,7 @@ export default defineConfig({
   },
 
   server: {
-    port: 5432,
+    port: 3001,
   },
 
   plugins: [
