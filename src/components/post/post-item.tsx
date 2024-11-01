@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
 import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
 import { Post } from '@/types/post/post';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import dayjsConfig from '@/utils/dayjs';
 import { useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -31,6 +31,7 @@ import { RootState } from '@/stores';
 import { useToggleUpvote } from '@/hooks/mutate/upvote/use-toggle-upvote';
 import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
 import { upvoteKeys } from '@/consts/factory/upvote';
+import PostComment from './post-comment';
 
 const { confirm } = Modal;
 
@@ -50,6 +51,8 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
     const { success } = useMessage();
 
     const [searchParams] = useSearchParams();
+
+    const [isShowComment, setIsShowComment] = useState(false);
 
     const { data: upvotes } = useUpvoteListing();
     const { mutate: upvote, isPending: isPendingUpvote } = useToggleUpvote();
@@ -102,6 +105,10 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
         });
     };
 
+    const handleComment = () => {
+        setIsShowComment(!isShowComment);
+    };
+
     const isAllowShowActions =
         accountInfo?.role?.name === 'ADMIN' ||
         accountInfo?.role?.name === 'STAFF' ||
@@ -151,15 +158,15 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                                     },
                                     {
                                         key: '2',
-                                        icon: <DeleteOutlined />,
-                                        label: <span>Delete post</span>,
-                                        onClick: handleDelete,
-                                    },
-                                    {
-                                        key: '3',
                                         icon: <EditOutlined />,
                                         label: <span>Edit post</span>,
                                         onClick: handleUpdate,
+                                    },
+                                    {
+                                        key: '3',
+                                        icon: <DeleteOutlined />,
+                                        label: <span>Delete post</span>,
+                                        onClick: handleDelete,
                                     },
                                 ],
                             }}
@@ -206,28 +213,32 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                     Posted {dayjsConfig(createdDate).add(7, 'hour').fromNow()}
                 </Typography.Text>
 
-                <Flex justify="end" gap={20}>
-                    <IconButton
-                        icon={
-                            !upvotes?.find(
-                                upvote =>
-                                    upvote?.post?.postId === data?.postId &&
-                                    upvote?.account?.accountId === accountInfo?.accountId,
-                            ) ? (
-                                <LikeOutlined />
-                            ) : (
-                                <LikeFilled />
-                            )
-                        }
-                        children="Like"
-                        onClick={() => handleUpvote(data?.postId)}
-                        disabled={isPendingUpvote}
-                    />
-                    <IconButton icon={<CommentOutlined />} children="Comment" />
-                    <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
-                    {isAllowShowReport && (
-                        <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport} />
-                    )}
+                <Flex gap={32} vertical>
+                    <Flex justify="end" gap={20}>
+                        <IconButton
+                            icon={
+                                !upvotes?.find(
+                                    upvote =>
+                                        upvote?.post?.postId === data?.postId &&
+                                        upvote?.account?.accountId === accountInfo?.accountId,
+                                ) ? (
+                                    <LikeOutlined />
+                                ) : (
+                                    <LikeFilled />
+                                )
+                            }
+                            children="Like"
+                            onClick={() => handleUpvote(data?.postId)}
+                            disabled={isPendingUpvote}
+                        />
+                        <IconButton icon={<CommentOutlined />} children="Comment" onClick={handleComment} />
+                        <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
+                        {isAllowShowReport && (
+                            <IconButton icon={<ExclamationCircleOutlined />} children="Report" onClick={handleReport} />
+                        )}
+                    </Flex>
+
+                    {isShowComment && <PostComment postId={data?.postId} isShown={isShowComment} />}
                 </Flex>
             </Flex>
         </Card>

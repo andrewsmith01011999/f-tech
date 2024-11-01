@@ -4,6 +4,7 @@ import { Avatar, Flex, Typography } from 'antd';
 import { FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 
 interface UserInfoProps {
     account: Account;
@@ -20,7 +21,7 @@ export const UserInfo: FC<UserInfoProps> = ({ account }) => {
 
     return (
         <Flex align="center" onClick={handleNavigate}>
-            <Avatar size={40} shape="circle" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+            <Avatar size={40} shape="circle" src={account?.avatar || AvatarPlaceholder} />
             <Flex vertical>
                 <Typography.Text>{account?.username}</Typography.Text>
                 <Typography.Text type="secondary">@{account?.username?.toLowerCase()}</Typography.Text>
