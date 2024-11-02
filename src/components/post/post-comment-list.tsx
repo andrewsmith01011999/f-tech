@@ -75,10 +75,10 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
         setCommentId(id);
     };
 
-     const handleUpdateReply = (id: string) => {
-         setIsEditReply(true);
-         setCommentId(id);
-     };
+    const handleUpdateReply = (id: string) => {
+        setIsEditReply(true);
+        setCommentId(id);
+    };
 
     const handleClickOutside = () => {
         setIsEdit(false);
