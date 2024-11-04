@@ -45,7 +45,14 @@ interface PostItemProps {
     extra?: React.ReactNode;
 }
 
-export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showCheckbox = false, showLike = true, field, extra }) => {
+export const PostItem: FC<PostItemProps> = ({
+    data,
+    showActions = true,
+    showCheckbox = false,
+    showLike = true,
+    field,
+    extra,
+}) => {
     const { title, content, createdDate, imageList, tag, postId, topic } = data;
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
@@ -241,10 +248,29 @@ export const PostItem: FC<PostItemProps> = ({ data, showActions = true, showChec
                                     ) ? (
                                         <LikeOutlined />
                                     ) : (
-                                        <LikeFilled />
+                                        <LikeFilled
+                                            color="#007AFF"
+                                            style={{
+                                                color: '#007AFF',
+                                            }}
+                                        />
                                     )
                                 }
-                                children="Like"
+                                children={
+                                    <Typography.Text
+                                        style={{
+                                            color: !upvotes?.find(
+                                                upvote =>
+                                                    upvote?.post?.postId === data?.postId &&
+                                                    upvote?.account?.accountId === accountInfo?.accountId,
+                                            )
+                                                ? 'unset'
+                                                : '#007AFF',
+                                        }}
+                                    >
+                                        Like
+                                    </Typography.Text>
+                                }
                                 onClick={() => handleUpvote(data?.postId)}
                                 disabled={isPendingUpvote}
                             />

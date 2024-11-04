@@ -171,7 +171,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
 
                     <Divider />
 
-                    <Flex gap={10} align="center">
+                    <Flex gap={10} align="center" wrap>
                         {topics?.map(topic => (
                             <Tag
                                 key={topic.topicId}
