@@ -131,6 +131,136 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
         );
     };
 
+    const renderShowReplyReplyRecursive = ( comment: TComment) => {
+        if (comment?.replies?.length) {
+            return comment?.replies.map((c: TComment) => {
+                return (
+                    <List
+                        className="comment-list"
+                        header={`${comment?.replies?.length} replies`}
+                        itemLayout="horizontal"
+                        dataSource={comment?.replies}
+                        rowKey={rep => rep?.commentId}
+                        renderItem={(rep: TComment) => (
+                            <li
+                                style={{
+                                    position: 'relative',
+                                    width: '100%',
+                                }}
+                            >
+                                <Comment
+                                    actions={[
+                                        <>
+                                            {isShowReply && commentId === rep.commentId ? (
+                                                <Flex align="center" gap={8}>
+                                                    <Form<CreateReplyPayload> form={formReply} onFinish={onFinishReply}>
+                                                        <Form.Item<CreateReplyPayload>
+                                                            name="content"
+                                                            style={{
+                                                                marginBottom: 0,
+                                                            }}
+                                                        >
+                                                            <Input
+                                                                style={{
+                                                                    minWidth: 550,
+                                                                }}
+                                                                size="large"
+                                                                ref={inputRef}
+                                                                placeholder="Enter reply here..."
+                                                            />
+                                                        </Form.Item>
+                                                    </Form>
+                                                    <Button
+                                                        size="small"
+                                                        htmlType="button"
+                                                        icon={<CloseOutlined />}
+                                                        onClick={handleClickOutsideReply}
+                                                    />
+                                                </Flex>
+                                            ) : (
+                                                <Button type="text" onClick={() => handleShowReply(rep.commentId)}>
+                                                    Reply
+                                                </Button>
+                                            )}
+                                        </>,
+                                    ]}
+                                    author={rep?.account?.username}
+                                    avatar={rep?.account?.avatar || AvatarPlaceholder}
+                                    content={
+                                        <>
+                                            {isEditReply && commentId === rep.commentId ? (
+                                                <Flex align="center" gap={8}>
+                                                    <Form<CommentCreatePayload>
+                                                        form={formReply}
+                                                        initialValues={{ content: rep?.content }}
+                                                        style={{
+                                                            width: '100%',
+                                                        }}
+                                                        onFinish={onFinish}
+                                                    >
+                                                        <Form.Item<CommentCreatePayload>
+                                                            name="content"
+                                                            style={{
+                                                                marginBottom: 0,
+                                                            }}
+                                                        >
+                                                            <Input size="large" ref={inputRef} />
+                                                        </Form.Item>
+                                                    </Form>
+                                                    <Button
+                                                        size="small"
+                                                        htmlType="button"
+                                                        icon={<CloseOutlined />}
+                                                        onClick={handleClickOutside}
+                                                    />
+                                                </Flex>
+                                            ) : (
+                                                rep?.content
+                                            )}
+                                        </>
+                                    }
+                                >
+                                    {renderShowReplyReplyRecursive(rep)}
+                                </Comment>
+
+                                {isAllowShowActions(rep) && (
+                                    <Dropdown
+                                        menu={{
+                                            items: [
+                                                {
+                                                    key: '0',
+                                                    icon: <EditOutlined />,
+                                                    label: <span>Edit reply</span>,
+                                                    onClick: () => handleUpdateReply(rep.commentId),
+                                                },
+                                                {
+                                                    key: '1',
+                                                    icon: <DeleteOutlined />,
+                                                    label: <span>Delete reply</span>,
+                                                    onClick: () => handleDelete(rep),
+                                                },
+                                            ],
+                                        }}
+                                    >
+                                        <Button
+                                            style={{
+                                                position: 'absolute',
+                                                top: 4,
+                                                right: 0,
+                                            }}
+                                            type="text"
+                                            icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+                                        />
+                                    </Dropdown>
+                                )}
+                            </li>
+                        )}
+                    />
+                );
+            });
+        }
+    }
+
     return (
         <List
             className="comment-list"
@@ -218,7 +348,7 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                         }
                     >
                         {/* LIST REPLY */}
-                        {!!item?.replies?.length && (
+                        {/* {!!item?.replies?.length && (
                             <List
                                 className="comment-list"
                                 header={`${item?.replies?.length} replies`}
@@ -303,7 +433,8 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                                     </li>
                                 )}
                             />
-                        )}
+                        )} */}
+                        {renderShowReplyReplyRecursive(item)}
                     </Comment>
 
                     {isAllowShowActions(item) && (
