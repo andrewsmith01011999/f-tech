@@ -37,7 +37,6 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     const dispatch = useDispatch();
     const [keyword, setKeyword] = useState('  ');
     const [openSearch, setOpenSearch] = useState(false);
-    const dropdownRef = useRef(null);
 
     const searchKeyword = useDebounce(keyword, 500);
 
@@ -47,11 +46,16 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         },
     });
 
+    const resetKeyword = () => {
+        setKeyword('  ');
+    };
+
     const searchCategoryDropdownItems = searchData?.categoryList.map(category => ({
         key: category.categoryId,
         label: category.name,
         onClick: () => {
             navigate(`${PATHS.POSTS}?category=${category.categoryId}`);
+            resetKeyword();
         },
     }));
 
@@ -60,6 +64,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         label: topic.name,
         onClick: () => {
             navigate(`${PATHS.POSTS}?topic=${topic.topicId}`);
+            resetKeyword();
         },
     }));
 
@@ -68,6 +73,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         label: post.title,
         onClick: () => {
             navigate(PATHS.POSTS);
+            resetKeyword();
         },
     }));
 
@@ -76,6 +82,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         label: account.username,
         onClick: () => {
             navigate(PATHS.USER_PROFILE.replace(':id', account?.accountId));
+            resetKeyword();
         },
     }));
 
