@@ -175,6 +175,9 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
         dispatch(setPost({ modal: { open: true, type: 'draft' } }));
     };
 
+    const topicId = searchParams.get('topicId') || undefined;
+    const tagId = searchParams.get('tagId') || undefined;
+
     return (
         <Modal
             title={
@@ -199,7 +202,16 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                 <Flex vertical gap={10}>
                     <UserInfo account={accountInfo!} />
 
-                    <Form<CreatePostPayload> layout="vertical" form={form} name="createPost" onFinish={onFinish}>
+                    <Form<CreatePostPayload>
+                        layout="vertical"
+                        form={form}
+                        name="createPost"
+                        onFinish={onFinish}
+                        initialValues={{
+                            topicId,
+                            tagId,
+                        }}
+                    >
                         <Form.Item<CreatePostPayload>
                             name="title"
                             label="Title"
@@ -221,6 +233,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                                     label: topic.name,
                                     value: topic.topicId,
                                 }))}
+                                disabled={!!topicId}
                             />
                         </Form.Item>
 
@@ -237,6 +250,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                                     label: tag.name,
                                     value: tag.tagId,
                                 }))}
+                                disabled={!!tagId}
                             />
                         </Form.Item>
 
