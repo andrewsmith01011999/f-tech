@@ -178,6 +178,16 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const topicId = searchParams.get('topicId') || undefined;
     const tagId = searchParams.get('tagId') || undefined;
 
+    useEffect(() => {
+        if (topicId) {
+            form.setFieldsValue({ topicId });
+        }
+
+        if (tagId) {
+            form.setFieldsValue({ tagId });
+        }
+    }, [topicId, tagId]);
+
     return (
         <Modal
             title={
@@ -207,10 +217,10 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                         form={form}
                         name="createPost"
                         onFinish={onFinish}
-                        initialValues={{
-                            topicId,
-                            tagId,
-                        }}
+                        // initialValues={{
+                        //     topicId,
+                        //     tagId,
+                        // }}
                     >
                         <Form.Item<CreatePostPayload>
                             name="title"
