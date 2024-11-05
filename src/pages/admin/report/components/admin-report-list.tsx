@@ -4,7 +4,7 @@ import AdminFeedbackWrapper from '../../feedback/layout/admin-feedback-wrapper';
 import { PostReportParams, useReportPostsListing } from '@/hooks/query/report/use-report-posts';
 import AdminReportItem from './admin-report-item';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { EllipsisOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EllipsisOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { mapFeedbackStatusColor } from '../../feedback/utils/map-feedback-status-color';
 import { FeedbackStatus } from '@/types/feedback/feedback';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -15,6 +15,9 @@ import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-repor
 import { useQueryClient } from '@tanstack/react-query';
 import { useMessage } from '@/hooks/use-message';
 import { reportKeys } from '@/consts/factory/report';
+import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
+
+const { confirm } = Modal;
 
 const AdminReportList = () => {
     const initialParams: PostReportParams = {
@@ -57,6 +60,28 @@ const AdminReportList = () => {
             });
         },
     });
+
+    const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId ?? '', {
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: reportKeys.reportPostListing(),
+            });
+            success('Post deleted successfully!');
+        },
+    });
+
+    const handleDelete = () => {
+        confirm({
+            title: 'Are you sure you want to delete this post?',
+            content: 'This action cannot be undone',
+            onOk() {
+                deletePost();
+            },
+            okButtonProps: {
+                disabled: isPendingDeletePost,
+            },
+        });
+    };
 
     const optionsWithDisabled = [
         {
@@ -199,7 +224,7 @@ const AdminReportList = () => {
                 >
                     <PostItem
                         data={detail}
-                        showActions={true}
+                        showActions={false}
                         showLike={false}
                         extra={
                             <>
@@ -257,6 +282,12 @@ const AdminReportList = () => {
                                                     ),
                                                     onClick: () => updatePostReport('REJECTED'),
                                                     disabled: report?.status !== 'PENDING',
+                                                },
+                                                {
+                                                    key: '3',
+                                                    icon: <DeleteOutlined />,
+                                                    label: <span>Delete post</span>,
+                                                    onClick: handleDelete,
                                                 },
                                             ],
                                         }}
