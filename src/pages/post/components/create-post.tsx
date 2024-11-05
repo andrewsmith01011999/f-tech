@@ -70,7 +70,12 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
 
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-    const { data: topics, isLoading: isLoadingTopics } = useTopicsListing({ params: initialParams });
+    const { data: topics, isLoading: isLoadingTopics } = useTopicsListing({ params: {
+        ...initialParams,
+        categoryId: searchParams.get('category') || undefined,
+        
+        
+    } });
     const { data: tags, isLoading: isLoadingTags } = useTagsListing({ params: initialParams });
     const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
     const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();

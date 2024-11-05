@@ -53,8 +53,8 @@ const SignUpPage: FC = () => {
             onSuccess: result => {
                 if (result) {
                     message.success('Registration account successfully');
-
-                    navigate(PATHS.SIGNIN);
+                    localStorage.setItem('email', values.email);
+                    navigate(PATHS.OTP_VERIFICATION);
                 }
             },
         });
