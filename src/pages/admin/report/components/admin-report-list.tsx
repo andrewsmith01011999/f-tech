@@ -199,7 +199,7 @@ const AdminReportList = () => {
                 >
                     <PostItem
                         data={detail}
-                        showActions={false}
+                        showActions={true}
                         showLike={false}
                         extra={
                             <>
