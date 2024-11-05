@@ -40,58 +40,58 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
 
     const searchKeyword = useDebounce(keyword, 500);
 
-    const { data: searchData } = useCategorySearch({
-        params: {
-            keyword: searchKeyword || '  ',
-        },
-    });
+    // const { data: searchData } = useCategorySearch({
+    //     params: {
+    //         keyword: searchKeyword || '  ',
+    //     },
+    // });
 
     const resetKeyword = () => {
         setKeyword('  ');
     };
 
-    const searchCategoryDropdownItems = searchData?.categoryList.map(category => ({
-        key: category.categoryId,
-        label: category.name,
-        onClick: () => {
-            navigate(`${PATHS.POSTS}?category=${category.categoryId}`);
-            resetKeyword();
-        },
-    }));
+    // const searchCategoryDropdownItems = searchData?.categoryList.map(category => ({
+    //     key: category.categoryId,
+    //     label: category.name,
+    //     onClick: () => {
+    //         navigate(`${PATHS.POSTS}?category=${category.categoryId}`);
+    //         resetKeyword();
+    //     },
+    // }));
 
-    const searchTopicDropdownItems = searchData?.topicList.map(topic => ({
-        key: topic.topicId,
-        label: topic.name,
-        onClick: () => {
-            navigate(`${PATHS.POSTS}?topic=${topic.topicId}`);
-            resetKeyword();
-        },
-    }));
+    // const searchTopicDropdownItems = searchData?.topicList.map(topic => ({
+    //     key: topic.topicId,
+    //     label: topic.name,
+    //     onClick: () => {
+    //         navigate(`${PATHS.POSTS}?topic=${topic.topicId}`);
+    //         resetKeyword();
+    //     },
+    // }));
 
-    const searchPostDropdownItems = searchData?.postList.map(post => ({
-        key: post.postId,
-        label: post.title,
-        onClick: () => {
-            navigate(PATHS.POSTS);
-            resetKeyword();
-        },
-    }));
+    // const searchPostDropdownItems = searchData?.postList.map(post => ({
+    //     key: post.postId,
+    //     label: post.title,
+    //     onClick: () => {
+    //         navigate(PATHS.POSTS);
+    //         resetKeyword();
+    //     },
+    // }));
 
-    const searchAccountDropdownItems = searchData?.accountList.map(account => ({
-        key: account.accountId,
-        label: account.username,
-        onClick: () => {
-            navigate(PATHS.USER_PROFILE.replace(':id', account?.accountId));
-            resetKeyword();
-        },
-    }));
+    // const searchAccountDropdownItems = searchData?.accountList.map(account => ({
+    //     key: account.accountId,
+    //     label: account.username,
+    //     onClick: () => {
+    //         navigate(PATHS.USER_PROFILE.replace(':id', account?.accountId));
+    //         resetKeyword();
+    //     },
+    // }));
 
-    const searchDropdownItems = [
-        ...(searchCategoryDropdownItems || []),
-        ...(searchTopicDropdownItems || []),
-        ...(searchPostDropdownItems || []),
-        ...(searchAccountDropdownItems || []),
-    ];
+    // const searchDropdownItems = [
+    //     ...(searchCategoryDropdownItems || []),
+    //     ...(searchTopicDropdownItems || []),
+    //     ...(searchPostDropdownItems || []),
+    //     ...(searchAccountDropdownItems || []),
+    // ];
 
     const onLogout = async () => {
         localStorage.clear();
@@ -115,11 +115,11 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         navigate(PATHS.WALLET);
     };
 
-    const handleNavigateWithParams = (e: React.KeyboardEvent ) => {
-       if (e.key === 'Enter') {
-           navigate(`${PATHS.SEARCH}?keyword=${keyword}`);
-       }
-    }
+    const handleNavigateWithParams = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            navigate(`${PATHS.SEARCH}?keyword=${keyword}`);
+        }
+    };
 
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
@@ -135,21 +135,21 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                 </div>
 
                 <div className="search-container">
-                    <Dropdown
+                    {/* <Dropdown
                         open={false}
                         menu={{
                             items: searchDropdownItems,
                         }}
-                    >
-                        <BaseInput.Search
-                            placeholder="Type here to search..."
-                            className="search"
-                            onChange={e => setKeyword(e.target.value)}
-                            // onBlur={() => setOpenSearch(false)}
-                            // onFocus={() => setOpenSearch(true)}
-                            onKeyDown={handleNavigateWithParams}
-                        />
-                    </Dropdown>
+                    > */}
+                    <BaseInput.Search
+                        placeholder="Type here to search..."
+                        className="search"
+                        onChange={e => setKeyword(e.target.value)}
+                        // onBlur={() => setOpenSearch(false)}
+                        // onFocus={() => setOpenSearch(true)}
+                        onKeyDown={handleNavigateWithParams}
+                    />
+                    {/* </Dropdown> */}
                 </div>
 
                 <div className="actions">
