@@ -20,7 +20,7 @@ export interface SignUpRequest {
   address: string;
   avatar?: string;
   coverImage?: string;
-  roleName: string;
+  role: string;
   categoryList: string[];
 }
 

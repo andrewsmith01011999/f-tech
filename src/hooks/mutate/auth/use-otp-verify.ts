@@ -9,7 +9,7 @@ export type OtpVerifyPayload = {
 
 export const useOtpVerify = (options: UseMutationOptions<unknown, AxiosError<unknown>, OtpVerifyPayload> = {}) => {
     const otpVerify = async (payload: OtpVerifyPayload) => {
-      return axiosInstance.post('/authenticate/otp-verify', payload);
+      return axiosInstance.post('/authenticate/verify-otp', payload);
     };
 
     return useMutation<unknown, AxiosError<unknown>, OtpVerifyPayload>({
@@ -18,3 +18,15 @@ export const useOtpVerify = (options: UseMutationOptions<unknown, AxiosError<unk
         ...options,
     });
 };
+
+export const useResendOtp = (options: UseMutationOptions<unknown, AxiosError<unknown>, { email: string }> = {}) => {
+    const resendOtp = async (payload: { email: string }) => {
+      return axiosInstance.post(`/authenticate/resend-otp?email=${payload.email}`);
+    };
+
+    return useMutation<unknown, AxiosError<unknown>, { email: string }>({
+        mutationKey: ['auth', 'resend-otp'],
+        mutationFn: payload => resendOtp(payload),
+        ...options,
+    });
+}

@@ -3,7 +3,7 @@ import AuthPageLayout from '@/components/authen/layout';
 import AuthResultPage from '@/components/authen/result';
 import BaseButton from '@/components/core/button';
 import { OTP_EXPIRE_TIME } from '@/consts/common';
-import { useOtpVerify } from '@/hooks/mutate/auth/use-otp-verify';
+import { useOtpVerify, useResendOtp } from '@/hooks/mutate/auth/use-otp-verify';
 import { SuccessfulIcon } from '@/utils/asset';
 import { PATHS } from '@/utils/paths';
 import { css } from '@emotion/react';
@@ -26,9 +26,9 @@ const OTPVerificationPage: FC = () => {
     const [timeCount, setTimeCount] = useState(OTP_EXPIRE_TIME);
 
     const { mutate: verifyOtp, isPending: isPendingVerifyOtp } = useOtpVerify();
+    const {mutate: resendOtp, isPending: isPendingResendOtp} = useResendOtp();
 
     const onFinish: FormProps<FieldType>['onFinish'] = async values => {
-        console.log('OTP: ', values.otp);
         verifyOtp(
             {
                 email: localStorage.getItem('email') as string,
@@ -54,7 +54,7 @@ const OTPVerificationPage: FC = () => {
                     return 0;
                 }
 
-                return prev - 1;
+                return prev - 1000;
 
             });
         }, 1000);
@@ -93,17 +93,34 @@ const OTPVerificationPage: FC = () => {
                         </Form.Item>
 
                         <Form.Item>
-                            <BaseButton
-                                size="large"
-                                className="auth-submit-button "
-                                shape="round"
-                                type="primary"
-                                htmlType="submit"
-                                loading={isPendingVerifyOtp}
-                                disabled={timeCount === 0}
-                            >
-                                Send code
-                            </BaseButton>
+                            {timeCount === 0 ? (
+                                <BaseButton
+                                    size="large"
+                                    className="auth-submit-button "
+                                    shape="round"
+                                    type="primary"
+                                    htmlType="button"
+                                    loading={isPendingResendOtp}
+                                    onClick={() => {
+                                        resendOtp({ email: localStorage.getItem('email') as string });
+                                        setTimeCount(OTP_EXPIRE_TIME);
+                                    }}
+                                >
+                                    Resend OTP
+                                </BaseButton>
+                            ) : (
+                                <BaseButton
+                                    size="large"
+                                    className="auth-submit-button "
+                                    shape="round"
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={isPendingVerifyOtp}
+                                    disabled={timeCount === 0}
+                                >
+                                    Verify OTP
+                                </BaseButton>
+                            )}
                         </Form.Item>
                     </Form>
 

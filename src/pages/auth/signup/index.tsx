@@ -45,7 +45,7 @@ const SignUpPage: FC = () => {
             confirmPassword: values.confirmPassword,
             address: '',
             gender: '',
-            roleName: '',
+            role: 'USER',
             categoryList: [],
         };
 
