@@ -104,7 +104,7 @@ const SearchPage = () => {
                                     justifyContent: 'center',
                                     cursor: 'pointer',
                                 }}
-                                onClick={() => navigate(`${PATHS.POSTS}?topic=${item.topicId}`)}
+                                onClick={() => navigate(`${PATHS.POSTS}?category=${item?.category?.categoryId}&topic=${item.topicId}`)}
                             >
                                 {item.name}
                             </Tag>
