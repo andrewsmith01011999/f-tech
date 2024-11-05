@@ -115,6 +115,12 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         navigate(PATHS.WALLET);
     };
 
+    const handleNavigateWithParams = (e: React.KeyboardEvent ) => {
+       if (e.key === 'Enter') {
+           navigate(`${PATHS.SEARCH}?keyword=${keyword}`);
+       }
+    }
+
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
             {device !== 'MOBILE' && (
@@ -130,7 +136,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
 
                 <div className="search-container">
                     <Dropdown
-                        open={!!searchKeyword}
+                        open={false}
                         menu={{
                             items: searchDropdownItems,
                         }}
@@ -141,6 +147,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                             onChange={e => setKeyword(e.target.value)}
                             // onBlur={() => setOpenSearch(false)}
                             // onFocus={() => setOpenSearch(true)}
+                            onKeyDown={handleNavigateWithParams}
                         />
                     </Dropdown>
                 </div>

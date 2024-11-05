@@ -25,6 +25,7 @@ const FeedbackPage = lazy(() => import('@/pages/feedback'));
 const UserProfilePage = lazy(() => import('@/pages/user-profile'));
 const AdminFeedbackPage = lazy(() => import('@/pages/admin/feedback'));
 const AdminReportPage = lazy(() => import('@/pages/admin/report'));
+const SearchPage = lazy(() => import('@/pages/search'));
 
 const routes: RouteObject[] = [
     {
@@ -70,6 +71,10 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.ADMIN_REPORTS,
                 element: <WrapperRouteComponent element={<AdminReportPage />} title="Admin Reports" />,
+            },
+            {
+                path: PATHS.SEARCH,
+                element: <WrapperRouteComponent element={<SearchPage />} title="Search Page" />,
             }
         ],
     },

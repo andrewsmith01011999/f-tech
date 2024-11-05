@@ -14,4 +14,5 @@ export const PATHS = {
     ADMIN_FEEDBACKS: '/admin/feedback-manager',
     USER_PROFILE: '/user-profile/:id',
     ADMIN_REPORTS: '/admin/reports',
+    SEARCH: '/search',
 };
