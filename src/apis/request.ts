@@ -17,8 +17,8 @@ export type BaseResponse<T = any> = Promise<Response<T>>;
 const axiosInstance = axios.create({
     baseURL: API_PATH,
     timeout: ApiConfigs.TIME_OUT_MS,
-    validateStatus: status => status >= 200 && status < 300,
-    paramsSerializer: params => Qs.stringify(params, { arrayFormat: 'repeat' }),
+    // validateStatus: status => status >= 200 && status < 300,
+    // paramsSerializer: params => Qs.stringify(params, { arrayFormat: 'repeat' }),
 });
 
 axiosInstance.interceptors.request.use(
@@ -106,7 +106,7 @@ axiosInstance.interceptors.response.use(
         };
 
         errorResponse.message && $message.error(errorResponse.message);
-        return errorResponse;
+        return Promise.reject(errorResponse);
     },
 );
 
