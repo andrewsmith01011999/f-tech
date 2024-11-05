@@ -66,6 +66,12 @@ export const themeConfig: ThemeConfig = {
         Breadcrumb: {
             linkColor: '#fff',
         },
+        DatePicker: {
+            algorithm: true,
+            colorBorder: 'transparent',
+            borderRadius: 6,
+            colorBgContainer: '#2C353D',
+        },
     },
     algorithm: theme.darkAlgorithm,
 };

@@ -1,13 +1,29 @@
 import { request } from '@/apis/request';
 import { transactionKeys } from '@/consts/factory/transaction';
-import { Transaction } from '@/types/transaction/transaction';
+import { FilterTransaction, Transaction } from '@/types/transaction/transaction';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-export const useTransactionsCurrentAccount = () => {
-    const fetchTransactionsCurrentAccount = async (): Promise<Transaction[]> => {
-        const { entity } = await request<Transaction[]>(
+export type FilterTransactionParams = {
+    viewTransaction: boolean;
+    dailyPoint: boolean;
+    bonusPoint: boolean;
+    startDate?: string;
+    endDate?: string;
+};
+
+type FilterTransactionProps = {
+    params?: FilterTransactionParams;
+};
+
+export const useTransactionsCurrentAccount = ({ params }: FilterTransactionProps) => {
+    const fetchTransactionsCurrentAccount = async (): Promise<FilterTransaction> => {
+        const append = params?.startDate && params?.endDate ? `&startDate=${params.startDate}&endDate=${params.endDate}` : '';
+
+        const endpoint = `/category/filter-transaction?viewTransaction=${params?.viewTransaction}&dailyPoint=${params?.dailyPoint}&bonusPoint=${params?.bonusPoint}${append}`;
+        
+        const { entity } = await request<FilterTransaction>(
             'get',
-            '/transaction/getall/by-current-user',
+            endpoint,
             {},
             {
                 paramsSerializer: {
@@ -18,8 +34,8 @@ export const useTransactionsCurrentAccount = () => {
         return entity;
     };
 
-    return useQuery<Transaction[]>({
-        queryKey: transactionKeys.currentAccount(),
+    return useQuery<FilterTransaction>({
+        queryKey: transactionKeys.currentAccount(params),
         queryFn: fetchTransactionsCurrentAccount,
         placeholderData: keepPreviousData,
     });
