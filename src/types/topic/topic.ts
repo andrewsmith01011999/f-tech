@@ -4,4 +4,5 @@ export type Topic = {
   topicId: string;
   name: string;
   category?: Category
+  imageUrl: string;
 }

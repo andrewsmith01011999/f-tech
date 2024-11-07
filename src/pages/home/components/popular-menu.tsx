@@ -1,54 +1,65 @@
 import BaseMenu from '@/components/core/menu';
 import Icon from '@ant-design/icons';
-import { Flex, GetProp, MenuProps, Typography } from 'antd';
+import { Flex, GetProp, MenuProps, Space, Tooltip, Typography } from 'antd';
 import AppleSvg from '/public/apple.svg';
 import AndroidSvg from '/public/android.svg';
 import ChatbotSvg from '/public/chatbot.svg';
 import ToolKitSvg from '/public/toolkit.svg';
 import { FC } from 'react';
+import { usePopularTopics } from '@/hooks/query/topic/use-popular-topic';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const PopularMenu = () => {
-    const items: MenuItem[] = [
-        {
-            key: '1',
-            icon: <Icon component={() => <img src={AppleSvg} alt="apple" />} />,
-            label: <Label label="JavaScript" subLabel="82,645 Posted by this tag" />,
-        },
-        {
-            key: '2',
-            icon: <Icon component={() => <img src={AndroidSvg} alt="android" />} />,
-            label: <Label label="HTML/CSS" subLabel="65,523 Posted • Trending" />,
-        },
-        {
-            key: '3',
-            icon: <Icon component={() => <img src={ChatbotSvg} alt="chatbot" />} />,
-            label: <Label label="Python" subLabel="65,523 Posted • Trending" />,
-        },
-        {
-            key: '4',
-            icon: <Icon component={() => <img src={ToolKitSvg} alt="chatbot" />} />,
-            label: <Label label="NodeJS" subLabel="51,354 • Trending in Bangladesh" />,
-        },
-    ];
+    const { data } = usePopularTopics();
+
+    const menuItems: MenuItem[] =
+        data?.map(topic => ({
+            key: topic?.topicId,
+            label: (
+                <Label
+                    topic={topic?.name}
+                    subLabel={`82,645 Posted by this tag`}
+                    category={topic?.category?.name || ''}
+                />
+            ),
+            icon: <Icon component={() => <img src={topic?.imageUrl} alt={topic?.name} />} />,
+        })) || [];
 
     return (
         <>
-            <BaseMenu items={items} />
+            <BaseMenu items={menuItems} />
         </>
     );
 };
 
 interface LabelProps {
-    label: string;
+    topic: string;
+    category: string;
     subLabel: string;
 }
 
-const Label: FC<LabelProps> = ({ label, subLabel }) => {
+const Label: FC<LabelProps> = ({ topic, subLabel, category }) => {
     return (
         <Flex vertical justify="space-between">
-            <Typography.Text strong>{label}</Typography.Text>
+            <Flex
+                align="center"
+                justify="flex-start"
+                gap={4}
+                style={{
+                    lineHeight: '1',
+                    maxWidth: 150,
+                    overflow: 'hidden',
+                }}
+            >
+                <Tooltip title={`${topic} - ${category}`}>
+                    <Typography.Text strong style={{ color: '#1D9BF0' }}>
+                        {topic}
+                    </Typography.Text>
+                    {' - '}
+                    <Typography.Text style={{ color: '#FF6934' }}>{category}</Typography.Text>
+                </Tooltip>
+            </Flex>
             <Typography.Text
                 style={{
                     fontSize: 10,
