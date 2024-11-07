@@ -20,10 +20,17 @@ export interface Account {
     status: AccountStatus; // Enum for status
     role: Role;
     wallet?: Wallet;
+    bio?: string;
 }
 
 export interface Wallet {
     walletId: string;
     balance: number;
+}
+
+export interface UpdateProfilePayload {
+    avatar?: string;
+    coverImage?: string;
+    bio?: string;
 }
 
