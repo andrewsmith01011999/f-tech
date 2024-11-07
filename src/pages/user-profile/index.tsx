@@ -18,7 +18,7 @@ import { useParams } from 'react-router-dom';
 import { PostStatus } from '@/types/post/post';
 
 const UserProfilePage = () => {
-    const {id}= useParams<{id: string}>();
+    const { id } = useParams<{ id: string }>();
     const [selectedReason, setSelectedReason] = useState<ReportAccountReasons>();
     const [isShowReportReasons, setIsShowReportReasons] = useState(false);
 
@@ -33,7 +33,7 @@ const UserProfilePage = () => {
     const { data } = usePostsListing({
         params: {
             ...initialParams,
-            accountId: accountInfo?.accountId,
+            accountId: id || accountInfo?.accountId,
             statuses: [PostStatus.PUBLIC],
         },
     });
@@ -100,7 +100,12 @@ const UserProfilePage = () => {
                 ))}
 
                 <Flex justify="center">
-                    <Button type="primary" onClick={handleReportAccount} loading={isPendingCreateReport} disabled={!selectedReason}>
+                    <Button
+                        type="primary"
+                        onClick={handleReportAccount}
+                        loading={isPendingCreateReport}
+                        disabled={!selectedReason}
+                    >
                         Submit
                     </Button>
                 </Flex>
