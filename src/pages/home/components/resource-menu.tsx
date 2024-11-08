@@ -38,6 +38,10 @@ export const ResourceMenu = () => {
         navigate(PATHS.ABOUT);
     }
 
+    const toContentPolicy = () => {
+        navigate(PATHS.CONTENT_POLICY);
+    }
+
     const items: MenuItem[] = [
         {
             key: '1',
@@ -54,6 +58,7 @@ export const ResourceMenu = () => {
             key: '3',
             icon: <Icon component={() => <img src={OpenBookSvg} alt="open-book" />} />,
             label: 'Content Policy',
+            onClick: toContentPolicy,
         },
         {
             key: '4',

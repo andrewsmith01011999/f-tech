@@ -7,10 +7,13 @@ import ChatbotSvg from '/public/chatbot.svg';
 import ToolKitSvg from '/public/toolkit.svg';
 import { FC } from 'react';
 import { usePopularTopics } from '@/hooks/query/topic/use-popular-topic';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/utils/paths';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const PopularMenu = () => {
+    const navigate = useNavigate();
     const { data } = usePopularTopics();
 
     const menuItems: MenuItem[] =
@@ -24,6 +27,7 @@ export const PopularMenu = () => {
                 />
             ),
             icon: <Icon component={() => <img src={topic?.imageUrl} alt={topic?.name} />} />,
+            onClick: () => navigate(`${PATHS.POSTS}?category=${topic?.category?.categoryId}&topicId=${topic?.topicId}`),
         })) || [];
 
     return (
