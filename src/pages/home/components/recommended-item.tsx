@@ -1,8 +1,13 @@
 import { Button, Flex, Image, Typography } from 'antd';
 import AmdSvg from '/public/amd.svg';
 import { PlusOutlined } from '@ant-design/icons';
+import { Account } from '@/types/account';
 
-export const RecommendedItem = () => {
+interface RecommendedItemProps {
+    account: Account;
+}
+
+export const RecommendedItem = ({ account }: RecommendedItemProps) => {
     return (
         <Flex align="flex-start" gap={10}>
             <Image
@@ -13,16 +18,16 @@ export const RecommendedItem = () => {
                     objectFit: 'contain',
                     boxShadow: '0px 3px 4px 0px #FA89240F',
                 }}
-                src={AmdSvg}
+                src={account?.avatar || AmdSvg}
                 alt="creator"
                 preview={false}
             />
 
             <Flex gap={10}>
                 <Flex vertical style={{ minWidth: 94 }}>
-                    <Typography.Text>AMD</Typography.Text>
+                    <Typography.Text>{account?.username}</Typography.Text>
                     <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                        @AMD
+                        {account?.handle}
                     </Typography.Text>
                 </Flex>
 

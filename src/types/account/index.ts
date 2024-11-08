@@ -21,6 +21,7 @@ export interface Account {
     role: Role;
     wallet?: Wallet;
     bio?: string;
+    countFollowers?: number
 }
 
 export interface Wallet {

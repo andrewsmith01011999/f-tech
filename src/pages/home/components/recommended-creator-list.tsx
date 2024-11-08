@@ -1,9 +1,12 @@
-import { Card, Flex } from 'antd';
+import { Card, Empty, Flex } from 'antd';
 import ArrowRightSvg from '/public/arrow-right.svg';
 import { RecommendedItem } from './recommended-item';
 import { EventsWrapper } from '../layout/events-wrapper';
+import { useGetFollowTopAccounts } from '@/hooks/query/follow/use-follow-top-accounts';
 
 export const RecommendedCreatorList = () => {
+    const { data: topAccounts } = useGetFollowTopAccounts();
+
     return (
         <Card
             title={
@@ -19,11 +22,11 @@ export const RecommendedCreatorList = () => {
             className="card-menu card-events"
         >
             <EventsWrapper>
-                <RecommendedItem />
-                <RecommendedItem />
-                <RecommendedItem />
-                <RecommendedItem />
-                <RecommendedItem />
+                {topAccounts?.length ? (
+                    topAccounts?.map(account => <RecommendedItem key={account?.accountId} account={account} />)
+                ) : (
+                    <Empty description="No recommendation" />
+                )}
             </EventsWrapper>
         </Card>
     );
