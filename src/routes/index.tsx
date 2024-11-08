@@ -29,6 +29,7 @@ const SearchPage = lazy(() => import('@/pages/search'));
 const AboutPage = lazy(() => import('@/pages/about'));
 const ContentPolicyPage = lazy(() => import('@/pages/content-policy'));
 const HelpPage = lazy(() => import('@/pages/help'));
+const EventsPage = lazy(() => import('@/pages/events'));
 
 const routes: RouteObject[] = [
     {
@@ -90,6 +91,10 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.HELP,
                 element: <WrapperRouteComponent element={<HelpPage />} title="Help" />,
+            },
+            {
+                path: PATHS.EVENTS,
+                element: <WrapperRouteComponent element={<EventsPage />} title="Events" />,
             }
         ],
     },

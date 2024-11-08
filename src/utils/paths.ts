@@ -18,4 +18,5 @@ export const PATHS = {
     ABOUT: '/about',
     CONTENT_POLICY: '/content-policy',
     HELP: '/help',
+    EVENTS: '/events',
 };
