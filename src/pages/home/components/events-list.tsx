@@ -33,9 +33,11 @@ export const EventList = () => {
             className="card-menu card-events"
         >
             <EventsWrapper>
-                {events?.length ?events?.map(event => (
-                    <EventItem key={event.eventId} event={event} />
-                )) : <Empty description="No new events" />}
+                {events?.length ? (
+                    events?.slice(0, 3)?.map(event => <EventItem key={event.eventId} event={event} />)
+                ) : (
+                    <Empty description="No new events" />
+                )}
             </EventsWrapper>
         </Card>
     );

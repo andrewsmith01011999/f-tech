@@ -19,4 +19,5 @@ export const PATHS = {
     CONTENT_POLICY: '/content-policy',
     HELP: '/help',
     EVENTS: '/events',
+    EVENT_DETAIL: '/events/:id',
 };

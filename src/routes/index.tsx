@@ -8,6 +8,7 @@ import WrapperRouteComponent from './config';
 import { PATHS } from '@/utils/paths';
 import MainLayout from '@/layout/main-layout';
 import { RootState } from '@/stores';
+import EventPage from '@/pages/event';
 
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
@@ -95,6 +96,10 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.EVENTS,
                 element: <WrapperRouteComponent element={<EventsPage />} title="Events" />,
+            },
+            {
+                path: PATHS.EVENT_DETAIL,
+                element: <WrapperRouteComponent element={<EventPage />} title="Event Detail" />,
             }
         ],
     },
