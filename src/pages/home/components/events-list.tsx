@@ -1,19 +1,27 @@
-import { Card, Flex } from 'antd';
+import { Card, Empty, Flex } from 'antd';
 import ArrowRightSvg from '/public/arrow-right.svg';
 import { EventsWrapper } from '../layout/events-wrapper';
 import { EventItem } from './event-item';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
+import { useEventListing } from '@/hooks/query/event/use-event-listing';
 
 export const EventList = () => {
     const navigate = useNavigate();
 
+    const { data: events } = useEventListing();
+
     return (
         <Card
             title={
-                <Flex align="center" gap={4} onClick={() => navigate(PATHS.EVENTS)} style={{
-                    cursor: 'pointer'
-                }}>
+                <Flex
+                    align="center"
+                    gap={4}
+                    onClick={() => navigate(PATHS.EVENTS)}
+                    style={{
+                        cursor: 'pointer',
+                    }}
+                >
                     Events
                     <img src={ArrowRightSvg} />
                 </Flex>
@@ -24,12 +32,11 @@ export const EventList = () => {
             }}
             className="card-menu card-events"
         >
-          <EventsWrapper>
-            <EventItem />
-            <EventItem />
-            <EventItem />
-            <EventItem />
-          </EventsWrapper>
+            <EventsWrapper>
+                {events?.length ?events?.map(event => (
+                    <EventItem key={event.eventId} event={event} />
+                )) : <Empty description="No new events" />}
+            </EventsWrapper>
         </Card>
     );
 };
