@@ -17,4 +17,5 @@ export const PATHS = {
     SEARCH: '/search',
     ABOUT: '/about',
     CONTENT_POLICY: '/content-policy',
+    HELP: '/help',
 };

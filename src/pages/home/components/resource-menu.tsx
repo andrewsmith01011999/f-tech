@@ -14,7 +14,7 @@ import { RootState } from '@/stores';
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const ResourceMenu = () => {
-        const { accountInfo } = useSelector((state: RootState) => state.account);
+    const { accountInfo } = useSelector((state: RootState) => state.account);
     const navigate = useNavigate();
 
     const toReward = () => {
@@ -29,18 +29,22 @@ export const ResourceMenu = () => {
 
         navigate(PATHS.FEEDBACKS);
     };
-    
+
     const toReport = () => {
         navigate(PATHS.ADMIN_REPORTS);
-    }
+    };
 
     const toAbout = () => {
         navigate(PATHS.ABOUT);
-    }
+    };
 
     const toContentPolicy = () => {
         navigate(PATHS.CONTENT_POLICY);
-    }
+    };
+
+    const toHelp = () => {
+        navigate(PATHS.HELP);
+    };
 
     const items: MenuItem[] = [
         {
@@ -53,6 +57,7 @@ export const ResourceMenu = () => {
             key: '2',
             icon: <Icon component={() => <img src={QuestionMarkSvg} alt="question-mark" />} />,
             label: 'Help',
+            onClick: toHelp,
         },
         {
             key: '3',
@@ -72,12 +77,16 @@ export const ResourceMenu = () => {
             label: 'Feedback',
             onClick: toFeedback,
         },
-        ...((accountInfo?.role?.name === 'STAFF' || accountInfo?.role?.name === 'ADMIN') ? [{
-            key: '6',
-            icon: <Icon component={() => <img src={FeedbackSvg} alt="feedback" />} />,
-            label: 'Report',
-            onClick: toReport,
-        }] : [])
+        ...(accountInfo?.role?.name === 'STAFF' || accountInfo?.role?.name === 'ADMIN'
+            ? [
+                  {
+                      key: '6',
+                      icon: <Icon component={() => <img src={FeedbackSvg} alt="feedback" />} />,
+                      label: 'Report',
+                      onClick: toReport,
+                  },
+              ]
+            : []),
     ];
 
     return (

@@ -28,6 +28,7 @@ const AdminReportPage = lazy(() => import('@/pages/admin/report'));
 const SearchPage = lazy(() => import('@/pages/search'));
 const AboutPage = lazy(() => import('@/pages/about'));
 const ContentPolicyPage = lazy(() => import('@/pages/content-policy'));
+const HelpPage = lazy(() => import('@/pages/help'));
 
 const routes: RouteObject[] = [
     {
@@ -85,6 +86,10 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.CONTENT_POLICY,
                 element: <WrapperRouteComponent element={<ContentPolicyPage />} title="Content Policy" />,
+            },
+            {
+                path: PATHS.HELP,
+                element: <WrapperRouteComponent element={<HelpPage />} title="Help" />,
             }
         ],
     },
