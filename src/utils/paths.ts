@@ -15,4 +15,5 @@ export const PATHS = {
     USER_PROFILE: '/user-profile/:id',
     ADMIN_REPORTS: '/admin/reports',
     SEARCH: '/search',
+    ABOUT: '/about'
 };

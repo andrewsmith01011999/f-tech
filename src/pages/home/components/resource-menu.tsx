@@ -34,11 +34,16 @@ export const ResourceMenu = () => {
         navigate(PATHS.ADMIN_REPORTS);
     }
 
+    const toAbout = () => {
+        navigate(PATHS.ABOUT);
+    }
+
     const items: MenuItem[] = [
         {
             key: '1',
             icon: <Icon component={() => <img src={WarningSvg} alt="warning" />} />,
             label: 'About',
+            onClick: toAbout,
         },
         {
             key: '2',
