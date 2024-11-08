@@ -130,8 +130,8 @@ const Transactions: FC = () => {
                             onChange={e => {
                                 setParams({
                                     ...params,
-                                    startDate: dayjs(e?.[0]).format('YYYY-MM-DD'),
-                                    endDate: dayjs(e?.[1]).format('YYYY-MM-DD'),
+                                    startDate: e?.[0] ? dayjs(e?.[0]).format('YYYY-MM-DD') : undefined,
+                                    endDate: e?.[1] ? dayjs(e?.[1]).format('YYYY-MM-DD') : undefined,
                                 });
                             }}
                         />
