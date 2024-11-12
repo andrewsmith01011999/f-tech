@@ -67,7 +67,7 @@ const PostComment = ({ postId, isShown }: PostCommentProps) => {
                 </Form>
 
                 <SecondaryButton form="comment-form" htmlType="submit" loading={isPendingCreateComment}>
-                    Reply
+                    Comment
                 </SecondaryButton>
             </Flex>
 
