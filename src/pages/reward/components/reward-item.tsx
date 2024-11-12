@@ -65,8 +65,8 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
                                 queryKey: walletKeys.getByAccount(accountInfo?.accountId || ''),
                             });
                             queryClient.invalidateQueries({
-                                queryKey: redeemKeys.myReward(),
-                            });
+                                queryKey: redeemKeys.documents(),
+                            })
                             success('Redeem successfully');
                         },
                     },
