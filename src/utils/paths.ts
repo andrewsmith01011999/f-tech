@@ -6,6 +6,7 @@ export const PATHS = {
     CREATE_NEW_PASSWORD: '/create-new-password',
     OTP_VERIFICATION: '/otp',
     POSTS: '/posts',
+    POST_DETAIL: '/posts/:id',
     PROFILE: '/profile',
     WALLET: '/wallet',
     NOTIFICATION: '/notification',

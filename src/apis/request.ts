@@ -58,7 +58,6 @@ axiosInstance.interceptors.response.use(
         return response;
     },
 
-
     async (err: AxiosError) => {
         setLoadingState(false);
 
@@ -66,7 +65,7 @@ axiosInstance.interceptors.response.use(
         const { response } = err;
 
         if (originalConfig.url !== ApiPaths.REFRESH_TOKEN && response && response.status === 401 && !isRefreshToken) {
-            isRefreshToken = true
+            isRefreshToken = true;
 
             // clear previous access token;
             localStorage.removeItem(LocalStorageKeys.ACCESS_TOKEN_KEY);
@@ -76,22 +75,26 @@ axiosInstance.interceptors.response.use(
             const username = localStorage.getItem(LocalStorageKeys.USERNAME_KEY);
 
             if (refreshToken && username) {
-                const res: Response<RefreshTokenResponse> = await axiosInstance.post(ApiPaths.REFRESH_TOKEN, undefined, {
-                    params: { refreshToken, username }
-                });
+                const res: Response<RefreshTokenResponse> = await axiosInstance.post(
+                    ApiPaths.REFRESH_TOKEN,
+                    undefined,
+                    {
+                        params: { refreshToken, username },
+                    },
+                );
 
                 const { success, entity } = res;
 
                 isRefreshToken = false;
                 if (success && entity && entity.accessToken) {
                     const { accessToken } = entity;
-                    
+
                     // set new access token
                     localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN_KEY, accessToken);
 
                     return axiosInstance(originalConfig);
                 } else {
-                    $message.error("Session has been expired")
+                    $message.error('Session has been expired');
                     localStorage.clear();
                     historyNavigation.navigate(PATHS.SIGNIN);
                 }

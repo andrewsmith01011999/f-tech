@@ -9,6 +9,7 @@ import {
     EllipsisOutlined,
     ExclamationCircleOutlined,
     EyeInvisibleOutlined,
+    EyeOutlined,
     GlobalOutlined,
     KeyOutlined,
     LikeFilled,
@@ -23,7 +24,7 @@ import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
 import { Post } from '@/types/post/post';
 import { FC, useState } from 'react';
 import dayjsConfig from '@/utils/dayjs';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
 import { useMessage } from '@/hooks/use-message';
@@ -37,6 +38,7 @@ import { useToggleBookmark } from '@/hooks/mutate/bookmark/use-toggle-bookmark';
 import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
 import { useBookmarkListing } from '@/hooks/query/bookmark/use-bookmark-listing';
 import { bookmarkKeys } from '@/consts/factory/bookmark';
+import { PATHS } from '@/utils/paths';
 
 const { confirm } = Modal;
 
@@ -47,6 +49,7 @@ interface PostItemProps {
     field?: FormListFieldData;
     showLike?: boolean;
     extra?: React.ReactNode;
+    showComment?: boolean;
 }
 
 export const PostItem: FC<PostItemProps> = ({
@@ -56,9 +59,12 @@ export const PostItem: FC<PostItemProps> = ({
     showLike = true,
     field,
     extra,
+    showComment = false,
 }) => {
     const { title, content, createdDate, imageList, tag, postId, topic } = data;
 
+    const { id } = useParams();
+    const navigate = useNavigate();
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
@@ -66,7 +72,7 @@ export const PostItem: FC<PostItemProps> = ({
 
     const [searchParams] = useSearchParams();
 
-    const [isShowComment, setIsShowComment] = useState(false);
+    const [isShowComment, setIsShowComment] = useState(showComment);
 
     const { data: upvotes } = useUpvoteListing();
     const { data: bookmarks } = useBookmarkListing();
@@ -104,7 +110,7 @@ export const PostItem: FC<PostItemProps> = ({
     };
 
     const copyLink = () => {
-        navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
+        navigator.clipboard.writeText(`${window.location.origin}/posts/${postId}`);
         success('Link copied to clipboard!');
     };
 
@@ -148,7 +154,7 @@ export const PostItem: FC<PostItemProps> = ({
         data?.account?.accountId !== accountInfo?.accountId;
 
     return (
-        <Card>
+        <Card style={{ cursor: 'pointer' }}>
             <Flex vertical gap={8}>
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
@@ -216,6 +222,13 @@ export const PostItem: FC<PostItemProps> = ({
                         >
                             <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
                         </Dropdown>
+                    )}
+                    {!id && (
+                        <IconButton
+                            icon={<EyeOutlined />}
+                            children=""
+                            onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
+                        />
                     )}
                     {showCheckbox && field && (
                         <Form.Item name={[field.name, 'checked']} valuePropName="checked">
