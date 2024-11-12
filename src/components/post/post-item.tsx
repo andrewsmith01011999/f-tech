@@ -33,6 +33,10 @@ import { useToggleUpvote } from '@/hooks/mutate/upvote/use-toggle-upvote';
 import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
 import { upvoteKeys } from '@/consts/factory/upvote';
 import PostComment from './post-comment';
+import { useToggleBookmark } from '@/hooks/mutate/bookmark/use-toggle-bookmark';
+import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
+import { useBookmarkListing } from '@/hooks/query/bookmark/use-bookmark-listing';
+import { bookmarkKeys } from '@/consts/factory/bookmark';
 
 const { confirm } = Modal;
 
@@ -65,6 +69,8 @@ export const PostItem: FC<PostItemProps> = ({
     const [isShowComment, setIsShowComment] = useState(false);
 
     const { data: upvotes } = useUpvoteListing();
+    const { data: bookmarks } = useBookmarkListing();
+    const { mutate: toggleBookmark, isPending: isPendingToggleBookmark } = useToggleBookmark();
     const { mutate: upvote, isPending: isPendingUpvote } = useToggleUpvote();
 
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
@@ -113,6 +119,19 @@ export const PostItem: FC<PostItemProps> = ({
                 });
             },
         });
+    };
+
+    const handleBookmark = (id: string) => {
+        toggleBookmark(
+            { postId: id },
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: bookmarkKeys.listing(),
+                    });
+                },
+            },
+        );
     };
 
     const handleComment = () => {
@@ -276,6 +295,27 @@ export const PostItem: FC<PostItemProps> = ({
                             />
                             <IconButton icon={<CommentOutlined />} children="Comment" onClick={handleComment} />
                             <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
+                            {bookmarks?.find(bookmark => bookmark?.postId === data?.postId) ? (
+                                <IconButton
+                                    icon={
+                                        <FaBookmark
+                                            style={{
+                                                color: '#EEA956',
+                                            }}
+                                        />
+                                    }
+                                    children="Bookmark"
+                                    onClick={() => handleBookmark(data?.postId)}
+                                    disabled={isPendingToggleBookmark}
+                                />
+                            ) : (
+                                <IconButton
+                                    icon={<FaRegBookmark />}
+                                    children="Bookmark"
+                                    onClick={() => handleBookmark(data?.postId)}
+                                    disabled={isPendingToggleBookmark}
+                                />
+                            )}
                             {isAllowShowReport && (
                                 <IconButton
                                     icon={<ExclamationCircleOutlined />}
