@@ -22,11 +22,13 @@ export const PageMenu = () => {
             key: PATHS.HOME,
             icon: <Icon component={() => <img src={HomeSvg} alt="home" />} />,
             label: 'Home',
+            onClick: () => navigate(PATHS.HOME),
         },
         {
-            key: 'bookmark',
+            key: PATHS.BOOKMARKS,
             icon: <Icon component={() => <img src={BookMarkSvg} alt="bookmark" />} />,
             label: 'Bookmark',
+            onClick: () => navigate(PATHS.BOOKMARKS),
         },
         {
             key: 'explore',

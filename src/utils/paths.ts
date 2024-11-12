@@ -20,4 +20,5 @@ export const PATHS = {
     HELP: '/help',
     EVENTS: '/events',
     EVENT_DETAIL: '/events/:id',
+    BOOKMARKS: '/bookmarks',
 };

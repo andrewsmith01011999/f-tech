@@ -12,13 +12,13 @@ type CategoryListingProps = {
 
 export const useCategoriesListing = ({ params }: CategoryListingProps) => {
     const fetchCategories = async (): Promise<Category[]> => {
-        const {entity} = await request<Category[]>('get', '/category/getall', params, {
+        const { entity } = await request<Category[]>('get', '/category/getall', params, {
             paramsSerializer: {
                 indexes: null,
             },
         });
 
-        return entity
+        return entity;
     };
 
     return useQuery<Category[]>({
