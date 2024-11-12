@@ -17,7 +17,7 @@ export const PopularMenu = () => {
     const { data } = usePopularTopics();
 
     const menuItems: MenuItem[] =
-        data?.map(topic => ({
+        data?.slice(0, 5)?.map(topic => ({
             key: topic?.topicId,
             label: (
                 <Label

@@ -44,10 +44,12 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
     const [selectedReason, setSelectedReason] = useState<ReportAccountReasons>();
 
     const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReportPost(id || '');
-    const { data: topics } = useTopicsListing({ params: {
-        ...initialParams,
-        ...(categoryId && { categoryId })
-    } });
+    const { data: topics } = useTopicsListing({
+        params: {
+            ...initialParams,
+            ...(categoryId && { categoryId }),
+        },
+    });
     const { data: tagsData, isLoading: loadingTags } = useTagsListing({ params: initialParams });
 
     const handleCancel = (type: PostModalType) => {
@@ -63,7 +65,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
             ...params,
             ...(categoryId && { category: categoryId }),
             ...(topicId && { topicId }),
-            tagId: id,
+            ...(id && { tagId: id }),
         }));
     };
 
