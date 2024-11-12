@@ -1,3 +1,5 @@
+import { Topic } from '../topic/topic';
+
 export type Category = {
     categoryId: string;
     name: string;
@@ -5,4 +7,5 @@ export type Category = {
     upvoteCount: number;
     commentCount: number;
     description: string;
+    topicListByCategory: Topic[];
 };

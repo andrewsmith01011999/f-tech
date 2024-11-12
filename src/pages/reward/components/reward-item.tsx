@@ -11,6 +11,7 @@ import { useMessage } from '@/hooks/use-message';
 import { useQueryClient } from '@tanstack/react-query';
 import { walletKeys } from '@/consts/factory/wallet';
 import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
+import { redeemKeys } from '@/consts/factory/redeem';
 
 const { confirm } = Modal;
 
@@ -62,6 +63,9 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
                         onSuccess: () => {
                             queryClient.invalidateQueries({
                                 queryKey: walletKeys.getByAccount(accountInfo?.accountId || ''),
+                            });
+                            queryClient.invalidateQueries({
+                                queryKey: redeemKeys.myReward(),
                             });
                             success('Redeem successfully');
                         },

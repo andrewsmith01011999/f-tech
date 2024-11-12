@@ -28,7 +28,7 @@ interface PostSummaryProps {
 export const PostSummary: FC<PostSummaryProps> = ({ data }) => {
     const navigate = useNavigate();
 
-    const { image, name, categoryId, upvoteCount, commentCount, description } = data;
+    const { image, name, categoryId, upvoteCount, commentCount, description, topicListByCategory } = data;
 
     const toPost = () => {
         navigate(`${PATHS.POSTS}?category=${categoryId}`);
@@ -56,8 +56,16 @@ export const PostSummary: FC<PostSummaryProps> = ({ data }) => {
                             </Flex>
 
                             <Flex gap={20} wrap>
-                                {programmingLanguages.map((text, index) => (
-                                    <Tag key={index}>{text}</Tag>
+                                {topicListByCategory?.map(text => (
+                                    <Tag
+                                        key={text?.topicId}
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            navigate(`${PATHS.POSTS}?category=${categoryId}&topicId=${text?.topicId}`);
+                                        }}
+                                    >
+                                        {text?.name}
+                                    </Tag>
                                 ))}
                             </Flex>
                         </Flex>
