@@ -248,7 +248,7 @@ export const PostItem: FC<PostItemProps> = ({
                 <Flex gap={10} wrap>
                     {imageList?.map(file => (
                         <div className="ant-upload" key={file.imageId}>
-                            <Image src={file.url} alt={file.url} width={200} height={200} />
+                            <Image src={file.url} alt={file.url} />
                         </div>
                     ))}
                 </Flex>

@@ -24,9 +24,10 @@ const OTPVerificationPage: FC = () => {
     const [form] = Form.useForm();
 
     const [timeCount, setTimeCount] = useState(OTP_EXPIRE_TIME);
+    const [verifySuccess, setVerifySuccess] = useState(false);
 
     const { mutate: verifyOtp, isPending: isPendingVerifyOtp } = useOtpVerify();
-    const {mutate: resendOtp, isPending: isPendingResendOtp} = useResendOtp();
+    const { mutate: resendOtp, isPending: isPendingResendOtp } = useResendOtp();
 
     const onFinish: FormProps<FieldType>['onFinish'] = async values => {
         verifyOtp(
@@ -37,6 +38,7 @@ const OTPVerificationPage: FC = () => {
             {
                 onSuccess: () => {
                     navigate(PATHS.SIGNIN);
+                    setVerifySuccess(true);
                 },
             },
         );
@@ -55,7 +57,6 @@ const OTPVerificationPage: FC = () => {
                 }
 
                 return prev - 1000;
-
             });
         }, 1000);
 
@@ -124,13 +125,15 @@ const OTPVerificationPage: FC = () => {
                         </Form.Item>
                     </Form>
 
-                    <AuthResultPage
-                        icon={SuccessfulIcon}
-                        title="SUCCESSFULLY!"
-                        description="Your account has been created"
-                        btnNavigateTo={PATHS.SIGNIN}
-                        btnText="Back to login"
-                    />
+                    {isPendingVerifyOtp && (
+                        <AuthResultPage
+                            icon={SuccessfulIcon}
+                            title="SUCCESSFULLY!"
+                            description="Your account has been created"
+                            btnNavigateTo={PATHS.SIGNIN}
+                            btnText="Back to login"
+                        />
+                    )}
                 </AuthFormWrapper>
             </AuthPageLayout>
         </div>
@@ -140,7 +143,7 @@ const OTPVerificationPage: FC = () => {
 const styles = css(`
     .ant-otp {
         gap: 15px;
-        
+
         .ant-input {
             font-size: 22px;
             font-weight: 700;
