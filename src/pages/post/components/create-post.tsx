@@ -34,6 +34,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
 import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
+import { PaperClipOutlined } from '@ant-design/icons';
 
 interface CreatePostProps {
     onCancel: OnAction;
@@ -66,9 +67,11 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
 
-    const { imgUrl, imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
+    const { imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
+    const { imgUrlList: urlFileList, setImgUrlList: setUrlFileList, uploadFile: upLoadAnotherFile } = useUploadFile();
 
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [anotherFileList, setAnotherFileList] = useState<UploadFile[]>([]);
 
     const { data: topics, isLoading: isLoadingTopics } = useTopicsListing({
         params: {
@@ -98,6 +101,9 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                         url: file.url as string,
                     })),
                 }),
+                ...(urlFileList.length > 0 && {
+                    linkFile: urlFileList[0] as string,
+                }),
             },
             {
                 onSuccess: () => {
@@ -108,6 +114,8 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                     onCancel && onCancel();
                     form.resetFields();
                     setImgUrlList([]);
+                    setUrlFileList([]);
+                    setAnotherFileList([]);
                 },
                 onError: error => {
                     message.error(error.message);
@@ -131,6 +139,9 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                         url: file.url as string,
                     })),
                 }),
+                ...(anotherFileList.length > 0 && {
+                    linkFile: anotherFileList[0].url as string,
+                }),
             },
             {
                 onSuccess: () => {
@@ -140,6 +151,9 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                     });
                     onCancel && onCancel();
                     form.resetFields();
+                    setImgUrlList([]);
+                    setUrlFileList([]);
+                    setAnotherFileList([]);
                 },
                 onError: error => {
                     message.error(error.message);
@@ -159,6 +173,20 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
             newImgUrlList.splice(index, 1);
             setImgUrlList(newImgUrlList);
             setFileList(fileList.filter(item => item.uid !== file.uid));
+        }
+    };
+
+    const onChangeAnotherFile: UploadProps['onChange'] = ({ file, fileList: newFileList }) => {
+        setAnotherFileList(newFileList);
+    };
+
+    const onRemoveAnotherFile = (file: UploadFile) => {
+        const index = anotherFileList.indexOf(file);
+        if (index > -1) {
+            const newImgUrlList = urlFileList.slice();
+            newImgUrlList.splice(index, 1);
+            setUrlFileList(newImgUrlList);
+            setAnotherFileList(anotherFileList.filter(item => item.uid !== file.uid));
         }
     };
 
@@ -297,6 +325,8 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                         )}
                     </Flex>
 
+                    <Upload fileList={anotherFileList} onRemove={onRemoveAnotherFile} />
+
                     <Flex align="center" justify="space-between">
                         <Space size="large">
                             <Upload
@@ -308,6 +338,16 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                                 fileList={fileList}
                             >
                                 <Button type="text" icon={<img src={GallerySvg} />} />
+                            </Upload>
+                            <Upload
+                                customRequest={upLoadAnotherFile}
+                                onChange={onChangeAnotherFile}
+                                onRemove={onRemoveAnotherFile}
+                                showUploadList={false}
+                                fileList={anotherFileList}
+                                maxCount={1}
+                            >
+                                <Button type="text" icon={<PaperClipOutlined />} />
                             </Upload>
                             <Button type="text" icon={<img src={EmojiSvg} />} />
                         </Space>

@@ -24,7 +24,7 @@ import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
 import { Post } from '@/types/post/post';
 import { FC, useState } from 'react';
 import dayjsConfig from '@/utils/dayjs';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
 import { useMessage } from '@/hooks/use-message';
@@ -61,7 +61,7 @@ export const PostItem: FC<PostItemProps> = ({
     extra,
     showComment = false,
 }) => {
-    const { title, content, createdDate, imageList, tag, postId, topic } = data;
+    const { title, content, createdDate, imageList, tag, postId, topic, linkFile } = data;
 
     const { id } = useParams();
     const navigate = useNavigate();
@@ -268,6 +268,10 @@ export const PostItem: FC<PostItemProps> = ({
                         </div>
                     ))}
                 </Flex>
+
+                <Link to={linkFile} target="_blank">
+                    {linkFile}
+                </Link>
 
                 <Typography.Text type="secondary">Posted {dayjsConfig(createdDate).fromNow()}</Typography.Text>
 

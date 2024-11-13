@@ -21,6 +21,7 @@ export type Post = {
     imageList?: ImageResponse[];
     tag: Tag;
     account: Account;
+    linkFile: string;
 };
 
 export type CreatePostPayload = {
@@ -29,6 +30,7 @@ export type CreatePostPayload = {
     topicId: string;
     tagId: string;
     imageUrlList: { url: string }[];
+    linkFile: string;
 };
 
 export type UpdatePostPayload = {
@@ -37,4 +39,5 @@ export type UpdatePostPayload = {
     topicId: string;
     tagId: string;
     imageUrlList: { url: string }[];
+    linkFile: string;
 };
