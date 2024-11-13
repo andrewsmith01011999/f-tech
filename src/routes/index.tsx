@@ -33,6 +33,7 @@ const EventsPage = lazy(() => import('@/pages/events'));
 const EventPage = lazy(() => import('@/pages/event'));
 const BookmarksPage = lazy(() => import('@/pages/bookmarks'));
 const PostDetailPage = lazy(() => import('@/pages/post-detail'));
+const DepositPage = lazy(() => import('@/pages/deposit'));
 
 const routes: RouteObject[] = [
     {
@@ -110,6 +111,10 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.POST_DETAIL,
                 element: <WrapperRouteComponent element={<PostDetailPage />} title="Post Detail" />,
+            },
+            {
+                path: PATHS.DEPOSIT,
+                element: <WrapperRouteComponent element={<DepositPage />} title="Deposit" />,
             },
         ],
     },

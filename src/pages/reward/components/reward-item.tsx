@@ -66,7 +66,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
                             });
                             queryClient.invalidateQueries({
                                 queryKey: redeemKeys.documents(),
-                            })
+                            });
                             success('Redeem successfully');
                         },
                     },
