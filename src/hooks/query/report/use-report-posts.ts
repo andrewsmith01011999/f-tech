@@ -21,7 +21,7 @@ export const useReportPostsListing = ({ params }: PostReportProps) => {
     const fetchPostReport = async () => {
         const { entity } = await request<PostReport[]>(
             'get',
-            '/post-report/getall',
+            '/post-report/getall/for-staff',
             {},
             {
                 params,
