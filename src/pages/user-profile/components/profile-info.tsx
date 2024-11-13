@@ -1,15 +1,52 @@
-import { Avatar, Button, Dropdown, Flex, Image, Space, Typography } from 'antd';
+import { Avatar, Button, Dropdown, Flex, Image, Modal, Space, Typography } from 'antd';
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
 import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
-import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, EllipsisOutlined, ExclamationCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { useToggleBlock } from '@/hooks/mutate/block/use-toggle-block';
+import { useBlocksListing } from '@/hooks/query/block/use-block-listing';
+import { useMessage } from '@/hooks/use-message';
+import { useQueryClient } from '@tanstack/react-query';
+import { blockKeys } from '@/consts/factory/block';
+
+const { confirm } = Modal;
+
 interface ProfileInfoProps {
     setIsShowReportReasons: (value: boolean) => void;
 }
 
 export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
     const { accountInfo, userInfo } = useSelector((state: RootState) => state.account);
+
+    const { success } = useMessage();
+    const queryClient = useQueryClient();
+
+    const { data: blocks } = useBlocksListing();
+    const { mutate: toggleBlock } = useToggleBlock();
+
+    const isBlocked = blocks?.find(block => block?.accountId === userInfo?.accountId);
+
+    const handleToggleBlock = () => {
+        confirm({
+            title: isBlocked
+                ? `Do you want to unblock ${userInfo?.username}?`
+                : `Do you want to block ${userInfo?.username}?`,
+            onOk() {
+                toggleBlock(
+                    { accountID: userInfo?.accountId as string },
+                    {
+                        onSuccess: () => {
+                            queryClient.invalidateQueries({
+                                queryKey: blockKeys.listing(),
+                            });
+                            success(isBlocked ? 'Unblocked successfully' : 'Blocked successfully');
+                        },
+                    },
+                );
+            },
+        });
+    };
 
     return (
         <Flex vertical gap={92}>
@@ -36,6 +73,12 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                                 icon: <ExclamationCircleOutlined />,
                                 label: 'Report',
                                 onClick: () => setIsShowReportReasons(true),
+                            },
+                            {
+                                key: '2',
+                                icon: isBlocked ? <CheckCircleOutlined /> : <StopOutlined />,
+                                label: isBlocked ? 'Unblock' : 'Block',
+                                onClick: handleToggleBlock,
                             },
                         ],
                     }}

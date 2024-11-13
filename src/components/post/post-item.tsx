@@ -179,57 +179,60 @@ export const PostItem: FC<PostItemProps> = ({
                             </PostTag>
                         )}
                     </Flex>
-                    {showActions && isAllowShowActions && (
-                        <Dropdown
-                            menu={{
-                                items: [
-                                    {
-                                        key: '1',
-                                        icon: <GlobalOutlined />,
-                                        label: <span>Public</span>,
-                                        children: [
-                                            {
-                                                key: '1.1',
-                                                icon: <GlobalOutlined />,
-                                                label: <span>Public</span>,
-                                            },
-                                            {
-                                                key: '1.2',
-                                                icon: <KeyOutlined />,
-                                                label: <span>Private</span>,
-                                            },
-                                            {
-                                                key: '1.3',
-                                                icon: <EyeInvisibleOutlined />,
-                                                label: <span>Hide</span>,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        key: '2',
-                                        icon: <EditOutlined />,
-                                        label: <span>Edit post</span>,
-                                        onClick: handleUpdate,
-                                    },
-                                    {
-                                        key: '3',
-                                        icon: <DeleteOutlined />,
-                                        label: <span>Delete post</span>,
-                                        onClick: handleDelete,
-                                    },
-                                ],
-                            }}
-                        >
-                            <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
-                        </Dropdown>
-                    )}
-                    {!id && (
-                        <IconButton
-                            icon={<EyeOutlined />}
-                            children=""
-                            onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
-                        />
-                    )}
+                    <Flex align="center" gap={8}>
+                        {showActions && isAllowShowActions && (
+                            <Dropdown
+                                menu={{
+                                    items: [
+                                        {
+                                            key: '1',
+                                            icon: <GlobalOutlined />,
+                                            label: <span>Public</span>,
+                                            children: [
+                                                {
+                                                    key: '1.1',
+                                                    icon: <GlobalOutlined />,
+                                                    label: <span>Public</span>,
+                                                },
+                                                {
+                                                    key: '1.2',
+                                                    icon: <KeyOutlined />,
+                                                    label: <span>Private</span>,
+                                                },
+                                                {
+                                                    key: '1.3',
+                                                    icon: <EyeInvisibleOutlined />,
+                                                    label: <span>Hide</span>,
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            key: '2',
+                                            icon: <EditOutlined />,
+                                            label: <span>Edit post</span>,
+                                            onClick: handleUpdate,
+                                        },
+                                        {
+                                            key: '3',
+                                            icon: <DeleteOutlined />,
+                                            label: <span>Delete post</span>,
+                                            onClick: handleDelete,
+                                        },
+                                    ],
+                                }}
+                            >
+                                <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                            </Dropdown>
+                        )}
+                        {!id && (
+                            <IconButton
+                                icon={<EyeOutlined />}
+                                children=""
+                                onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
+                            />
+                        )}
+                    </Flex>
+
                     {showCheckbox && field && (
                         <Form.Item name={[field.name, 'checked']} valuePropName="checked">
                             <Checkbox />
