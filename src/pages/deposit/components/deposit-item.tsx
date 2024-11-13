@@ -1,18 +1,46 @@
 import RewardCard from '@/components/core/reward-card';
 import { SecondaryButton } from '@/components/core/secondary-button';
+import { useAuthorize } from '@/hooks/use-authorize';
+import { OnAction } from '@/types';
 import { Pack } from '@/types/pack/pack';
-import { Flex, Typography } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import { Button, Flex, Typography } from 'antd';
 import PlaceholderSvg from '/public/placeholder.svg';
 
 interface DepositItemProps {
     pack: Pack;
+    handleOpenUpdate?: OnAction;
+    setPackId?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const DepositItem = ({ pack }: DepositItemProps) => {
+const DepositItem = ({ pack, handleOpenUpdate, setPackId }: DepositItemProps) => {
+    const isAllowUpdatePack = useAuthorize();
+
     return (
         <Flex vertical>
             <RewardCard
-                title={`${pack?.point} MC`}
+                title={
+                    <div style={{ position: 'relative' }}>
+                        <Typography.Title level={5}>{pack?.point} MC</Typography.Title>
+
+                        {isAllowUpdatePack && (
+                            <Button
+                                type="text"
+                                size="small"
+                                icon={<EditOutlined style={{ fontSize: 16 }} />}
+                                style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 0,
+                                }}
+                                onClick={() => {
+                                    handleOpenUpdate?.();
+                                    setPackId?.(pack.monkeyCoinPackId);
+                                }}
+                            />
+                        )}
+                    </div>
+                }
                 hoverable
                 style={{ width: 348 }}
                 cover={
