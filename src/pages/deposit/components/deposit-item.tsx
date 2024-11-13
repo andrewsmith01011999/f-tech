@@ -1,9 +1,13 @@
 import RewardCard from '@/components/core/reward-card';
 import { SecondaryButton } from '@/components/core/secondary-button';
+import { packKeys } from '@/consts/factory/pack';
+import { useBuyPoints } from '@/hooks/mutate/payment/use-buy-point';
 import { useAuthorize } from '@/hooks/use-authorize';
+import { useMessage } from '@/hooks/use-message';
 import { OnAction } from '@/types';
 import { Pack } from '@/types/pack/pack';
 import { EditOutlined } from '@ant-design/icons';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button, Flex, Typography } from 'antd';
 import PlaceholderSvg from '/public/placeholder.svg';
 
@@ -11,10 +15,30 @@ interface DepositItemProps {
     pack: Pack;
     handleOpenUpdate?: OnAction;
     setPackId?: React.Dispatch<React.SetStateAction<string>>;
+    setIsPolling: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DepositItem = ({ pack, handleOpenUpdate, setPackId }: DepositItemProps) => {
+const DepositItem = ({ pack, handleOpenUpdate, setPackId, setIsPolling }: DepositItemProps) => {
     const isAllowUpdatePack = useAuthorize();
+
+    const queryClient = useQueryClient();
+    const { success } = useMessage();
+
+    const { mutate: buyPoint } = useBuyPoints();
+
+    const handleBuy = () => {
+        buyPoint(
+            {
+                monkeyCoinPackId: pack.monkeyCoinPackId,
+                redirectUrl: window.location.href,
+            },
+            {
+                onSuccess: data => {
+                    window.open(data?.paymentUrl);
+                },
+            },
+        );
+    };
 
     return (
         <Flex vertical>
@@ -55,7 +79,7 @@ const DepositItem = ({ pack, handleOpenUpdate, setPackId }: DepositItemProps) =>
                 <Flex justify="space-between" align="center">
                     <Typography.Title level={4}>{pack?.price} VND</Typography.Title>
 
-                    <SecondaryButton>Buy</SecondaryButton>
+                    <SecondaryButton onClick={handleBuy}>Buy</SecondaryButton>
                 </Flex>
             </RewardCard>
         </Flex>

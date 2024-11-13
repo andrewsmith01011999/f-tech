@@ -13,6 +13,7 @@ import {
     MenuUnfoldOutlined,
     MoneyCollectOutlined,
     UserOutlined,
+    WalletOutlined,
 } from '@ant-design/icons';
 import BaseInput from '@/components/core/input';
 import { PATHS } from '@/utils/paths';
@@ -115,6 +116,10 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         navigate(PATHS.WALLET);
     };
 
+    const toDeposit = () => {
+        navigate(PATHS.DEPOSIT);
+    };
+
     const handleNavigateWithParams = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
             navigate(`${PATHS.SEARCH}?keyword=${keyword}`);
@@ -161,16 +166,21 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                                     items: [
                                         {
                                             key: '0',
-                                            icon: <MoneyCollectOutlined />,
+                                            icon: <WalletOutlined />,
                                             label: <span onClick={toWallet}>Wallet</span>,
                                         },
                                         {
                                             key: '1',
+                                            icon: <MoneyCollectOutlined />,
+                                            label: <span onClick={toDeposit}>Deposit</span>,
+                                        },
+                                        {
+                                            key: '2',
                                             icon: <UserOutlined />,
                                             label: <span onClick={toProfile}>Profile</span>,
                                         },
                                         {
-                                            key: '2',
+                                            key: '3',
                                             icon: <LogoutOutlined />,
                                             label: <span onClick={onLogout}>Logout</span>,
                                         },
