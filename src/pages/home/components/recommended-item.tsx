@@ -34,52 +34,55 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
     };
 
     const handleDeleteFollow = (accountId: string) => {
-        deleteFollow({
-            accountId: accountId,
-        }, {
-            onSuccess: () => {
-                queryClient.invalidateQueries({
-                    queryKey: followKeys.listing(),
-                });
+        deleteFollow(
+            {
+                accountId: accountId,
             },
-        });
-    }
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: followKeys.listing(),
+                    });
+                },
+            },
+        );
+    };
 
     return (
-        <Flex align="flex-start" gap={10}>
-            <Image
-                style={{
-                    borderRadius: 10,
-                    width: 58,
-                    height: 58,
-                    objectFit: 'contain',
-                    boxShadow: '0px 3px 4px 0px #FA89240F',
-                }}
-                src={account?.avatar || AmdSvg}
-                alt="creator"
-                preview={false}
-            />
-
+        <Flex align="flex-start" gap={10} justify="space-between">
             <Flex gap={10}>
+                <Image
+                    style={{
+                        borderRadius: 10,
+                        width: 58,
+                        height: 58,
+                        objectFit: 'contain',
+                        boxShadow: '0px 3px 4px 0px #FA89240F',
+                    }}
+                    src={account?.avatar || AmdSvg}
+                    alt="creator"
+                    preview={false}
+                />
+
                 <Flex vertical style={{ minWidth: 94 }}>
                     <Typography.Text>{account?.username}</Typography.Text>
                     <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                         {account?.handle}
                     </Typography.Text>
                 </Flex>
-
-                {follows?.find(follow => follow?.follower?.accountId === accountInfo?.accountId) ? (
-                    <Button type="primary" size="small" onClick={() => handleDeleteFollow(account?.accountId)}>
-                        <MinusOutlined style={{ fontSize: 12 }} />
-                        Unfollow
-                    </Button>
-                ) : (
-                    <Button type="primary" size="small" onClick={() => handleCreateFollow(account?.accountId)}>
-                        <PlusOutlined style={{ fontSize: 12 }} />
-                        Follow
-                    </Button>
-                )}
             </Flex>
+
+            {follows?.find(follow => follow?.follower?.accountId === accountInfo?.accountId) ? (
+                <Button type="primary" size="small" onClick={() => handleDeleteFollow(account?.accountId)}>
+                    <MinusOutlined style={{ fontSize: 12 }} />
+                    Unfollow
+                </Button>
+            ) : (
+                <Button type="primary" size="small" onClick={() => handleCreateFollow(account?.accountId)}>
+                    <PlusOutlined style={{ fontSize: 12 }} />
+                    Follow
+                </Button>
+            )}
         </Flex>
     );
 };
