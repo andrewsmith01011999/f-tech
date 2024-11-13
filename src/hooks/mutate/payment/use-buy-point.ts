@@ -1,6 +1,8 @@
-import axiosInstance from '@/apis/request';
+import axiosInstance, { request } from '@/apis/request';
+import { LocalStorageKeys } from '@/consts/local-storage';
+import { API_PATH } from '@/utils/env';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export type BuyPointsPayload = {
     monkeyCoinPackId: string;
@@ -9,8 +11,10 @@ export type BuyPointsPayload = {
 
 export const useBuyPoints = (options: UseMutationOptions<unknown, AxiosError<unknown>, BuyPointsPayload> = {}) => {
     const createBuyPoints = async (payload: BuyPointsPayload) => {
-        const { data } = await axiosInstance.post(`/payment/buyPoints`, {
-            data: payload,
+        const { data } = await axios.post(`${API_PATH}/payment/buyPoints`, payload, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN_KEY)}`,
+            },
         });
 
         return data;

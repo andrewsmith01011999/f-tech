@@ -34,7 +34,7 @@ const DepositItem = ({ pack, handleOpenUpdate, setPackId, setIsPolling }: Deposi
             },
             {
                 onSuccess: data => {
-                    window.open(data?.paymentUrl);
+                    window.open(data?.paymentUrl, '_blank');
                 },
             },
         );
