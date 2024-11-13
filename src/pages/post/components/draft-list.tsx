@@ -32,6 +32,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
     const { type, open } = useSelector((state: RootState) => state.post.modal);
     const { success } = useMessage();
     const queryClient = useQueryClient();
+    const [deletedDrafts, setDeletedDrafts] = useState<string[]>([]);
 
     const initialParams: PaginationParams = {
         page: DEFAULT_PAGE,
@@ -50,9 +51,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
     const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();
     const { mutate: deleteDraft } = useDeleteDraftPost();
 
-    if (!data || data.length === 0) {
-        return <Empty />;
-    }
+
 
     const toggleSelectAll = () => {
         setIsSelectAll(prev => !prev);
@@ -85,22 +84,36 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
     };
 
     const handleDeleteDrafts = async () => {
-        const deleteDrafts = form
+        // const deleteDrafts = form
+        //     .getFieldValue('post')
+        //     .filter((post: FormFieldValues['post']) => post.checked)
+        //     .map((post: FormFieldValues['post']) => deleteDraft(post.postId));
+
+        // Promise.all(deleteDrafts).then(() => {
+        //     queryClient.invalidateQueries({
+        //         queryKey: postKeys.listing({
+        //             statuses: [PostStatus.DRAFT],
+        //             page: DEFAULT_PAGE,
+        //             perPage: DEFAULT_PAGE_SIZE,
+        //         }),
+        //     });
+        //     form.resetFields();
+        // });
+        const deletedIds = form
             .getFieldValue('post')
             .filter((post: FormFieldValues['post']) => post.checked)
-            .map((post: FormFieldValues['post']) => deleteDraft(post.postId));
+            .map((post: FormFieldValues['post']) => post.postId);
+        deleteDraft(deletedIds, {
+            onSuccess: () => {
+                setDeletedDrafts(deletedIds);
+                form.resetFields();
 
-        Promise.all(deleteDrafts).then(() => {
-            queryClient.invalidateQueries({
-                queryKey: postKeys.listing({
-                    statuses: [PostStatus.DRAFT],
-                    page: DEFAULT_PAGE,
-                    perPage: DEFAULT_PAGE_SIZE,
-                }),
-            });
-            form.resetFields();
+                success('Drafts deleted successfully');
+            },
         });
     };
+
+    const remainingDrafts = data?.filter(post => !deletedDrafts.includes(post.postId));
 
     return (
         <Modal
@@ -124,50 +137,56 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             footer={null}
         >
             <PostWrapper>
-                <Form<FormFieldValues>
-                    name="draft"
-                    form={form}
-                    initialValues={{
-                        post: sortBy(data, 'createdDate').map(post => ({
-                            postId: post.postId,
-                        })),
-                    }}
-                    onFinish={onFinish}
-                >
-                    <Form.List name="post">
-                        {fields => (
-                            <PostWrapper>
-                                {fields.map((field, index) => (
-                                    <PostItem
-                                        data={data[index]}
-                                        key={field.key}
-                                        showActions={false}
-                                        showCheckbox
-                                        field={field}
-                                        showDetail={false}
-                                    />
-                                ))}
-                            </PostWrapper>
-                        )}
-                    </Form.List>
-                </Form>
+                {remainingDrafts?.length ? (
+                    <>
+                        <Form<FormFieldValues>
+                            name="draft"
+                            form={form}
+                            initialValues={{
+                                post: sortBy(remainingDrafts, 'createdDate').map(post => ({
+                                    postId: post.postId,
+                                })),
+                            }}
+                            onFinish={onFinish}
+                        >
+                            <Form.List name="post">
+                                {fields => (
+                                    <PostWrapper>
+                                        {fields.map((field, index) => (
+                                            <PostItem
+                                                data={remainingDrafts[index]}
+                                                key={field.key}
+                                                showActions={false}
+                                                showCheckbox
+                                                field={field}
+                                                showDetail={false}
+                                            />
+                                        ))}
+                                    </PostWrapper>
+                                )}
+                            </Form.List>
+                        </Form>
 
-                <Divider />
+                        <Divider />
 
-                <Flex justify="space-between">
-                    {isSelectAll ? (
-                        <Button size="large" type="link" onClick={handleUnselectAll}>
-                            Unselect All
-                        </Button>
-                    ) : (
-                        <Button size="large" type="link" onClick={handleSelectAll}>
-                            Select All
-                        </Button>
-                    )}
-                    <Button size="large" danger type="link" onClick={handleDeleteDrafts}>
-                        Delete
-                    </Button>
-                </Flex>
+                        <Flex justify="space-between">
+                            {isSelectAll ? (
+                                <Button size="large" type="link" onClick={handleUnselectAll}>
+                                    Unselect All
+                                </Button>
+                            ) : (
+                                <Button size="large" type="link" onClick={handleSelectAll}>
+                                    Select All
+                                </Button>
+                            )}
+                            <Button size="large" danger type="link" onClick={handleDeleteDrafts}>
+                                Delete
+                            </Button>
+                        </Flex>
+                    </>
+                ) : (
+                    <Empty />
+                )}
             </PostWrapper>
         </Modal>
     );

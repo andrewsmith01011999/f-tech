@@ -31,6 +31,7 @@ const initialParams: TagListingParams = {
 
 export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true }) => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const { type, open } = useSelector((state: RootState) => state.post.modal);
 
     const topicId = searchParams.get('topicId') || undefined;
     const tagId = searchParams.get('tagId') || undefined;
@@ -206,7 +207,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
 
             <UpdatePost onCancel={() => handleCancel('update')} />
 
-            <DraftList onCancel={() => handleCancel('draft')} />
+            {type === 'draft' && open && <DraftList onCancel={() => handleCancel('draft')} />}
 
             <Modal
                 title="Report"

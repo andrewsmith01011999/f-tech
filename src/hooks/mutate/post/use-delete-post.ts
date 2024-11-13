@@ -15,13 +15,13 @@ export const useDeletePost = (postId: string, options: UseMutationOptions<unknow
 };
 
 export const useDeleteDraftPost = (options: UseMutationOptions<unknown, AxiosError<unknown>> = {}) => {
-    const deletePost = async (postId: string) => {
-        const { data } = await axiosInstance.put(`/post/update/${postId}/status/hidden`);
+    const deletePost = async (postIds: string[]) => {
+        const { data } = await axiosInstance.delete(`/post/delete/draft`, { data: postIds });
     };
 
     return useMutation<unknown, AxiosError<unknown>, any>({
         mutationKey: ['post', 'delete', 'draft'],
-        mutationFn: (payload: string) => deletePost(payload),
+        mutationFn: (payload: string[]) => deletePost(payload),
         ...options,
     });
 };
