@@ -50,6 +50,7 @@ interface PostItemProps {
     showLike?: boolean;
     extra?: React.ReactNode;
     showComment?: boolean;
+    showDetail?: boolean;
 }
 
 export const PostItem: FC<PostItemProps> = ({
@@ -60,6 +61,7 @@ export const PostItem: FC<PostItemProps> = ({
     field,
     extra,
     showComment = false,
+    showDetail = true,
 }) => {
     const { title, content, createdDate, imageList, tag, postId, topic, linkFile } = data;
 
@@ -224,20 +226,20 @@ export const PostItem: FC<PostItemProps> = ({
                                 <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
                             </Dropdown>
                         )}
-                        {!id && (
+                        {!id && showDetail && (
                             <IconButton
                                 icon={<EyeOutlined />}
                                 children=""
                                 onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
                             />
                         )}
+                        {showCheckbox && field && (
+                            <Form.Item name={[field.name, 'checked']} valuePropName="checked">
+                                <Checkbox />
+                            </Form.Item>
+                        )}
                     </Flex>
 
-                    {showCheckbox && field && (
-                        <Form.Item name={[field.name, 'checked']} valuePropName="checked">
-                            <Checkbox />
-                        </Form.Item>
-                    )}
                     {extra && extra}
                 </Flex>
 
