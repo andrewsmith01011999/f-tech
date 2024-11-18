@@ -113,7 +113,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
         });
     };
 
-    const remainingDrafts = data?.filter(post => !deletedDrafts.includes(post.postId));
+    const remainingDrafts = [...(data || [])]?.filter(post => !deletedDrafts.includes(post.postId));
 
     return (
         <Modal
