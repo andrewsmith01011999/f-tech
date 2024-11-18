@@ -11,6 +11,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { followKeys } from '@/consts/factory/follow';
 import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
 import { useMessage } from '@/hooks/use-message';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/utils/paths';
 
 interface RecommendedItemProps {
     account: Account;
@@ -18,6 +20,8 @@ interface RecommendedItemProps {
 }
 
 export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
+    const navigate = useNavigate();
+
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const { mutate: toggleFollow } = useToggleFollow();
@@ -39,7 +43,7 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
     };
 
     return (
-        <Flex align="flex-start" gap={10} justify="space-between">
+        <Flex align="flex-start" gap={10} justify="space-between" onClick={() => navigate(PATHS.RECOMMENDATIONS)}>
             <Flex gap={10}>
                 <Image
                     style={{
@@ -63,12 +67,26 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
             </Flex>
 
             {follows?.find(follow => follow?.follower?.accountId === accountInfo?.accountId) ? (
-                <Button type="primary" size="small" onClick={() => handleToggleFollow()}>
+                <Button
+                    type="primary"
+                    size="small"
+                    onClick={e => {
+                        e.stopPropagation();
+                        handleToggleFollow();
+                    }}
+                >
                     <MinusOutlined style={{ fontSize: 12 }} />
                     Unfollow
                 </Button>
             ) : (
-                <Button type="primary" size="small" onClick={() => handleToggleFollow()}>
+                <Button
+                    type="primary"
+                    size="small"
+                    onClick={e => {
+                        e.stopPropagation();
+                        handleToggleFollow();
+                    }}
+                >
                     <PlusOutlined style={{ fontSize: 12 }} />
                     Follow
                 </Button>
