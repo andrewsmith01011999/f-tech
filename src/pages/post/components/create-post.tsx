@@ -14,6 +14,7 @@ import {
     Image,
     Modal,
     GetProp,
+    Tooltip,
 } from 'antd';
 import GallerySvg from '/public/gallery.svg';
 import EmojiSvg from '/public/emoji.svg';
@@ -341,7 +342,9 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                                 showUploadList={false}
                                 fileList={fileList}
                             >
-                                <Button type="text" icon={<img src={GallerySvg} />} />
+                                <Tooltip title="Upload Image">
+                                    <Button type="text" icon={<img src={GallerySvg} />} />
+                                </Tooltip>
                             </Upload>
                             {categories?.find(category => category.categoryId === searchParams.get('category'))
                                 ?.name !== 'KNOWLEDGE SHARING' && (
@@ -353,7 +356,9 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                                     fileList={anotherFileList}
                                     maxCount={1}
                                 >
-                                    <Button type="text" icon={<PaperClipOutlined />} />
+                                    <Tooltip title="Upload File">
+                                        <Button type="text" icon={<PaperClipOutlined />} />
+                                    </Tooltip>
                                 </Upload>
                             )}
                         </Space>
