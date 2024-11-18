@@ -94,7 +94,7 @@ axiosInstance.interceptors.response.use(
 
                     return axiosInstance(originalConfig);
                 } else {
-                    $message.error('Session has been expired');
+                    // $message.error('Session has been expired');
                     localStorage.clear();
                     historyNavigation.navigate(PATHS.SIGNIN);
                 }
@@ -108,7 +108,7 @@ axiosInstance.interceptors.response.use(
             entity: data,
         };
 
-        errorResponse.message && $message.error(errorResponse.message);
+        // errorResponse.message && $message.error(errorResponse.message);
         return Promise.reject(errorResponse);
     },
 );
