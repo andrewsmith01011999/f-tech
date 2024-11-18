@@ -45,13 +45,31 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
                                 marginTop: 24,
                             }}
                         >
-                            {price} MC
+                            -{price} MC
                         </Typography.Title>
                     </Flex>
                     <Divider />
                     <Flex justify="space-between">
                         <Typography.Title level={4}>Balance:</Typography.Title>
                         <Typography.Title level={4}>{wallet?.balance} MC</Typography.Title>
+                    </Flex>
+                    <Flex justify="space-between">
+                        <Typography.Title
+                            level={4}
+                            style={{
+                                color: (wallet?.balance || 0) - price < 0 ? 'red' : 'black',
+                            }}
+                        >
+                            Remaining:
+                        </Typography.Title>
+                        <Typography.Title
+                            level={4}
+                            style={{
+                                color: (wallet?.balance || 0) - price < 0 ? 'red' : 'black',
+                            }}
+                        >
+                            {(wallet?.balance || 0) - price} MC
+                        </Typography.Title>
                     </Flex>
                     <Divider />
                 </>
