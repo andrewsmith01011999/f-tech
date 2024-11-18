@@ -3,12 +3,15 @@ import BackgroundPlaceholder from '/public/background-placeholder.svg';
 import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
-import { CheckCircleOutlined, EllipsisOutlined, ExclamationCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, EllipsisOutlined, ExclamationCircleOutlined, MinusCircleOutlined, PlusCircleFilled, StopOutlined } from '@ant-design/icons';
 import { useToggleBlock } from '@/hooks/mutate/block/use-toggle-block';
 import { useBlocksListing } from '@/hooks/query/block/use-block-listing';
 import { useMessage } from '@/hooks/use-message';
 import { useQueryClient } from '@tanstack/react-query';
 import { blockKeys } from '@/consts/factory/block';
+import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
+import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
+import { followKeys } from '@/consts/factory/follow';
 
 const { confirm } = Modal;
 
@@ -19,13 +22,19 @@ interface ProfileInfoProps {
 export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
     const { accountInfo, userInfo } = useSelector((state: RootState) => state.account);
 
+    
     const { success } = useMessage();
     const queryClient = useQueryClient();
-
+    
+    const { data: follows } = useGetFollows();
     const { data: blocks } = useBlocksListing();
     const { mutate: toggleBlock } = useToggleBlock();
+    const {mutate: toggleFollow} = useToggleFollow();
 
     const isBlocked = blocks?.find(block => block?.accountId === userInfo?.accountId);
+
+        const isFollowed = follows?.find(follow => follow?.follower?.accountId === userInfo?.accountId);
+
 
     const handleToggleBlock = () => {
         confirm({
@@ -47,6 +56,16 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
             },
         });
     };
+
+    const handleToggleFollow = () => {
+        toggleFollow(userInfo?.accountId as string, {
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: followKeys.listing(),
+                });
+            },
+        });
+    }
 
     return (
         <Flex vertical gap={92}>
@@ -80,6 +99,12 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                                 label: isBlocked ? 'Unblock' : 'Block',
                                 onClick: handleToggleBlock,
                             },
+                            {
+                                key: '3',
+                                icon: isFollowed ? <MinusCircleOutlined /> : <PlusCircleFilled />,
+                                label: isFollowed ? 'UnFollow' : 'Follow',
+                                onClick: handleToggleFollow
+                            }
                         ],
                     }}
                 >

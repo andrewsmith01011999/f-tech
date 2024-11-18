@@ -9,6 +9,7 @@ import { useCreateFollow } from '@/hooks/mutate/follow/use-create-follow';
 import { useDeleteFollow } from '@/hooks/mutate/follow/use-delete-follow';
 import { useQueryClient } from '@tanstack/react-query';
 import { followKeys } from '@/consts/factory/follow';
+import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
 
 interface RecommendedItemProps {
     account: Account;
@@ -18,34 +19,18 @@ interface RecommendedItemProps {
 export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
-    const { mutate: createFollow, isPending: isPendingCreateFollow } = useCreateFollow();
-    const { mutate: deleteFollow, isPending: isPendingDeleteFollow } = useDeleteFollow();
+    const { mutate: toggleFollow } = useToggleFollow();
 
     const queryClient = useQueryClient();
 
-    const handleCreateFollow = (accountId: string) => {
-        createFollow(accountId, {
+    const handleToggleFollow = () => {
+        toggleFollow(account?.accountId, {
             onSuccess: () => {
                 queryClient.invalidateQueries({
                     queryKey: followKeys.listing(),
                 });
             },
         });
-    };
-
-    const handleDeleteFollow = (accountId: string) => {
-        deleteFollow(
-            {
-                accountId: accountId,
-            },
-            {
-                onSuccess: () => {
-                    queryClient.invalidateQueries({
-                        queryKey: followKeys.listing(),
-                    });
-                },
-            },
-        );
     };
 
     return (
@@ -73,12 +58,12 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
             </Flex>
 
             {follows?.find(follow => follow?.follower?.accountId === accountInfo?.accountId) ? (
-                <Button type="primary" size="small" onClick={() => handleDeleteFollow(account?.accountId)}>
+                <Button type="primary" size="small" onClick={() => handleToggleFollow()}>
                     <MinusOutlined style={{ fontSize: 12 }} />
                     Unfollow
                 </Button>
             ) : (
-                <Button type="primary" size="small" onClick={() => handleCreateFollow(account?.accountId)}>
+                <Button type="primary" size="small" onClick={() => handleToggleFollow()}>
                     <PlusOutlined style={{ fontSize: 12 }} />
                     Follow
                 </Button>
