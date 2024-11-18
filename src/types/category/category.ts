@@ -6,6 +6,7 @@ export type Category = {
     image: string;
     upvoteCount: number;
     commentCount: number;
+    viewCount: number;
     description: string;
     topicListByCategory: Topic[];
 };

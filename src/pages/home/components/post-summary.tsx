@@ -6,21 +6,6 @@ import { PATHS } from '@/utils/paths';
 import { Category } from '@/types/category/category';
 import { FC } from 'react';
 
-const programmingLanguages = [
-    'JavaScript',
-    'TypeScript',
-    'Python',
-    'Java',
-    'C#',
-    'PHP',
-    'Ruby',
-    'Go',
-    'Swift',
-    'Kotlin',
-    'Rust',
-    'Scala',
-];
-
 interface PostSummaryProps {
     data: Category;
 }
@@ -28,7 +13,7 @@ interface PostSummaryProps {
 export const PostSummary: FC<PostSummaryProps> = ({ data }) => {
     const navigate = useNavigate();
 
-    const { image, name, categoryId, upvoteCount, commentCount, description, topicListByCategory } = data;
+    const { image, name, categoryId, upvoteCount, commentCount, viewCount, description, topicListByCategory } = data;
 
     const toPost = () => {
         navigate(`${PATHS.POSTS}?category=${categoryId}`);
@@ -71,7 +56,7 @@ export const PostSummary: FC<PostSummaryProps> = ({ data }) => {
                         </Flex>
 
                         <Flex gap={32}>
-                            <Typography.Text>651,324 Views</Typography.Text>
+                            <Typography.Text>{viewCount} Views</Typography.Text>
                             <Typography.Text>{upvoteCount} Likes</Typography.Text>
                             <Typography.Text>{commentCount} Comments</Typography.Text>
                         </Flex>
