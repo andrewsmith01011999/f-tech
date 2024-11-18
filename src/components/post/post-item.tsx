@@ -5,6 +5,7 @@ import {
     BarChartOutlined,
     CommentOutlined,
     DeleteOutlined,
+    DownloadOutlined,
     EditOutlined,
     EllipsisOutlined,
     ExclamationCircleOutlined,
@@ -39,6 +40,7 @@ import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
 import { useBookmarkListing } from '@/hooks/query/bookmark/use-bookmark-listing';
 import { bookmarkKeys } from '@/consts/factory/bookmark';
 import { PATHS } from '@/utils/paths';
+import { usePostDownload } from '@/hooks/query/post/use-post-download';
 
 const { confirm } = Modal;
 
@@ -80,7 +82,7 @@ export const PostItem: FC<PostItemProps> = ({
     const { data: bookmarks } = useBookmarkListing();
     const { mutate: toggleBookmark, isPending: isPendingToggleBookmark } = useToggleBookmark();
     const { mutate: upvote, isPending: isPendingUpvote } = useToggleUpvote();
-
+    const { trigger: download } = usePostDownload(postId);
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -219,6 +221,12 @@ export const PostItem: FC<PostItemProps> = ({
                                             icon: <DeleteOutlined />,
                                             label: <span>Delete post</span>,
                                             onClick: handleDelete,
+                                        },
+                                        {
+                                            key: '4',
+                                            icon: <DownloadOutlined />,
+                                            label: <span>Download</span>,
+                                            onClick: () => download(),
                                         },
                                     ],
                                 }}
