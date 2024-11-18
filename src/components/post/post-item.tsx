@@ -41,6 +41,7 @@ import { useBookmarkListing } from '@/hooks/query/bookmark/use-bookmark-listing'
 import { bookmarkKeys } from '@/consts/factory/bookmark';
 import { PATHS } from '@/utils/paths';
 import { usePostDownload } from '@/hooks/query/post/use-post-download';
+import ToggleTruncateTextTypography from './toggle-truncate-text-typography';
 
 const { confirm } = Modal;
 
@@ -76,6 +77,7 @@ export const PostItem: FC<PostItemProps> = ({
 
     const [searchParams] = useSearchParams();
 
+    const [expandable, setExpandable] = useState(false);
     const [isShowComment, setIsShowComment] = useState(showComment);
 
     const { data: upvotes } = useUpvoteListing();
@@ -261,15 +263,7 @@ export const PostItem: FC<PostItemProps> = ({
                     {title}
                 </Typography.Title>
 
-                <Typography.Paragraph
-                    ellipsis={{
-                        rows: 8,
-                        expandable: true,
-                        symbol: <Button type="link">more</Button>,
-                    }}
-                >
-                    {content}
-                </Typography.Paragraph>
+                <ToggleTruncateTextTypography content={content} maxLength={200} />
 
                 <Flex gap={10} wrap>
                     {imageList?.map(file => (
