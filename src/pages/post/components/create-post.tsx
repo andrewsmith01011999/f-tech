@@ -64,7 +64,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
     const queryClient = useQueryClient();
-    const { success } = useMessage();
+    const { success, error } = useMessage();
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
 
@@ -119,8 +119,8 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                     setUrlFileList([]);
                     setAnotherFileList([]);
                 },
-                onError: error => {
-                    message.error(error.message);
+                onError: err => {
+                    error(err.message);
                 },
             },
         );
@@ -161,8 +161,8 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                     setUrlFileList([]);
                     setAnotherFileList([]);
                 },
-                onError: error => {
-                    message.error(error.message);
+                onError: err => {
+                    error(err.message);
                 },
             },
         );

@@ -57,6 +57,9 @@ const SignUpPage: FC = () => {
                     navigate(PATHS.OTP_VERIFICATION);
                 }
             },
+            onError: error => {
+                message.error(error.message);
+            }
         });
     };
 

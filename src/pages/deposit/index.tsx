@@ -39,7 +39,7 @@ const DepositPage = () => {
     const [form] = Form.useForm();
     const [formUpdate] = Form.useForm();
     const { imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
-    const { success } = useMessage();
+    const { success, error } = useMessage();
     const queryClient = useQueryClient();
 
     const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -110,6 +110,9 @@ const DepositPage = () => {
                     handleResetForm();
                     handleCloseCreate();
                 },
+                onError: err => {
+                    error(err.message);
+                },
             },
         );
     };
@@ -132,6 +135,9 @@ const DepositPage = () => {
                     setPackId('');
                     handleCloseUpdate();
                 },
+                onError: err => {
+                    error(err.message);
+                }
             },
         );
     };

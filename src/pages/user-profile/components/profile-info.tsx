@@ -23,7 +23,7 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
     const { accountInfo, userInfo } = useSelector((state: RootState) => state.account);
 
     
-    const { success } = useMessage();
+    const { success, error } = useMessage();
     const queryClient = useQueryClient();
     
     const { data: follows } = useGetFollows();
@@ -51,6 +51,9 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                             });
                             success(isBlocked ? 'Unblocked successfully' : 'Blocked successfully');
                         },
+                        onError: err => {
+                            error(err.message);
+                        }
                     },
                 );
             },

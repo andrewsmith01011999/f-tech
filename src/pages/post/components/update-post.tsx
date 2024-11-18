@@ -50,7 +50,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const dispatch = useDispatch();
     const { type, open } = useSelector((state: RootState) => state.post.modal);
     const queryClient = useQueryClient();
-    const { success } = useMessage();
+    const { success, error } = useMessage();
     const id = useSelector((state: RootState) => state.post.id);
 
     const { imgUrl, imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
@@ -95,8 +95,8 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                     setUrlFileList([]);
                     setAnotherFileList([]);
                 },
-                onError: error => {
-                    message.error(error.message);
+                onError: err => {
+                    error(err.message);
                 },
             },
         );

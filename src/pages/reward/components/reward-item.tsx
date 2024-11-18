@@ -26,7 +26,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const { data: wallet, isLoading } = useGetWalletByAccount(accountInfo?.accountId as string);
 
-    const { success } = useMessage();
+    const { success, error } = useMessage();
 
     const { mutate: createRedeem, isPending: isPendingCreateRedeem } = useCreateRedeem();
 
@@ -86,6 +86,9 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
                                 queryKey: redeemKeys.documents(),
                             });
                             success('Redeem successfully');
+                        },
+                        onError: err => {
+                            error(err.message);
                         },
                     },
                 );

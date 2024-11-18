@@ -73,7 +73,7 @@ export const PostItem: FC<PostItemProps> = ({
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
-    const { success } = useMessage();
+    const { success, error } = useMessage();
 
     const [searchParams] = useSearchParams();
 
@@ -92,6 +92,9 @@ export const PostItem: FC<PostItemProps> = ({
             });
             success('Post deleted successfully!');
         },
+        onError: (err) => {
+            error(err?.message ?? 'Failed to delete post');
+        }
     });
 
     const handleUpdate = () => {

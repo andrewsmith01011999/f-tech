@@ -87,6 +87,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
         createReport(selectedReason, {
             onSuccess: () => {
                 success('Reported successfully!');
+                setSelectedReason(undefined);
                 dispatch(setPost({ modal: { open: false, type: 'report' } }));
             },
         });

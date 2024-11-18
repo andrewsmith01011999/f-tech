@@ -23,7 +23,7 @@ const UserProfilePage = () => {
     const [isShowReportReasons, setIsShowReportReasons] = useState(false);
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
-    const { success } = useMessage();
+    const { success, error } = useMessage();
 
     const initialParams: PaginationParams = {
         page: DEFAULT_PAGE,
@@ -75,6 +75,9 @@ const UserProfilePage = () => {
             onSuccess: () => {
                 success('Reported successfully!');
                 setIsShowReportReasons(false);
+            },
+            onError: err => {
+                error(err.message);
             },
         });
     };

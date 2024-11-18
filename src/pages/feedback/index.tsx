@@ -11,7 +11,7 @@ import FeedbackWrapper from './layout/feedback-wrapper';
 const FeedbackPage = () => {
     const [form] = Form.useForm();
 
-    const { success } = useMessage();
+    const { success, error } = useMessage();
 
     const { mutate: createFeedback, isPending: isPendingFeedback } = useCreateFeedback();
 
@@ -20,6 +20,9 @@ const FeedbackPage = () => {
             onSuccess: () => {
                 success('Feedback submitted successfully!');
                 form.resetFields();
+            },
+            onError: err => {
+                error(err.message);
             },
         });
     };

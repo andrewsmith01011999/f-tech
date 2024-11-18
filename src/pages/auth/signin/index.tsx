@@ -54,6 +54,9 @@ const SignInPage: FC = () => {
 
                 navigate(PATHS.HOME);
             },
+            onError: error => {
+                message.error(error.message);
+            }
         });
     };
 

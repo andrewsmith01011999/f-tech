@@ -15,10 +15,9 @@ interface DepositItemProps {
     pack: Pack;
     handleOpenUpdate?: OnAction;
     setPackId?: React.Dispatch<React.SetStateAction<string>>;
-    setIsPolling: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DepositItem = ({ pack, handleOpenUpdate, setPackId, setIsPolling }: DepositItemProps) => {
+const DepositItem = ({ pack, handleOpenUpdate, setPackId }: DepositItemProps) => {
     const isAllowUpdatePack = useAuthorize();
 
     const queryClient = useQueryClient();

@@ -10,6 +10,7 @@ import { useDeleteFollow } from '@/hooks/mutate/follow/use-delete-follow';
 import { useQueryClient } from '@tanstack/react-query';
 import { followKeys } from '@/consts/factory/follow';
 import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
+import { useMessage } from '@/hooks/use-message';
 
 interface RecommendedItemProps {
     account: Account;
@@ -21,6 +22,7 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
 
     const { mutate: toggleFollow } = useToggleFollow();
 
+    const { error } = useMessage();
     const queryClient = useQueryClient();
 
     const handleToggleFollow = () => {
@@ -29,6 +31,9 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
                 queryClient.invalidateQueries({
                     queryKey: followKeys.listing(),
                 });
+            },
+            onError: err => {
+                error(err.message);
             },
         });
     };

@@ -23,7 +23,7 @@ export const ProfileInfo = () => {
     const { imgUrl: avatar, uploadFile: uploadAvatar } = useUploadFile();
 
     const queryClient = useQueryClient();
-    const { success } = useMessage();
+    const { success, error } = useMessage();
 
     const { mutate: updateProfile } = useUpdateProfile();
 
@@ -44,6 +44,9 @@ export const ProfileInfo = () => {
                     success('Profile updated successfully');
                     setIsEdit(false);
                 },
+                onError: err => {
+                    error(err.message);
+                }
             },
         );
     };
