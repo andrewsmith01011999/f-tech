@@ -8,7 +8,7 @@ export const usePopularTopics = () => {
     const fetchTopics = async (): Promise<Topic[]> => {
         const { entity } = await request<Topic[]>(
             'get',
-            '/topic/getall',
+            '/topic/popular',
             {},
             {
                 paramsSerializer: {

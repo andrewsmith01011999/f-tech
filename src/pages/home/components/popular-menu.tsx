@@ -17,12 +17,13 @@ export const PopularMenu = () => {
     const { data } = usePopularTopics();
 
     const menuItems: MenuItem[] =
-        data?.slice(0, 5)?.map(topic => ({
+        data?.map(topic => ({
             key: topic?.topicId,
             label: (
                 <Label
                     topic={topic?.name}
-                    subLabel={`82,645 Posted by this tag`}
+                    subLabel={`${topic?.postAmount} Posted by this topic`}
+                    subLabel2={`${topic?.viewAmount} Views - ${topic?.upvoteAmount} Upvotes`}
                     category={topic?.category?.name || ''}
                 />
             ),
@@ -41,9 +42,10 @@ interface LabelProps {
     topic: string;
     category: string;
     subLabel: string;
+    subLabel2?: string;
 }
 
-const Label: FC<LabelProps> = ({ topic, subLabel, category }) => {
+const Label: FC<LabelProps> = ({ topic, subLabel, category, subLabel2 }) => {
     return (
         <Flex vertical justify="space-between">
             <Flex
@@ -72,6 +74,15 @@ const Label: FC<LabelProps> = ({ topic, subLabel, category }) => {
                 ellipsis
             >
                 {subLabel}
+            </Typography.Text>
+            <Typography.Text
+                style={{
+                    fontSize: 10,
+                }}
+                type="secondary"
+                ellipsis
+            >
+                {subLabel2}
             </Typography.Text>
         </Flex>
     );
