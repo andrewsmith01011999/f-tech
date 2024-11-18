@@ -15,7 +15,7 @@ type CategorySearchProps = {
 
 export const useCategorySearch = ({ params }: CategorySearchProps) => {
     const fetchCategorySearch = async () => {
-        const { entity } = await request<CategorySearch>('get', '/category/search', params, {
+        const { entity } = await request<CategorySearch>('get', '/utility/search', params, {
             paramsSerializer: {
                 indexes: null,
             },
