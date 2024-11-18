@@ -35,6 +35,7 @@ import { RootState } from '@/stores';
 import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
 import { PaperClipOutlined } from '@ant-design/icons';
+import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
 
 interface CreatePostProps {
     onCancel: OnAction;
@@ -79,6 +80,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
             categoryId: searchParams.get('category') || undefined,
         },
     });
+    const { data: categories } = useCategoriesListing({ params: initialParams });
     const { data: tags, isLoading: isLoadingTags } = useTagsListing({ params: initialParams });
     const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
     const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();
@@ -280,7 +282,6 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                                     label: topic.name,
                                     value: topic.topicId,
                                 }))}
-                                disabled={!!topicId}
                             />
                         </Form.Item>
 
@@ -297,7 +298,6 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                                     label: tag.name,
                                     value: tag.tagId,
                                 }))}
-                                disabled={!!tagId}
                             />
                         </Form.Item>
 
@@ -343,16 +343,19 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                             >
                                 <Button type="text" icon={<img src={GallerySvg} />} />
                             </Upload>
-                            <Upload
-                                customRequest={upLoadAnotherFile}
-                                onChange={onChangeAnotherFile}
-                                onRemove={onRemoveAnotherFile}
-                                showUploadList={false}
-                                fileList={anotherFileList}
-                                maxCount={1}
-                            >
-                                <Button type="text" icon={<PaperClipOutlined />} />
-                            </Upload>
+                            {categories?.find(category => category.categoryId === searchParams.get('category'))
+                                ?.name !== 'KNOWLEDGE SHARING' && (
+                                <Upload
+                                    customRequest={upLoadAnotherFile}
+                                    onChange={onChangeAnotherFile}
+                                    onRemove={onRemoveAnotherFile}
+                                    showUploadList={false}
+                                    fileList={anotherFileList}
+                                    maxCount={1}
+                                >
+                                    <Button type="text" icon={<PaperClipOutlined />} />
+                                </Upload>
+                            )}
                             <Button type="text" icon={<img src={EmojiSvg} />} />
                         </Space>
 

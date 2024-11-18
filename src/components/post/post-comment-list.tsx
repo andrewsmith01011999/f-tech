@@ -14,6 +14,7 @@ import { useRef, useState } from 'react';
 import { useOnClickOutside } from 'usehooks-ts';
 import { useUpdateComment } from '@/hooks/mutate/comment/use-update-comment';
 import { useCreateReply } from '@/hooks/mutate/comment/use-create-comment';
+import { postKeys } from '@/consts/factory/post';
 
 const { confirm } = Modal;
 
@@ -62,6 +63,9 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                     onSuccess: () => {
                         success('Delete comment successfully');
                         queryClient.invalidateQueries({
+                            queryKey: postKeys.listing(),
+                        });
+                        queryClient.invalidateQueries({
                             queryKey: commentKeys.byPost(postId),
                         });
                     },
@@ -99,6 +103,9 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                     setIsEdit(false);
                     setIsEditReply(false);
                     queryClient.invalidateQueries({
+                        queryKey: postKeys.listing(),
+                    });
+                    queryClient.invalidateQueries({
                         queryKey: commentKeys.byPost(postId),
                     });
                 },
@@ -123,6 +130,9 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                     setIsShowReply(false);
                     setCommentId(null);
                     formReply.resetFields();
+                    queryClient.invalidateQueries({
+                        queryKey: postKeys.listing(),
+                    });
                     queryClient.invalidateQueries({
                         queryKey: commentKeys.byPost(postId),
                     });

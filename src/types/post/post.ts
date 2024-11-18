@@ -22,6 +22,9 @@ export type Post = {
     tag: Tag;
     account: Account;
     linkFile: string;
+    upvoteCount: number;
+    viewCount: number;
+    commentCount: number;
 };
 
 export type CreatePostPayload = {

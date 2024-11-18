@@ -309,13 +309,21 @@ export const PostItem: FC<PostItemProps> = ({
                                                 : '#007AFF',
                                         }}
                                     >
-                                        Like
+                                        {data?.upvoteCount} {data?.upvoteCount > 1 ? 'Likes' : 'Like'}
                                     </Typography.Text>
                                 }
                                 onClick={() => handleUpvote(data?.postId)}
                                 disabled={isPendingUpvote}
                             />
-                            <IconButton icon={<CommentOutlined />} children="Comment" onClick={handleComment} />
+                            <IconButton
+                                icon={<CommentOutlined />}
+                                children={
+                                    <Typography.Text>
+                                        {data?.commentCount} {data?.commentCount > 1 ? 'Comments' : 'Comment'}
+                                    </Typography.Text>
+                                }
+                                onClick={handleComment}
+                            />
                             <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
                             {bookmarks?.find(bookmark => bookmark?.postId === data?.postId) ? (
                                 <IconButton
