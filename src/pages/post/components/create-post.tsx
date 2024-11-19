@@ -106,6 +106,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                 }),
                 ...(urlFileList.length > 0 && {
                     linkFile: urlFileList[0] as string,
+                    postFileUrlRequest: [{ url: urlFileList[0] as string }],
                 }),
             },
             {
@@ -144,6 +145,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                 }),
                 ...(anotherFileList.length > 0 && {
                     linkFile: anotherFileList[0].url as string,
+                    postFileUrlRequest: [{ url: urlFileList[0] as string }],
                 }),
             },
             {
@@ -354,6 +356,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                                     showUploadList={false}
                                     fileList={anotherFileList}
                                     maxCount={1}
+                                    accept=".zip,.rar,.7zip,.tar,.tar.gz"
                                 >
                                     <Tooltip title="Upload File">
                                         <Button type="text" icon={<PaperClipOutlined />} />

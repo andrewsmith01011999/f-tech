@@ -38,6 +38,7 @@ export type CreatePostPayload = {
     tagId: string;
     imageUrlList: { url: string }[];
     linkFile: string;
+    postFileUrlRequest?: { url: string }[];
 };
 
 export type UpdatePostPayload = {
@@ -47,4 +48,5 @@ export type UpdatePostPayload = {
     tagId: string;
     imageUrlList: { url: string }[];
     linkFile: string;
+    postFileUrlRequest?: { url: string }[];
 };

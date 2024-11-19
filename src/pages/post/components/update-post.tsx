@@ -264,6 +264,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                                 showUploadList={false}
                                 fileList={anotherFileList}
                                 maxCount={1}
+                                accept=".zip,.rar,.7zip,.tar,.tar.gz"
                             >
                                 <Button type="text" icon={<PaperClipOutlined />} />
                             </Upload>
