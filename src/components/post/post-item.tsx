@@ -230,8 +230,8 @@ export const PostItem: FC<PostItemProps> = ({
                                         {
                                             key: '4',
                                             icon: <DownloadOutlined />,
-                                            label: <span>Download</span>,
-                                            onClick: () => download(),
+                                            label: <a href={data?.linkFile} download>Download</a>,
+                                            disabled: !data?.linkFile,
                                         },
                                     ],
                                 }}
