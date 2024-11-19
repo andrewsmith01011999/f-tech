@@ -1,19 +1,15 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { OnAction, PaginationParams } from '@/types';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
+import { useDraftsListing } from '@/hooks/query/post/use-posts-listing';
 import { Button, Divider, Empty, Flex, Form, Modal } from 'antd';
 import { PostItem } from '@/components/post/post-item';
-import { PostStatus } from '@/types/post/post';
 import { PostWrapper } from '@/pages/home/layout/post-wrapper';
 import { sortBy } from 'lodash';
-import { useCreateDraftPost } from '@/hooks/mutate/post/use-create-draft-post';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
 import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
-import { useQueryClient } from '@tanstack/react-query';
 import { useMessage } from '@/hooks/use-message';
-import { postKeys } from '@/consts/factory/post';
 
 interface FormFieldValues {
     post: {
@@ -31,7 +27,6 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
 
     const { type, open } = useSelector((state: RootState) => state.post.modal);
     const { success } = useMessage();
-    const queryClient = useQueryClient();
     const [deletedDrafts, setDeletedDrafts] = useState<string[]>([]);
 
     const initialParams: PaginationParams = {
@@ -41,17 +36,13 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
 
     const [isSelectAll, setIsSelectAll] = useState(false);
 
-    const { data } = usePostsListing({
+    const { data } = useDraftsListing({
         params: {
             ...initialParams,
-            statuses: [PostStatus.DRAFT],
         },
     });
 
-    const { mutate: createDraftPost, isPending: isPendingCreateDraftPost } = useCreateDraftPost();
     const { mutate: deleteDraft } = useDeleteDraftPost();
-
-
 
     const toggleSelectAll = () => {
         setIsSelectAll(prev => !prev);
@@ -84,21 +75,6 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
     };
 
     const handleDeleteDrafts = async () => {
-        // const deleteDrafts = form
-        //     .getFieldValue('post')
-        //     .filter((post: FormFieldValues['post']) => post.checked)
-        //     .map((post: FormFieldValues['post']) => deleteDraft(post.postId));
-
-        // Promise.all(deleteDrafts).then(() => {
-        //     queryClient.invalidateQueries({
-        //         queryKey: postKeys.listing({
-        //             statuses: [PostStatus.DRAFT],
-        //             page: DEFAULT_PAGE,
-        //             perPage: DEFAULT_PAGE_SIZE,
-        //         }),
-        //     });
-        //     form.resetFields();
-        // });
         const deletedIds = form
             .getFieldValue('post')
             .filter((post: FormFieldValues['post']) => post.checked)

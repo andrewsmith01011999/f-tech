@@ -33,3 +33,21 @@ export const usePostsListing = ({ params }: PostListingProps) => {
         placeholderData: keepPreviousData,
     });
 };
+
+export const useDraftsListing = ({ params }: PostListingProps) => {
+    const fetchPosts = async (): Promise<Post[]> => {
+        const { entity } = await request<Post[]>('get', '/post/getall/draft/by-current-user', params, {
+            paramsSerializer: {
+                indexes: null,
+            },
+        });
+
+        return entity;
+    };
+
+    return useQuery<Post[]>({
+        queryKey: postKeys.drafts(params),
+        queryFn: fetchPosts,
+        placeholderData: keepPreviousData,
+    });
+};

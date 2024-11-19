@@ -150,8 +150,7 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                 onSuccess: () => {
                     success('Post saved as draft successfully!');
                     queryClient.invalidateQueries({
-                        queryKey: postKeys.listing({
-                            statuses: ['DRAFT'],
+                        queryKey: postKeys.drafts({
                             page: DEFAULT_PAGE,
                             perPage: DEFAULT_PAGE_SIZE,
                         }),
