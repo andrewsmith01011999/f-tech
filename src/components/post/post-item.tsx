@@ -23,7 +23,7 @@ import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
 import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
 import { Post } from '@/types/post/post';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import dayjsConfig from '@/utils/dayjs';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -56,6 +56,27 @@ interface PostItemProps {
     showDetail?: boolean;
 }
 
+export const useDownloadZip = (data: string, fileName: string, extension: string) => {
+    useEffect(() => {
+        if (data) {
+            // Create blob link to download
+            const url = window.URL.createObjectURL(new Blob([data], { type: 'application/gzip' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${fileName}.${extension}`);
+
+            // Append to html link element page
+            document.body.appendChild(link);
+
+            // Start download
+            link.click();
+
+            // Clean up and remove the link
+            link!.parentNode!.removeChild(link);
+        }
+    }, [data]);
+};
+
 export const PostItem: FC<PostItemProps> = ({
     data,
     showActions = true,
@@ -84,7 +105,7 @@ export const PostItem: FC<PostItemProps> = ({
     const { data: bookmarks } = useBookmarkListing();
     const { mutate: toggleBookmark, isPending: isPendingToggleBookmark } = useToggleBookmark();
     const { mutate: upvote, isPending: isPendingUpvote } = useToggleUpvote();
-    const { trigger: download } = usePostDownload(postId);
+    const { trigger: download, data: downloadData } = usePostDownload(postId);
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -92,9 +113,9 @@ export const PostItem: FC<PostItemProps> = ({
             });
             success('Post deleted successfully!');
         },
-        onError: (err) => {
+        onError: err => {
             error(err?.message ?? 'Failed to delete post');
-        }
+        },
     });
 
     const handleUpdate = () => {
@@ -161,6 +182,8 @@ export const PostItem: FC<PostItemProps> = ({
         accountInfo?.role?.name === 'ADMIN' ||
         accountInfo?.role?.name === 'STAFF' ||
         data?.account?.accountId !== accountInfo?.accountId;
+
+    useDownloadZip(downloadData?.entity, postId, 'zip');
 
     return (
         <Card style={{ cursor: 'pointer' }}>
@@ -230,8 +253,12 @@ export const PostItem: FC<PostItemProps> = ({
                                         {
                                             key: '4',
                                             icon: <DownloadOutlined />,
-                                            label: <a href={data?.linkFile} download>Download</a>,
-                                            disabled: !data?.linkFile,
+                                            label: (
+                                                <a href={data?.postFileList?.[0]?.url} download>
+                                                    Download
+                                                </a>
+                                            ),
+                                            disabled: !data?.postFileList?.[0]?.url,
                                         },
                                     ],
                                 }}

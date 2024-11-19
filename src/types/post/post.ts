@@ -25,6 +25,10 @@ export type Post = {
     upvoteCount: number;
     viewCount: number;
     commentCount: number;
+    postFileList: {
+        postFileId: string;
+        url: string
+    }[]
 };
 
 export type CreatePostPayload = {
