@@ -11,6 +11,7 @@ import {
     ExclamationCircleOutlined,
     EyeInvisibleOutlined,
     EyeOutlined,
+    FileZipOutlined,
     GlobalOutlined,
     KeyOutlined,
     LikeFilled,
@@ -76,6 +77,20 @@ export const useDownloadZip = (data: string, fileName: string, extension: string
         }
     }, [data]);
 };
+
+function getFileNameFromUrl(url: string) {
+    // Create a URL object
+    const urlObj = new URL(url);
+
+    // Get the pathname from the URL object
+    const pathname = urlObj.pathname;
+
+    // Extract the file name from the pathname
+    const fileName = pathname.substring(pathname.lastIndexOf('/') + 1);
+
+    // Decode the file name to handle URL encoded characters
+    return decodeURIComponent(fileName)?.split('/')[1];
+}
 
 export const PostItem: FC<PostItemProps> = ({
     data,
@@ -303,9 +318,12 @@ export const PostItem: FC<PostItemProps> = ({
                     ))}
                 </Flex>
 
-                <Link to={linkFile} target="_blank">
-                    {linkFile}
-                </Link>
+                <Flex gap={8}>
+                    <FileZipOutlined />
+                    <Link to={data?.postFileList?.[0]?.url} target="_blank">
+                        {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
+                    </Link>
+                </Flex>
 
                 <Typography.Text type="secondary">Posted {dayjsConfig(createdDate).fromNow()}</Typography.Text>
 
