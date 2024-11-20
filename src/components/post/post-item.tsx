@@ -79,6 +79,14 @@ export const useDownloadZip = (data: string, fileName: string, extension: string
 };
 
 function getFileNameFromUrl(url: string) {
+    // validate url is valid (check with regex)
+    if (
+        !url ||
+        !url.match(/((https?|ftp|file):\/\/)?(www\.)?([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+)+([a-zA-Z0-9\?=_-]+)?/g)
+    ) {
+        return '';
+    }
+
     // Create a URL object
     const urlObj = new URL(url);
 
