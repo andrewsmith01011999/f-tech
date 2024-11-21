@@ -231,8 +231,8 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                             /> */}
                             <Tiptap
                                 onChange={content => form.setFieldValue('content', content)}
-                                content={watchContent}
-                                key={watchContent}
+                                content={watchContent || detail?.content || ''}
+                                key={detail?.content || watchContent}
                             />
                         </Form.Item>
                     </Form>
