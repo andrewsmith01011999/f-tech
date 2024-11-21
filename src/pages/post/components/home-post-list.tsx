@@ -26,7 +26,6 @@ export const HomePostList = () => {
             topicId,
             statuses: [PostStatus.PUBLIC],
             categoryId,
-            isFolloweeIncluded: true,
         },
     });
 
