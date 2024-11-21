@@ -1,9 +1,25 @@
-import React from 'react'
+import { useCurrentUserRewards } from '@/hooks/query/redeem/use-redeem-documents';
+import { Empty, Flex } from 'antd';
+import React from 'react';
+import RewardItem from './reward-item';
 
 const RewardList = () => {
-  return (
-    <div>RewardList</div>
-  )
-}
+    const { data } = useCurrentUserRewards();
 
-export default RewardList
+        if (!data || !data.length) {
+            return <Empty />;
+        }
+
+    return (
+        <Flex align="center" justify="space-between" wrap gap={10}>
+            {data.map(reward => (
+                <RewardItem
+                    reward={reward}
+                    key={reward.rewardId}
+                />
+            ))}
+        </Flex>
+    );
+};
+
+export default RewardList;

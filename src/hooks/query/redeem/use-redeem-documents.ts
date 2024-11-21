@@ -45,3 +45,17 @@ export const useRewardDetail = (rewardId: string) => {
         enabled: !!rewardId,
     });
 }
+
+export const useCurrentUserRewards = () => {
+      const fetchRedeemDocuments = async (): Promise<RedeemDocument[]> => {
+          const { entity } = await request<RedeemDocument[]>('get', '/reward/get-all/for-current-user');
+
+          return entity;
+      };
+
+      return useQuery<RedeemDocument[]>({
+          queryKey: redeemKeys.currentUserRewards(),
+          queryFn: fetchRedeemDocuments,
+          placeholderData: keepPreviousData,
+      });
+}
