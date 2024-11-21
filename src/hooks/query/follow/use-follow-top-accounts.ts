@@ -15,5 +15,26 @@ export const useGetFollowTopAccounts = () => {
     queryFn: fetchPostTopAccounts,
     placeholderData: keepPreviousData,
   })
-
 }
+
+export const useGetRecommendations = () => {
+    const fetchPostTopAccounts = async (): Promise<{
+      account: Account;
+      trendScore: number;
+    }[]> => {
+        const { entity } = await request<
+            {
+                account: Account;
+                trendScore: number;
+            }[]
+        >('get', `/account/get/recommended`);
+
+        return entity;
+    };
+
+    return useQuery({
+        queryKey: followKeys.recommendations(),
+        queryFn: fetchPostTopAccounts,
+        placeholderData: keepPreviousData,
+    });
+};

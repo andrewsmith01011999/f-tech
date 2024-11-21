@@ -35,6 +35,9 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
                 queryClient.invalidateQueries({
                     queryKey: followKeys.listing(),
                 });
+                queryClient.invalidateQueries({
+                    queryKey: followKeys.recommendations(),
+                });
             },
             onError: err => {
                 error(err.message);
