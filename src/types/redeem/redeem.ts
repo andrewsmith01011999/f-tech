@@ -12,6 +12,7 @@ export type RedeemDocument = {
     sectionList: Section[];
     description: string;
     createdDate: string;
+    linkSourceCode: string;
 };
 
 export type Section = {

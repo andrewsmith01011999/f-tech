@@ -13,6 +13,7 @@ import { walletKeys } from '@/consts/factory/wallet';
 import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
 import { redeemKeys } from '@/consts/factory/redeem';
 import { OnAction } from '@/types';
+import { useRewardDownload } from '@/hooks/query/redeem/use-reward-download';
 
 const { confirm } = Modal;
 
@@ -22,13 +23,15 @@ interface RewardItemProps {
 }
 
 const RewardItem: FC<RewardItemProps> = ({ reward, onClick }) => {
-    const { name, type, image, price, status, sectionList, rewardId } = reward;
+    const { name, type, image, price, status, sectionList, rewardId, linkSourceCode } = reward;
 
     const queryClient = useQueryClient();
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const { data: wallet, isLoading } = useGetWalletByAccount(accountInfo?.accountId as string);
 
     const { success, error } = useMessage();
+
+    const { trigger: download } = useRewardDownload(rewardId);
 
     return (
         <RewardCard
@@ -46,6 +49,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward, onClick }) => {
                 <SecondaryButton
                     onClick={e => {
                         e.stopPropagation();
+                        download();
                     }}
                 >
                     Download

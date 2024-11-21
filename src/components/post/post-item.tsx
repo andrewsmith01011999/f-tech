@@ -78,7 +78,7 @@ export const useDownloadZip = (data: string, fileName: string, extension: string
     }, [data]);
 };
 
-function getFileNameFromUrl(url: string) {
+export function getFileNameFromUrl(url: string) {
     // validate url is valid (check with regex)
     if (
         !url ||
