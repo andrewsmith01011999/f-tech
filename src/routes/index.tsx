@@ -35,6 +35,7 @@ const BookmarksPage = lazy(() => import('@/pages/bookmarks'));
 const PostDetailPage = lazy(() => import('@/pages/post-detail'));
 const DepositPage = lazy(() => import('@/pages/deposit'));
 const RecommendationsPage = lazy(() => import('@/pages/recommendations'));
+const ExplorePage = lazy(() => import('@/pages/explore'));
 
 const routes: RouteObject[] = [
     {
@@ -121,6 +122,10 @@ const routes: RouteObject[] = [
                 path: PATHS.RECOMMENDATIONS,
                 element: <WrapperRouteComponent element={<RecommendationsPage />} title="Recommendations" />,
             },
+            {
+                path: PATHS.EXPLORE,
+                element: <WrapperRouteComponent element={<ExplorePage />} title="Explore" />,
+            }
         ],
     },
     {

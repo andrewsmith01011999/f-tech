@@ -10,6 +10,7 @@ export type PostListingParams = PaginationParams & {
     statuses?: PostStatus[];
     accountId?: string;
     categoryId?: string;
+    isFolloweeIncluded?: boolean;
 };
 
 type PostListingProps = {

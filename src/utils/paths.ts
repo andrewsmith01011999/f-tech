@@ -24,4 +24,5 @@ export const PATHS = {
     BOOKMARKS: '/bookmarks',
     DEPOSIT: '/deposit',
     RECOMMENDATIONS: '/recommendations',
+    EXPLORE: '/explore',
 };

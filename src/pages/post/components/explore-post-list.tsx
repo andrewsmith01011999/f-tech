@@ -25,7 +25,8 @@ export const ExplorePostList = () => {
             tagId,
             topicId,
             statuses: [PostStatus.PUBLIC],
-            categoryId
+            categoryId,
+            isFolloweeIncluded: false,
         },
     });
 

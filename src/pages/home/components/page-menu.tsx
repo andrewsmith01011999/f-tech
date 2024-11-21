@@ -3,7 +3,7 @@ import Icon from '@ant-design/icons';
 import { GetProp, MenuProps } from 'antd';
 import HomeSvg from '/public/home.svg';
 import BookMarkSvg from '/public/android.svg';
-import ExploreSvg from '/public/explore.svg';
+import ExploreSvg from '/public/source-code.svg';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '@/utils/paths';
@@ -33,7 +33,7 @@ export const PageMenu = () => {
         {
             key: 'explore',
             icon: <Icon component={() => <img src={ExploreSvg} alt="explore" />} />,
-            label: 'Explore',
+            label: 'Source Code & Download',
         },
     ];
 
