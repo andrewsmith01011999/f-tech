@@ -12,6 +12,8 @@ import { useSelector } from 'react-redux';
 import { walletKeys } from '@/consts/factory/wallet';
 import { redeemKeys } from '@/consts/factory/redeem';
 import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import { FULL_TIME_FORMAT } from '@/consts/common';
 
 const { confirm } = Modal;
 
@@ -150,7 +152,12 @@ const RewardList = () => {
                     </Flex>
 
                     <Typography.Paragraph>
-                        <div dangerouslySetInnerHTML={{ __html: detail?.description || '' }} />
+                        <Flex vertical gap={10}>
+                            <Typography.Title level={2}>{detail?.name}</Typography.Title>
+                            <Typography.Text type="secondary">{dayjs(detail?.createdDate).format(FULL_TIME_FORMAT)}</Typography.Text>
+
+                            <div dangerouslySetInnerHTML={{ __html: detail?.description || '' }} />
+                        </Flex>
                     </Typography.Paragraph>
                 </Flex>
             </Modal>

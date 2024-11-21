@@ -11,6 +11,7 @@ export type RedeemDocument = {
     status: string;
     sectionList: Section[];
     description: string;
+    createdDate: string;
 };
 
 export type Section = {
