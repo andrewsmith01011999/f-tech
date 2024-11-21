@@ -52,11 +52,11 @@ const AdminReportList = () => {
 
     const { mutate: updatePostReport } = useUpdatePostReport(report?.reportId as string, {
         onSuccess: () => {
-            success('Feedback updated successfully!');
+            success('Report updated successfully!');
             setPostId(null);
             setReport(null);
             queryClient.invalidateQueries({
-                queryKey: reportKeys.reportPostListing(),
+                queryKey: reportKeys.reportPostListing(params),
             });
         },
     });

@@ -8,7 +8,10 @@ export const usePostDownload = (postId: string) => {
     const [enabled, setEnabled] = useState(false);
 
     const getPostDownload = async () => {
-        const response = await request('get', `/post/download/${postId}`);
+        const response = await request(
+            'get',
+            `/post/download/${postId}`,
+        );
 
         return response;
     };

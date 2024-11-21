@@ -61,7 +61,7 @@ export const useDownloadZip = (data: string, fileName: string, extension: string
     useEffect(() => {
         if (data) {
             // Create blob link to download
-            const url = window.URL.createObjectURL(new Blob([data], { type: 'application/gzip' }));
+            const url = window.URL.createObjectURL(new Blob([data], { type: 'application/gzip;charset=utf-8' }));
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', `${fileName}.${extension}`);
@@ -206,7 +206,7 @@ export const PostItem: FC<PostItemProps> = ({
         accountInfo?.role?.name === 'STAFF' ||
         data?.account?.accountId !== accountInfo?.accountId;
 
-    useDownloadZip(downloadData?.entity, postId, 'zip');
+    // useDownloadZip(downloadData?.entity, postId, 'zip');
 
     return (
         <Card style={{ cursor: 'pointer' }}>
@@ -282,6 +282,7 @@ export const PostItem: FC<PostItemProps> = ({
                                                 </a>
                                             ),
                                             disabled: !data?.postFileList?.[0]?.url,
+                                            onClick: () => download(),
                                         },
                                     ],
                                 }}
