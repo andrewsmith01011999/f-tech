@@ -20,10 +20,12 @@ const Tiptap = ({ onChange, content }: TiptapProps) => {
 
     const editor = useEditor({
         extensions,
+        content,
         onUpdate: ({ editor }) => {
             handleChange(editor.getHTML());
         },
     });
+    
     return (
         <div>
             <Toolbar editor={editor} />

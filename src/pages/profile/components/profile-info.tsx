@@ -12,6 +12,7 @@ import { useMessage } from '@/hooks/use-message';
 import { authKeys } from '@/consts/factory/auth';
 import { useDispatch } from 'react-redux';
 import { setAccountState } from '@/stores/account';
+import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
 
 export const ProfileInfo = () => {
     const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export const ProfileInfo = () => {
 
     const { mutate: updateProfile } = useUpdateProfile();
 
-    console.log(accountInfo);
+    const { data: follows } = useGetFollows();
 
     const update = () => {
         updateProfile(
@@ -46,7 +47,7 @@ export const ProfileInfo = () => {
                 },
                 onError: err => {
                     error(err.message);
-                }
+                },
             },
         );
     };
@@ -82,7 +83,7 @@ export const ProfileInfo = () => {
                     </Upload>
                 ) : (
                     <Image
-                        src={coverImage ||  accountInfo?.coverImage || BackgroundPlaceholder}
+                        src={coverImage || accountInfo?.coverImage || BackgroundPlaceholder}
                         alt="logo"
                         width="100%"
                         height={260}
@@ -142,12 +143,16 @@ export const ProfileInfo = () => {
                 )}
                 <Flex gap={24}>
                     <Space size="small">
-                        <Typography.Text>100</Typography.Text>
+                        <Typography.Text>
+                            {follows?.filter(follow => follow?.follower?.accountId === accountInfo?.accountId)?.length}
+                        </Typography.Text>
                         <Typography.Text type="secondary">Followings</Typography.Text>
                     </Space>
 
                     <Space>
-                        <Typography.Text>118</Typography.Text>
+                        <Typography.Text>
+                            {follows?.filter(follow => follow?.followee?.accountId === accountInfo?.accountId)?.length}
+                        </Typography.Text>
                         <Typography.Text type="secondary">Followers</Typography.Text>
                     </Space>
                 </Flex>

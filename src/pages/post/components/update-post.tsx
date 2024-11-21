@@ -33,6 +33,7 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
 import { PaperClipOutlined } from '@ant-design/icons';
+import Tiptap from '@/components/tiptap/tiptap';
 
 interface UpdatePostProps {
     onCancel?: OnAction;
@@ -46,6 +47,8 @@ const initialParams: TopicListingParams = {
 export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
+
+    const watchContent = Form.useWatch('content', form);
 
     const dispatch = useDispatch();
     const { type, open } = useSelector((state: RootState) => state.post.modal);
@@ -221,10 +224,15 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                         </Form.Item>
 
                         <Form.Item<UpdatePostPayload> name="content" label="Description">
-                            <Input.TextArea
+                            {/* <Input.TextArea
                                 size="large"
                                 rows={5}
                                 placeholder="Let's share what going on your mind..."
+                            /> */}
+                            <Tiptap
+                                onChange={content => form.setFieldValue('content', content)}
+                                content={watchContent}
+                                key={watchContent}
                             />
                         </Form.Item>
                     </Form>
