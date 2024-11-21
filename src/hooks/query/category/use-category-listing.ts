@@ -8,9 +8,10 @@ export type CategoryListingParams = PaginationParams;
 
 type CategoryListingProps = {
     params: CategoryListingParams;
+    enabled?: boolean;
 };
 
-export const useCategoriesListing = ({ params }: CategoryListingProps) => {
+export const useCategoriesListing = ({ params, enabled }: CategoryListingProps) => {
     const fetchCategories = async (): Promise<Category[]> => {
         const { entity } = await request<Category[]>('get', '/category/getall', params, {
             paramsSerializer: {
@@ -25,5 +26,25 @@ export const useCategoriesListing = ({ params }: CategoryListingProps) => {
         queryKey: categoryKeys.listing(params),
         queryFn: fetchCategories,
         placeholderData: keepPreviousData,
+        enabled
+    });
+};
+
+export const useCategoriesListingForStaff = ({ params, enabled }: CategoryListingProps) => {
+    const fetchCategories = async (): Promise<Category[]> => {
+        const { entity } = await request<Category[]>('get', '/category/getall/for-staff', params, {
+            paramsSerializer: {
+                indexes: null,
+            },
+        });
+
+        return entity;
+    };
+
+    return useQuery<Category[]>({
+        queryKey: categoryKeys.listingStaffs(params),
+        queryFn: fetchCategories,
+        placeholderData: keepPreviousData,
+        enabled
     });
 };
