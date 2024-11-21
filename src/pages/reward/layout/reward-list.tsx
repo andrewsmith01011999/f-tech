@@ -26,10 +26,6 @@ const RewardList = () => {
     const { data } = useRedeemDocuments();
     const { data: wallet, isLoading } = useGetWalletByAccount(accountInfo?.accountId as string);
 
-    if (!data || !data.length) {
-        return <Empty />;
-    }
-
     const { success, error } = useMessage();
     const queryClient = useQueryClient();
 
@@ -103,6 +99,10 @@ const RewardList = () => {
         });
     };
 
+    if (!data || !data.length) {
+        return <Empty />;
+    }
+
     return (
         <>
             <Flex align="center" justify="space-between" wrap gap={10}>
@@ -154,7 +154,9 @@ const RewardList = () => {
                     <Typography.Paragraph>
                         <Flex vertical gap={10}>
                             <Typography.Title level={2}>{detail?.name}</Typography.Title>
-                            <Typography.Text type="secondary">{dayjs(detail?.createdDate).format(FULL_TIME_FORMAT)}</Typography.Text>
+                            <Typography.Text type="secondary">
+                                {dayjs(detail?.createdDate).format(FULL_TIME_FORMAT)}
+                            </Typography.Text>
 
                             <div dangerouslySetInnerHTML={{ __html: detail?.description || '' }} />
                         </Flex>

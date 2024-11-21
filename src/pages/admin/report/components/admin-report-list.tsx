@@ -46,7 +46,7 @@ const AdminReportList = () => {
         });
     }, [searchDebounce]);
 
-    const { data: reportPosts } = useReportPostsListing({
+    const { data: reportPosts, error } = useReportPostsListing({
         params,
     });
 
@@ -140,6 +140,8 @@ const AdminReportList = () => {
     const onChange: GetProp<typeof Checkbox.Group, 'onChange'> = checkedValues => {
         setSelectedStatus(checkedValues as string[]);
     };
+
+    console.log(error)
 
     const content = (
         <Flex vertical justify="center" align="center" gap={12}>

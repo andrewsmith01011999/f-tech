@@ -53,8 +53,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward, onClick }) => {
                     }}
                 >
                     <a href={linkSourceCode} download>
-                        
-                    Download
+                        Download
                     </a>
                 </SecondaryButton>
             </Flex>
