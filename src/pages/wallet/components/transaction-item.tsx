@@ -1,32 +1,52 @@
-import { formatSignedNumber } from "@/utils/number";
-import { css } from "@emotion/react";
-import { Avatar, Flex, Typography } from "antd";
-import { title } from "process";
-import { FC } from "react";
+import { FULL_TIME_FORMAT } from '@/consts/common';
+import { formatSignedNumber } from '@/utils/number';
+import { css } from '@emotion/react';
+import { Avatar, Flex, Typography } from 'antd';
+import dayjs from 'dayjs';
+import { title } from 'process';
+import { FC } from 'react';
 
 interface TransactionItemProps {
     image: string;
     title: string;
     description: string;
     amount: number;
+    createdDate: string;
 }
 
-const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, amount }) => {
-    return <Flex css={styles} gap={15} align="center">
-        <div className="image">
-            <Avatar src={image} size={50}></Avatar>
-        </div>
-        <div>
-            <div>
-                <Typography.Text className="text-title">{title}</Typography.Text>
+const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, amount, createdDate }) => {
+    return (
+        <Flex align="center" justify="space-between">
+            <Flex align="center" gap={8}>
+                <div className="image">
+                    <Avatar src={image} size={50}></Avatar>
+                </div>
+                <div>
+                    <div>
+                        <Typography.Text className="text-title">{title}</Typography.Text>
+                    </div>
+                    <div>
+                        <Typography.Text type="secondary" className="text-description">
+                            {description}
+                        </Typography.Text>
+                    </div>
+                </div>
+            </Flex>
+
+            <Typography.Text className="text-description">
+                {dayjs(createdDate).format(FULL_TIME_FORMAT)}
+            </Typography.Text>
+
+            <div
+                style={{
+                    color: description !== 'Transaction' ? '#18C07A' : '#FF0000',
+                }}
+            >
+                {formatSignedNumber(amount)} MC
             </div>
-            <div>
-                <Typography.Text className="text-description">{description}</Typography.Text>
-            </div>
-        </div>
-        <div className={`amount ${amount > 0 ? 'deposit' : 'withdraw'}`}>{formatSignedNumber(amount)} MC</div>
-    </Flex>
-}
+        </Flex>
+    );
+};
 
 const styles = css(`
     .text-title {
@@ -52,6 +72,6 @@ const styles = css(`
     .withdraw {
         color: #FF0000;
     }
-`)
+`);
 
 export default TransactionItem;

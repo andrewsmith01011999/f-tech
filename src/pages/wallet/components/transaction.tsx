@@ -17,6 +17,7 @@ export const TransactionType = {
     bonus: 'Bonus Point',
     daily: 'Daily Point',
     transaction: 'Transaction',
+    order: 'Order Point',
 } as const;
 
 type FormatTransaction = {
@@ -24,6 +25,7 @@ type FormatTransaction = {
     title: string;
     type: string;
     amount: number;
+    createdDate: string;
 };
 
 const Transactions: FC = () => {
@@ -31,6 +33,7 @@ const Transactions: FC = () => {
         viewTransaction: false,
         dailyPoint: false,
         bonusPoint: false,
+        orderPoint: false,
     });
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
@@ -42,6 +45,7 @@ const Transactions: FC = () => {
             title: bonusPoint?.post?.title || '',
             type: 'Bonus Point',
             amount: bonusPoint.pointEarned,
+            createdDate: bonusPoint.createdDate,
         })) || [];
 
     const dailyPointsTransactions: FormatTransaction[] =
@@ -50,6 +54,7 @@ const Transactions: FC = () => {
             title: dailyPoint?.post?.title || '',
             type: 'Daily Point',
             amount: dailyPoint.pointEarned,
+            createdDate: dailyPoint.createdDate,
         })) || [];
 
     const transactionList: FormatTransaction[] =
@@ -58,17 +63,29 @@ const Transactions: FC = () => {
             title: transaction?.reward?.name,
             type: transaction.type,
             amount: transaction.amount,
+            createdDate: transaction.createdDate,
+        })) || [];
+
+    const orderPointTransactions: FormatTransaction[] =
+        data?.orderPointList?.map(orderPoint => ({
+            id: orderPoint?.orderId,
+            title: '',
+            type: 'Order Point',
+            amount: orderPoint.amount,
+            createdDate: orderPoint.orderDate,
         })) || [];
 
     const allTransactions = [...bonusPointsTransactions, ...dailyPointsTransactions, ...transactionList];
 
     const handleChangeType = (value: string) => {
+        console.log(value);
         if (value === 'Bonus Point') {
             setParams(prev => ({
                 ...prev,
                 dailyPoint: false,
                 viewTransaction: false,
                 bonusPoint: true,
+                orderPoint: false,
             }));
         } else if (value === 'Daily Point') {
             setParams(prev => ({
@@ -76,6 +93,7 @@ const Transactions: FC = () => {
                 bonusPoint: false,
                 viewTransaction: false,
                 dailyPoint: true,
+                orderPoint: false,
             }));
         } else if (value === 'Transaction') {
             setParams(prev => ({
@@ -83,6 +101,15 @@ const Transactions: FC = () => {
                 bonusPoint: false,
                 dailyPoint: false,
                 viewTransaction: true,
+                orderPoint: false,
+            }));
+        } else if (value === 'Order Point') {
+            setParams(prev => ({
+                ...params,
+                bonusPoint: false,
+                dailyPoint: false,
+                viewTransaction: false,
+                orderPoint: true,
             }));
         } else {
             setParams({
@@ -90,6 +117,7 @@ const Transactions: FC = () => {
                 bonusPoint: false,
                 dailyPoint: false,
                 viewTransaction: false,
+                orderPoint: false,
             });
         }
     };
@@ -146,6 +174,7 @@ const Transactions: FC = () => {
                         amount={transaction?.amount}
                         description={transaction?.type}
                         title={transaction?.title}
+                        createdDate={transaction?.createdDate}
                     />
                 ))}
             </Flex>

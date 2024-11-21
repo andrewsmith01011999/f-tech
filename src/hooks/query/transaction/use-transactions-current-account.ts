@@ -7,6 +7,7 @@ export type FilterTransactionParams = {
     viewTransaction: boolean;
     dailyPoint: boolean;
     bonusPoint: boolean;
+    orderPoint: boolean;
     startDate?: string;
     endDate?: string;
 };
@@ -17,10 +18,11 @@ type FilterTransactionProps = {
 
 export const useTransactionsCurrentAccount = ({ params }: FilterTransactionProps) => {
     const fetchTransactionsCurrentAccount = async (): Promise<FilterTransaction> => {
-        const append = params?.startDate && params?.endDate ? `&startDate=${params.startDate}&endDate=${params.endDate}` : '';
+        const append =
+            params?.startDate && params?.endDate ? `&startDate=${params.startDate}&endDate=${params.endDate}` : '';
 
-        const endpoint = `/utility/filter-transaction?viewTransaction=${params?.viewTransaction}&dailyPoint=${params?.dailyPoint}&bonusPoint=${params?.bonusPoint}${append}`;
-        
+        const endpoint = `/utility/filter-transaction?viewTransaction=${params?.viewTransaction}&dailyPoint=${params?.dailyPoint}&bonusPoint=${params?.bonusPoint}&orderPoint=${params?.orderPoint}${append}`;
+
         const { entity } = await request<FilterTransaction>(
             'get',
             endpoint,
