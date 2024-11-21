@@ -327,7 +327,7 @@ export const PostItem: FC<PostItemProps> = ({
                 </Flex>
 
                 <Flex gap={8}>
-                    <FileZipOutlined />
+                    {getFileNameFromUrl(data?.postFileList?.[0]?.url) && <FileZipOutlined />}
                     <Link to={data?.postFileList?.[0]?.url} target="_blank">
                         {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
                     </Link>

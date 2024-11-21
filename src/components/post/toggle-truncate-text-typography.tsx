@@ -38,7 +38,9 @@ const ToggleTruncateTextTypography = ({ content, maxLength }: ToggleTruncateText
     return (
         // write logic to show more or less text
         <Typography.Paragraph>
-            {text}
+            <div dangerouslySetInnerHTML={{
+                __html: text,
+            }}/>
             {isShowLess && (
                 <Typography.Link
                     style={{

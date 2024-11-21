@@ -37,6 +37,8 @@ import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
 import { PaperClipOutlined } from '@ant-design/icons';
 import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import Tiptap from '@/components/tiptap/tiptap';
 
 interface CreatePostProps {
     onCancel: OnAction;
@@ -60,6 +62,8 @@ const getBase64 = (file: FileType): Promise<string> =>
 export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
+
+    const watchContent = Form.useWatch('content');
 
     const { type, open } = useSelector((state: RootState) => state.post.modal);
     const dispatch = useDispatch();
@@ -308,10 +312,14 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                             label="Description"
                             rules={[{ required: true, message: 'Please add some description!' }]}
                         >
-                            <Input.TextArea
+                            {/* <Input.TextArea
                                 size="large"
                                 rows={5}
                                 placeholder="Let's share what going on your mind..."
+                            /> */}
+                            <Tiptap
+                                onChange={content => form.setFieldValue('content', content)}
+                                content={watchContent}
                             />
                         </Form.Item>
                     </Form>
