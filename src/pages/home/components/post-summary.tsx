@@ -63,7 +63,13 @@ export const PostSummary: FC<PostSummaryProps> = ({ data }) => {
                     </Flex>
                 </Flex>
 
-                <Typography.Paragraph>{description}</Typography.Paragraph>
+                <Typography.Paragraph>
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: description ?? '',
+                        }}
+                    />
+                </Typography.Paragraph>
             </Flex>
         </Card>
     );
