@@ -66,7 +66,7 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
                 </Flex>
             </Flex>
 
-            {follows?.find(follow => follow?.follower?.accountId === accountInfo?.accountId) ? (
+            {follows?.find(follow => follow?.followee?.accountId === account?.accountId) ? (
                 <Button
                     type="primary"
                     size="small"
