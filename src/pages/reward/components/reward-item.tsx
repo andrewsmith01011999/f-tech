@@ -12,14 +12,16 @@ import { useQueryClient } from '@tanstack/react-query';
 import { walletKeys } from '@/consts/factory/wallet';
 import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
 import { redeemKeys } from '@/consts/factory/redeem';
+import { OnAction } from '@/types';
 
 const { confirm } = Modal;
 
 interface RewardItemProps {
     reward: RedeemDocument;
+    onClick?: OnAction;
 }
 
-const RewardItem: FC<RewardItemProps> = ({ reward }) => {
+const RewardItem: FC<RewardItemProps> = ({ reward, onClick }) => {
     const { name, type, image, price, status, sectionList, rewardId } = reward;
 
     const queryClient = useQueryClient();
@@ -101,6 +103,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
             hoverable
             style={{ width: 348 }}
             cover={<img alt="example" src={image || PlaceholderSvg} style={{ height: 180, objectFit: 'cover' }} />}
+            onClick={onClick}
         >
             <Space direction="vertical" size={10}>
                 <Typography.Title level={4}>{name}</Typography.Title>
@@ -108,7 +111,13 @@ const RewardItem: FC<RewardItemProps> = ({ reward }) => {
             </Space>
 
             <Flex justify="flex-end">
-                <SecondaryButton loading={isPendingCreateRedeem} onClick={handleCreateRedeem}>
+                <SecondaryButton
+                    loading={isPendingCreateRedeem}
+                    onClick={e => {
+                        e.stopPropagation();
+                        handleCreateRedeem();
+                    }}
+                >
                     Buy
                 </SecondaryButton>
             </Flex>

@@ -10,6 +10,7 @@ export type RedeemDocument = {
     type: string;
     status: string;
     sectionList: Section[];
+    description: string;
 };
 
 export type Section = {

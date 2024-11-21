@@ -30,3 +30,18 @@ export const useRedeemHistory = () => {
         placeholderData: keepPreviousData,
     });
 }
+
+export const useRewardDetail = (rewardId: string) => {
+    const fetchRewardDetail = async (): Promise<RedeemDocument> => {
+        const { entity } = await request<RedeemDocument>('get', `/reward/get/${rewardId}`);
+
+        return entity;
+    };
+
+    return useQuery<RedeemDocument>({
+        queryKey: redeemKeys.detail(rewardId),
+        queryFn: fetchRewardDetail,
+        placeholderData: keepPreviousData,
+        enabled: !!rewardId,
+    });
+}
