@@ -209,7 +209,7 @@ export const PostItem: FC<PostItemProps> = ({
     // useDownloadZip(downloadData?.entity, postId, 'zip');
 
     return (
-        <Card style={{ cursor: 'pointer' }}>
+        <Card style={{ cursor: 'pointer' }} onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}>
             <Flex vertical gap={8}>
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
@@ -223,6 +223,7 @@ export const PostItem: FC<PostItemProps> = ({
                                     display: 'flex',
                                     alignItems: 'center',
                                 }}
+                                onClick={e => e.stopPropagation()}
                             >
                                 {topic?.name}
                             </Tag>
@@ -287,19 +288,23 @@ export const PostItem: FC<PostItemProps> = ({
                                     ],
                                 }}
                             >
-                                <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                                <Button
+                                    onClick={e => e.stopPropagation()}
+                                    type="text"
+                                    icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+                                />
                             </Dropdown>
                         )}
-                        {!id && showDetail && (
+                        {/* {!id && showDetail && (
                             <IconButton
                                 icon={<EyeOutlined />}
                                 children=""
                                 onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
                             />
-                        )}
+                        )} */}
                         {showCheckbox && field && (
                             <Form.Item name={[field.name, 'checked']} valuePropName="checked">
-                                <Checkbox />
+                                <Checkbox onClick={e => e.stopPropagation()} />
                             </Form.Item>
                         )}
                     </Flex>
@@ -313,30 +318,33 @@ export const PostItem: FC<PostItemProps> = ({
                         textDecoration: 'underline',
                         cursor: 'pointer',
                     }}
+                    onClick={e => e.stopPropagation()}
                 >
                     {title}
                 </Typography.Title>
 
                 <ToggleTruncateTextTypography content={content} maxLength={200} />
 
-                <Flex gap={10} wrap>
+                <Flex gap={10} wrap onClick={e => e.stopPropagation()}>
                     {imageList?.map(file => (
-                        <div className="ant-upload" key={file.imageId}>
-                            <Image src={file.url} alt={file.url} />
+                        <div className="ant-upload" key={file.imageId} onClick={e => e.stopPropagation()}>
+                            <Image src={file.url} alt={file.url} onClick={e => e.stopPropagation()} />
                         </div>
                     ))}
                 </Flex>
 
-                <Flex gap={8}>
+                <Flex gap={8} onClick={e => e.stopPropagation()}>
                     {getFileNameFromUrl(data?.postFileList?.[0]?.url) && <FileZipOutlined />}
-                    <Link to={data?.postFileList?.[0]?.url} target="_blank">
+                    <Link to={data?.postFileList?.[0]?.url} target="_blank" onClick={e => e.stopPropagation()}>
                         {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
                     </Link>
                 </Flex>
 
-                <Typography.Text type="secondary">Posted {dayjsConfig(createdDate).fromNow()}</Typography.Text>
+                <Typography.Text type="secondary" onClick={e => e.stopPropagation()}>
+                    Posted {dayjsConfig(createdDate).fromNow()}
+                </Typography.Text>
 
-                <Flex gap={32} vertical>
+                <Flex gap={32} vertical onClick={e => e.stopPropagation()}>
                     {showLike && (
                         <Flex justify="end" gap={20}>
                             <IconButton
