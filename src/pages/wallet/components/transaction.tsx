@@ -75,7 +75,12 @@ const Transactions: FC = () => {
             createdDate: orderPoint.orderDate,
         })) || [];
 
-    const allTransactions = [...bonusPointsTransactions, ...dailyPointsTransactions, ...transactionList];
+    const allTransactions = [
+        ...bonusPointsTransactions,
+        ...dailyPointsTransactions,
+        ...transactionList,
+        ...orderPointTransactions,
+    ];
 
     const handleChangeType = (value: string) => {
         console.log(value);
