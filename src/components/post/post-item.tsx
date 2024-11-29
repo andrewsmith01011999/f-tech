@@ -1,4 +1,17 @@
-import { Button, Card, Checkbox, Dropdown, Flex, Form, FormListFieldData, Image, Modal, Tag, Typography } from 'antd';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Dropdown,
+    Flex,
+    Form,
+    FormListFieldData,
+    Image,
+    Modal,
+    Spin,
+    Tag,
+    Typography,
+} from 'antd';
 import { UserInfo } from '../user/user-info';
 import { PostTag } from './post-tag';
 import {
@@ -128,7 +141,15 @@ export const PostItem: FC<PostItemProps> = ({
     const { data: bookmarks } = useBookmarkListing();
     const { mutate: toggleBookmark, isPending: isPendingToggleBookmark } = useToggleBookmark();
     const { mutate: upvote, isPending: isPendingUpvote } = useToggleUpvote();
-    const { trigger: download, data: downloadData } = usePostDownload(postId);
+    const {
+        trigger: download,
+        data: downloadData,
+        isSuccess: isSuccessDownload,
+        isError: isErrorDownload,
+        error: errorDownload,
+        isPending: isPendingDownload,
+        isLoading: isLoadingDownload,
+    } = usePostDownload(postId);
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -207,6 +228,18 @@ export const PostItem: FC<PostItemProps> = ({
         data?.account?.accountId !== accountInfo?.accountId;
 
     // useDownloadZip(downloadData?.entity, postId, 'zip');
+
+    useEffect(() => {
+        if (isSuccessDownload) {
+            window.open(data?.postFileList?.[0]?.url, '_blank');
+        }
+    }, [isSuccessDownload]);
+
+    useEffect(() => {
+        if (isErrorDownload) {
+            error(errorDownload?.message);
+        }
+    }, [isErrorDownload, errorDownload]);
 
     return (
         <Card style={{ cursor: 'pointer' }} onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}>
@@ -333,12 +366,30 @@ export const PostItem: FC<PostItemProps> = ({
                     ))}
                 </Flex>
 
-                <Flex gap={8} onClick={e => e.stopPropagation()}>
-                    {getFileNameFromUrl(data?.postFileList?.[0]?.url) && <FileZipOutlined />}
-                    <Link to={data?.postFileList?.[0]?.url} target="_blank" onClick={e => e.stopPropagation()}>
-                        {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
-                    </Link>
-                </Flex>
+                <Spin spinning={isLoadingDownload} size='small'>
+                    <Flex
+                        gap={8}
+                        onClick={e => {
+                            e.stopPropagation();
+                        }}
+                        style={{
+                            color: '#007AFF',
+                        }}
+                    >
+                        {getFileNameFromUrl(data?.postFileList?.[0]?.url) && <FileZipOutlined />}
+                        <Typography.Link
+                            onClick={e => {
+                                e.stopPropagation();
+                                download();
+                            }}
+                            style={{
+                                color: '#007AFF',
+                            }}
+                        >
+                            {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
+                        </Typography.Link>
+                    </Flex>
+                </Spin>
 
                 <Typography.Text type="secondary" onClick={e => e.stopPropagation()}>
                     Posted {dayjsConfig(createdDate).fromNow()}
