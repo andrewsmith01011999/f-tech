@@ -23,7 +23,7 @@ export const EventItem = ({ event }: EventItemProps) => {
                 </Typography.Title>
             </Flex>
 
-            <Flex vertical gap={10} align="center">
+            <Flex vertical gap={10}>
                 <Typography.Title level={5} style={{ textTransform: 'uppercase' }}>
                     {event?.title}
                 </Typography.Title>
