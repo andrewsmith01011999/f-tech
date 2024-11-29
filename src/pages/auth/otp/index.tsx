@@ -125,7 +125,7 @@ const OTPVerificationPage: FC = () => {
                         </Form.Item>
                     </Form>
 
-                    {isPendingVerifyOtp && (
+                    {verifySuccess && (
                         <AuthResultPage
                             icon={SuccessfulIcon}
                             title="SUCCESSFULLY!"
