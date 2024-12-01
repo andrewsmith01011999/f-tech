@@ -2,6 +2,7 @@ import {
     Button,
     Card,
     Checkbox,
+    Divider,
     Dropdown,
     Flex,
     Form,
@@ -56,6 +57,8 @@ import { bookmarkKeys } from '@/consts/factory/bookmark';
 import { PATHS } from '@/utils/paths';
 import { usePostDownload } from '@/hooks/query/post/use-post-download';
 import ToggleTruncateTextTypography from './toggle-truncate-text-typography';
+import { DOWNLOAD_POINT } from '@/consts/common';
+import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
 
 const { confirm } = Modal;
 
@@ -137,6 +140,7 @@ export const PostItem: FC<PostItemProps> = ({
     const [expandable, setExpandable] = useState(false);
     const [isShowComment, setIsShowComment] = useState(showComment);
 
+    const { data: wallet, isLoading } = useGetWalletByAccount(accountInfo?.accountId as string);
     const { data: upvotes } = useUpvoteListing();
     const { data: bookmarks } = useBookmarkListing();
     const { mutate: toggleBookmark, isPending: isPendingToggleBookmark } = useToggleBookmark();
@@ -366,7 +370,7 @@ export const PostItem: FC<PostItemProps> = ({
                     ))}
                 </Flex>
 
-                <Spin spinning={isLoadingDownload} size='small'>
+                <Spin spinning={isLoadingDownload} size="small">
                     <Flex
                         gap={8}
                         onClick={e => {
@@ -380,7 +384,61 @@ export const PostItem: FC<PostItemProps> = ({
                         <Typography.Link
                             onClick={e => {
                                 e.stopPropagation();
-                                download();
+                                confirm({
+                                    title: 'Confirm',
+                                    content: (
+                                        <>
+                                            <Typography.Text type="secondary">
+                                                Do you want to download this file?
+                                            </Typography.Text>
+                                            <Flex vertical align="center">
+                                                <Typography.Title
+                                                    level={3}
+                                                    color="#FF6934"
+                                                    style={{
+                                                        color: '#FF6934',
+                                                        marginTop: 24,
+                                                    }}
+                                                >
+                                                    -{DOWNLOAD_POINT} MC
+                                                </Typography.Title>
+                                            </Flex>
+                                            <Divider />
+                                            <Flex justify="space-between">
+                                                <Typography.Title level={4}>Balance:</Typography.Title>
+                                                <Typography.Title level={4}>{wallet?.balance} MC</Typography.Title>
+                                            </Flex>
+                                            <Flex justify="space-between">
+                                                <Typography.Title
+                                                    level={4}
+                                                    style={{
+                                                        color:
+                                                            (wallet?.balance || 0) - (DOWNLOAD_POINT || 0) < 0
+                                                                ? 'red'
+                                                                : 'black',
+                                                    }}
+                                                >
+                                                    Remaining:
+                                                </Typography.Title>
+                                                <Typography.Title
+                                                    level={4}
+                                                    style={{
+                                                        color:
+                                                            (wallet?.balance || 0) - (DOWNLOAD_POINT || 0) < 0
+                                                                ? 'red'
+                                                                : 'black',
+                                                    }}
+                                                >
+                                                    {(wallet?.balance || 0) - (DOWNLOAD_POINT || 0)} MC
+                                                </Typography.Title>
+                                            </Flex>
+                                            <Divider />
+                                        </>
+                                    ),
+                                    onOk: () => {
+                                        download();
+                                    },
+                                });
                             }}
                             style={{
                                 color: '#007AFF',
