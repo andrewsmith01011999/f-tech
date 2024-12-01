@@ -1,7 +1,7 @@
 import { FULL_TIME_FORMAT } from '@/consts/common';
 import { formatSignedNumber } from '@/utils/number';
 import { css } from '@emotion/react';
-import { Avatar, Flex, Typography } from 'antd';
+import { Avatar, Flex, Tooltip, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { title } from 'process';
 import { FC } from 'react';
@@ -21,9 +21,14 @@ const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, 
                 <div className="image">
                     <Avatar src={image} size={50}></Avatar>
                 </div>
-                <div>
+                <div style={{
+                    width: 300,
+                    maxWidth: 300,
+                }}>
                     <div>
-                        <Typography.Text className="text-title">{title}</Typography.Text>
+                        <Typography.Text className="text-title"
+
+                        >{title}</Typography.Text>
                     </div>
                     <div>
                         <Typography.Text type="secondary" className="text-description">
