@@ -2,7 +2,7 @@ import { Card, Empty, Flex } from 'antd';
 import ArrowRightSvg from '/public/arrow-right.svg';
 import { RecommendedItem } from './recommended-item';
 import { EventsWrapper } from '../layout/events-wrapper';
-import { useGetFollowTopAccounts } from '@/hooks/query/follow/use-follow-top-accounts';
+import { useGetFollowTopAccounts, useGetRecommendations } from '@/hooks/query/follow/use-follow-top-accounts';
 import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
@@ -10,7 +10,7 @@ import { PATHS } from '@/utils/paths';
 export const RecommendedCreatorList = () => {
     const navigate = useNavigate();
 
-    const { data: topAccounts } = useGetFollowTopAccounts();
+    const { data: topAccounts } = useGetRecommendations();
     const { data: follows } = useGetFollows();
 
     return (
@@ -36,8 +36,12 @@ export const RecommendedCreatorList = () => {
         >
             <EventsWrapper>
                 {topAccounts?.length ? (
-                    topAccounts?.map(account => (
-                        <RecommendedItem key={account?.accountId} account={account} follows={follows} />
+                    topAccounts?.slice(0, 5)?.map(account => (
+                        <RecommendedItem
+                            key={account?.account?.accountId}
+                            account={account?.account}
+                            follows={follows}
+                        />
                     ))
                 ) : (
                     <Empty description="No recommendation" />
