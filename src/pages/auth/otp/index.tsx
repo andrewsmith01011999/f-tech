@@ -4,6 +4,7 @@ import AuthResultPage from '@/components/authen/result';
 import BaseButton from '@/components/core/button';
 import { OTP_EXPIRE_TIME } from '@/consts/common';
 import { useOtpVerify, useResendOtp } from '@/hooks/mutate/auth/use-otp-verify';
+import { useMessage } from '@/hooks/use-message';
 import { SuccessfulIcon } from '@/utils/asset';
 import { PATHS } from '@/utils/paths';
 import { css } from '@emotion/react';
@@ -29,6 +30,9 @@ const OTPVerificationPage: FC = () => {
     const { mutate: verifyOtp, isPending: isPendingVerifyOtp } = useOtpVerify();
     const { mutate: resendOtp, isPending: isPendingResendOtp } = useResendOtp();
 
+        const { error } = useMessage();
+
+
     const onFinish: FormProps<FieldType>['onFinish'] = async values => {
         verifyOtp(
             {
@@ -39,6 +43,9 @@ const OTPVerificationPage: FC = () => {
                 onSuccess: () => {
                     navigate(PATHS.SIGNIN);
                     setVerifySuccess(true);
+                },
+                onError: err => {
+                    error(err.message);
                 },
             },
         );

@@ -3,12 +3,16 @@ import AuthPageLayout from '@/components/authen/layout';
 import AuthResultPage from '@/components/authen/result';
 import BaseButton from '@/components/core/button';
 import { OTP_EXPIRE_TIME } from '@/consts/common';
-import { useOtpVerifyForgetPassword, useResendOtpForgetPassword } from '@/hooks/mutate/auth/use-otp-verify-forget-password';
+import {
+    useOtpVerifyForgetPassword,
+    useResendOtpForgetPassword,
+} from '@/hooks/mutate/auth/use-otp-verify-forget-password';
+import { useMessage } from '@/hooks/use-message';
 import { RootState } from '@/stores';
 import { SuccessfulIcon } from '@/utils/asset';
 import { PATHS } from '@/utils/paths';
 import { css } from '@emotion/react';
-import { Form, FormProps, GetProps, Input } from 'antd';
+import { Form, FormProps, GetProps, Input, message } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +28,9 @@ const VerifyOtpResetPasswordPage: FC = () => {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
 
-    const email = useSelector((state: RootState) => state.account?.email)
+    const { error } = useMessage();
+
+    const email = useSelector((state: RootState) => state.account?.email);
 
     const [timeCount, setTimeCount] = useState(OTP_EXPIRE_TIME);
     const [verifySuccess, setVerifySuccess] = useState(false);
@@ -42,6 +48,9 @@ const VerifyOtpResetPasswordPage: FC = () => {
                 onSuccess: () => {
                     navigate(PATHS.CREATE_NEW_PASSWORD);
                     setVerifySuccess(true);
+                },
+                onError: err => {
+                    error(err.message);
                 },
             },
         );
