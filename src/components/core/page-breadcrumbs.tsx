@@ -4,7 +4,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import TagXSvg from '/public/tag-x.svg';
 import { RightOutlined } from '@ant-design/icons';
 
-const PageBreadcrumbs = () => {
+interface Props {
+    title?: string;
+}
+
+const PageBreadcrumbs = ({title} : Props) => {
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -23,7 +27,7 @@ const PageBreadcrumbs = () => {
             path: url,
             breadcrumbName: (
                 <Link to={url} onClick={() => setHistory(location.pathname)}>
-                    {url.split('/').splice(-1)?.[0]}
+                    {title || url.split('/').splice(-1)?.[0]}
                 </Link>
             ),
         };

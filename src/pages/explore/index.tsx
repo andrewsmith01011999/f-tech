@@ -4,7 +4,7 @@ import RewardList from './components/reward-list';
 
 const ExplorePage = () => {
     return (
-        <RewardWrapper>
+        <RewardWrapper title='Source Code & Download'>
             <RewardList />
         </RewardWrapper>
     );

@@ -8,9 +8,10 @@ import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
 
 interface RewardWrapperProps {
     children: React.ReactNode;
+    title?: string;
 }
 
-const RewardWrapper: FC<RewardWrapperProps> = ({ children }) => {
+const RewardWrapper: FC<RewardWrapperProps> = ({ children, title }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const { data: wallet } = useGetWalletByAccount(accountInfo?.accountId as string);
@@ -18,7 +19,7 @@ const RewardWrapper: FC<RewardWrapperProps> = ({ children }) => {
     return (
         <Card>
             <Flex justify="space-between" align="center">
-                <PageBreadcrumbs />
+                <PageBreadcrumbs title={title} />
 
                 <SecondaryTag>Balance: {wallet?.balance} MC</SecondaryTag>
             </Flex>
