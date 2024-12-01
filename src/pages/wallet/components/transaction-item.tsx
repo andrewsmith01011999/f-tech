@@ -39,7 +39,7 @@ const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, 
 
             <div
                 style={{
-                    color: description !== 'Transaction' ? '#18C07A' : '#FF0000',
+                    color: amount >= 0 ? '#18C07A' : '#FF0000',
                 }}
             >
                 {formatSignedNumber(amount)} MC
