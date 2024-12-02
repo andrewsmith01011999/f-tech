@@ -23,5 +23,6 @@ export const useUpvoteListing = () => {
          queryKey: upvoteKeys.listing(),
          queryFn: fetchUpvotes,
          placeholderData: keepPreviousData,
+         refetchInterval: 1000,
      });
 };

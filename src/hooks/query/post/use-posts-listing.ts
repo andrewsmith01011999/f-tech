@@ -32,6 +32,7 @@ export const usePostsListing = ({ params }: PostListingProps) => {
         queryKey: postKeys.listing(params),
         queryFn: fetchPosts,
         placeholderData: keepPreviousData,
+        refetchInterval: 1000,
     });
 };
 
