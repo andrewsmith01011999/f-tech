@@ -10,9 +10,10 @@ import { SignInRequest } from '@/types/auth';
 import { PATHS } from '@/utils/paths';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import { useGoogleLogin } from '@react-oauth/google';
 import { useQueryClient } from '@tanstack/react-query';
 import { App, Divider, Form, FormProps, Input } from 'antd';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -27,6 +28,12 @@ const SignInPage: FC = () => {
     const queryClient = useQueryClient();
     const { message } = App.useApp();
     const dispatch = useDispatch();
+
+    const [token, setToken] = useState('');
+
+    const login = useGoogleLogin({
+        onSuccess: tokenResponse => setToken(tokenResponse.access_token),
+    });
 
     const onFinish: FormProps<FieldType>['onFinish'] = async values => {
         const payload: SignInRequest = {
@@ -56,12 +63,16 @@ const SignInPage: FC = () => {
             },
             onError: error => {
                 message.error(error.message);
-            }
+            },
         });
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = errorInfo => {
         // Do something on failed submit form
+    };
+
+    const handleLoginGoogle = () => {
+        login();
     };
 
     return (
@@ -118,6 +129,7 @@ const SignInPage: FC = () => {
                         shape="round"
                         className="btn-google"
                         disabled={isPending}
+                        onClick={handleLoginGoogle}
                     >
                         <img src={GooglIcon}></img>
                         <span>Google</span>

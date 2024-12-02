@@ -303,13 +303,19 @@ export const PostItem: FC<PostItemProps> = ({
                                             key: '2',
                                             icon: <EditOutlined />,
                                             label: <span>Edit post</span>,
-                                            onClick: handleUpdate,
+                                            onClick: e => {
+                                                e.domEvent.stopPropagation();
+                                                handleUpdate()
+                                            },
                                         },
                                         {
                                             key: '3',
                                             icon: <DeleteOutlined />,
                                             label: <span>Delete post</span>,
-                                            onClick: handleDelete,
+                                            onClick: e => {
+                                                e.domEvent.stopPropagation();
+                                                handleDelete();
+                                            },
                                         },
                                         {
                                             key: '4',
@@ -320,10 +326,14 @@ export const PostItem: FC<PostItemProps> = ({
                                                 </a>
                                             ),
                                             disabled: !data?.postFileList?.[0]?.url,
-                                            onClick: () => download(),
+                                            onClick: (e) => {
+                                                e.domEvent.stopPropagation();
+                                                download();
+                                            },
                                         },
                                     ],
                                 }}
+                                
                             >
                                 <Button
                                     onClick={e => e.stopPropagation()}

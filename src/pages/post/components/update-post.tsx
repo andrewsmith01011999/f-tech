@@ -160,14 +160,14 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                 topicId: detail?.topic?.topicId,
                 tagId: detail?.tag?.tagId,
             });
-            setUrlFileList(detail?.linkFile ? [detail?.linkFile] : []);
+            setUrlFileList(detail?.postFileList?.[0]?.url ? [detail?.postFileList?.[0]?.url] : []);
             setAnotherFileList(
-                detail?.linkFile
+                detail?.postFileList?.[0]?.url
                     ? [
                           {
-                              uid: detail?.linkFile,
-                              name: detail?.linkFile,
-                              url: detail?.linkFile,
+                              uid: detail?.postFileList?.[0]?.url,
+                              name: detail?.postFileList?.[0]?.url,
+                              url: detail?.postFileList?.[0]?.url,
                               status: 'done',
                           },
                       ]
