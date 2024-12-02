@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
 import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
 import { useMessage } from '@/hooks/use-message';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/utils/paths';
 
 interface FormFieldValues {
     post: {
@@ -28,6 +30,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
     const { type, open } = useSelector((state: RootState) => state.post.modal);
     const { success } = useMessage();
     const [deletedDrafts, setDeletedDrafts] = useState<string[]>([]);
+    const navigate = useNavigate();
 
     const initialParams: PaginationParams = {
         page: DEFAULT_PAGE,
@@ -136,6 +139,14 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
                                                 showCheckbox
                                                 field={field}
                                                 showDetail={false}
+                                                onClick={() =>
+                                                    navigate(
+                                                        PATHS.POST_DETAIL_DRAFT.replace(
+                                                            ':id',
+                                                            remainingDrafts[index].postId,
+                                                        ),
+                                                    )
+                                                }
                                             />
                                         ))}
                                     </PostWrapper>

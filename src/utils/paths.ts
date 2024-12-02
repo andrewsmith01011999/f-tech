@@ -8,6 +8,7 @@ export const PATHS = {
     OTP_RESET_PASSWORD: '/otp-reset-password',
     POSTS: '/posts',
     POST_DETAIL: '/posts/:id',
+    POST_DETAIL_DRAFT: '/drafts/:id',
     PROFILE: '/profile',
     WALLET: '/wallet',
     NOTIFICATION: '/notification',

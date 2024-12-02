@@ -281,8 +281,6 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                         </Space>
 
                         <Space>
-                            <Button form="updatePost">Complete Draft</Button>
-
                             <Button loading={isPendingUpdatePost} form="updatePost" type="primary" htmlType="submit">
                                 Update
                             </Button>

@@ -1,28 +1,39 @@
-import { StarIcon } from "@/utils/asset";
-import { css } from "@emotion/react";
-import { Avatar, Card, Flex, Typography } from "antd";
-import { FC } from "react";
+import { Notification } from '@/types/notification';
+import { StarIcon } from '@/utils/asset';
+import { css } from '@emotion/react';
+import { Avatar, Card, Flex, Typography } from 'antd';
+import dayjs from 'dayjs';
+import { FC } from 'react';
 
-const NotificationItem: FC = () => {
-    return <Card css={styles}>
-        <Flex vertical gap={6}>
-            <Flex align="center" gap={10}>
+interface NotificationItemProps {
+    notification: Notification;
+}
+
+const NotificationItem = ({ notification }: NotificationItemProps) => {
+    return (
+        <Card css={styles}>
+            <Flex vertical gap={6}>
+                <Flex align="center" gap={10}>
+                    <div>
+                        <img src={StarIcon}></img>
+                    </div>
+                    <div>
+                        <Avatar src={notification?.account?.avatar} />
+                    </div>
+                </Flex>
                 <div>
-                    <img src={StarIcon}></img>
+                    <Typography.Text className="notification-title">{notification?.title}</Typography.Text>
                 </div>
                 <div>
-                    <Avatar />
+                    <Typography.Text>
+                        {notification?.message} -{' '}
+                        {notification?.createdDate ? dayjs(notification?.createdDate).format('DD/MM/YYYY') : ''}
+                    </Typography.Text>
                 </div>
             </Flex>
-            <div>
-                <Typography.Text className="notification-title">NOTIFICATION TITLE</Typography.Text>
-            </div>
-            <div>
-                <Typography.Text>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</Typography.Text>
-            </div>
-        </Flex>
-    </Card>
-}
+        </Card>
+    );
+};
 
 const styles = css(`
     border-radius: 0;
@@ -32,5 +43,5 @@ const styles = css(`
         font-size: 16px;
     }
 
-`)
+`);
 export default NotificationItem;

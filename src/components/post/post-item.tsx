@@ -36,11 +36,11 @@ import {
 import { IconButton } from './icon-button';
 import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
-import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
+import { useDeleteDraftPost, useDeletePost } from '@/hooks/mutate/post/use-delete-post';
 import { Post } from '@/types/post/post';
 import { FC, useEffect, useState } from 'react';
 import dayjsConfig from '@/utils/dayjs';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
 import { useMessage } from '@/hooks/use-message';
@@ -59,6 +59,7 @@ import { usePostDownload } from '@/hooks/query/post/use-post-download';
 import ToggleTruncateTextTypography from './toggle-truncate-text-typography';
 import { DOWNLOAD_POINT } from '@/consts/common';
 import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
+import { OnAction } from '@/types';
 
 const { confirm } = Modal;
 
@@ -71,6 +72,8 @@ interface PostItemProps {
     extra?: React.ReactNode;
     showComment?: boolean;
     showDetail?: boolean;
+    showPublic?: boolean;
+    onClick?: OnAction;
 }
 
 export const useDownloadZip = (data: string, fileName: string, extension: string) => {
@@ -125,6 +128,8 @@ export const PostItem: FC<PostItemProps> = ({
     extra,
     showComment = false,
     showDetail = true,
+    showPublic = true,
+    onClick,
 }) => {
     const { title, content, createdDate, imageList, tag, postId, topic, linkFile } = data;
 
@@ -134,6 +139,7 @@ export const PostItem: FC<PostItemProps> = ({
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const { success, error } = useMessage();
+    const location = useLocation();
 
     const [searchParams] = useSearchParams();
 
@@ -166,6 +172,8 @@ export const PostItem: FC<PostItemProps> = ({
         },
     });
 
+    const { mutate: deletePostDraft, isPending: isPendingDeletePostDraft } = useDeleteDraftPost();
+
     const handleUpdate = () => {
         dispatch(setPost({ modal: { open: true, type: 'update' }, id: postId }));
     };
@@ -175,7 +183,20 @@ export const PostItem: FC<PostItemProps> = ({
             title: 'Are you sure you want to delete this post?',
             content: 'This action cannot be undone',
             onOk() {
-                deletePost();
+                location.pathname.includes('draft')
+                    ? deletePostDraft([data?.postId], {
+                          onSuccess: () => {
+                              queryClient.invalidateQueries({
+                                  queryKey: postKeys.listing(),
+                              });
+                              success('Post deleted successfully!');
+                              navigate(-1)
+                          },
+                          onError: err => {
+                              error(err?.message ?? 'Failed to delete post');
+                          },
+                      })
+                    : deletePost();
             },
             okButtonProps: {
                 disabled: isPendingDeletePost,
@@ -246,7 +267,10 @@ export const PostItem: FC<PostItemProps> = ({
     }, [isErrorDownload, errorDownload]);
 
     return (
-        <Card style={{ cursor: 'pointer' }} onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}>
+        <Card
+            style={{ cursor: 'pointer' }}
+            onClick={() => onClick ? onClick() : navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
+        >
             <Flex vertical gap={8}>
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
@@ -277,35 +301,39 @@ export const PostItem: FC<PostItemProps> = ({
                             <Dropdown
                                 menu={{
                                     items: [
-                                        // {
-                                        //     key: '1',
-                                        //     icon: <GlobalOutlined />,
-                                        //     label: <span>Public</span>,
-                                        //     children: [
-                                        //         {
-                                        //             key: '1.1',
-                                        //             icon: <GlobalOutlined />,
-                                        //             label: <span>Public</span>,
-                                        //         },
-                                        //         {
-                                        //             key: '1.2',
-                                        //             icon: <KeyOutlined />,
-                                        //             label: <span>Private</span>,
-                                        //         },
-                                        //         {
-                                        //             key: '1.3',
-                                        //             icon: <EyeInvisibleOutlined />,
-                                        //             label: <span>Hide</span>,
-                                        //         },
-                                        //     ],
-                                        // },
+                                        ...(showPublic
+                                            ? [
+                                                  {
+                                                      key: '1',
+                                                      icon: <GlobalOutlined />,
+                                                      label: <span>Public</span>,
+                                                      children: [
+                                                          {
+                                                              key: '1.1',
+                                                              icon: <GlobalOutlined />,
+                                                              label: <span>Public</span>,
+                                                          },
+                                                          {
+                                                              key: '1.2',
+                                                              icon: <KeyOutlined />,
+                                                              label: <span>Private</span>,
+                                                          },
+                                                          {
+                                                              key: '1.3',
+                                                              icon: <EyeInvisibleOutlined />,
+                                                              label: <span>Hide</span>,
+                                                          },
+                                                      ],
+                                                  },
+                                              ]
+                                            : []),
                                         {
                                             key: '2',
                                             icon: <EditOutlined />,
                                             label: <span>Edit post</span>,
                                             onClick: e => {
                                                 e.domEvent.stopPropagation();
-                                                handleUpdate()
+                                                handleUpdate();
                                             },
                                         },
                                         {
@@ -326,14 +354,13 @@ export const PostItem: FC<PostItemProps> = ({
                                                 </a>
                                             ),
                                             disabled: !data?.postFileList?.[0]?.url,
-                                            onClick: (e) => {
+                                            onClick: e => {
                                                 e.domEvent.stopPropagation();
                                                 download();
                                             },
                                         },
                                     ],
                                 }}
-                                
                             >
                                 <Button
                                     onClick={e => e.stopPropagation()}

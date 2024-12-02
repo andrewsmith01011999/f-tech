@@ -1,7 +1,7 @@
-import React, { useRef, useState, type FC } from 'react';
+import React, { useEffect, useRef, useState, type FC } from 'react';
 import '../index.less';
 
-import { theme as antTheme, Avatar, Dropdown, Flex, Layout, Typography } from 'antd';
+import { theme as antTheme, Avatar, Badge, Dropdown, Flex, Layout, Modal, notification, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,6 +23,7 @@ import { loggout } from '@/stores/account';
 import NotificationIcon from './components/notification';
 import { useCategorySearch } from '@/hooks/query/utility/use-category-search';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useNotifications } from '@/hooks/query/notification/use-notifications';
 
 const { Header } = Layout;
 
@@ -39,6 +40,15 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     const [keyword, setKeyword] = useState('  ');
     const [openSearch, setOpenSearch] = useState(false);
 
+    const [api, contextHolder] = notification.useNotification();
+
+    const openNotification = (title: string, description: string) => {
+        api.open({
+            message: title,
+            description,
+        });
+    };
+
     const searchKeyword = useDebounce(keyword, 500);
 
     // const { data: searchData } = useCategorySearch({
@@ -47,9 +57,23 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     //     },
     // });
 
+    const { data: notifications } = useNotifications();
+
     const resetKeyword = () => {
         setKeyword('  ');
     };
+
+    useEffect(() => {
+        if (
+            notifications?.length !== undefined &&
+            localStorage.getItem('count') !== undefined &&
+            notifications?.length > Number(localStorage.getItem('count'))
+        ) {
+            openNotification(notifications?.[0]?.title, notifications?.[0]?.message);
+        }
+
+        localStorage.setItem('count', notifications?.length.toString() || '0');
+    }, [notifications]);
 
     // const searchCategoryDropdownItems = searchData?.categoryList.map(category => ({
     //     key: category.categoryId,
@@ -160,7 +184,9 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                 <div className="actions">
                     {logged && accountInfo ? (
                         <Flex gap={20} align="center">
-                            <NotificationIcon />
+                            <Badge count={notifications?.length} showZero>
+                                <NotificationIcon />
+                            </Badge>
                             <Dropdown
                                 menu={{
                                     items: [

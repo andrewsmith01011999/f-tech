@@ -9,6 +9,7 @@ import { PATHS } from '@/utils/paths';
 import MainLayout from '@/layout/main-layout';
 import { RootState } from '@/stores';
 import VerifyOtpResetPasswordPage from '@/pages/auth/forgot-password/verify-otp';
+import PostDetailDraftPage from '@/pages/post-detail/post-detail-draft';
 
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
@@ -116,6 +117,10 @@ const routes: RouteObject[] = [
                 element: <WrapperRouteComponent element={<PostDetailPage />} title="Post Detail" />,
             },
             {
+                path: PATHS.POST_DETAIL_DRAFT,
+                element: <WrapperRouteComponent element={<PostDetailDraftPage />} title="Post Detail Draft" />,
+            },
+            {
                 path: PATHS.DEPOSIT,
                 element: <WrapperRouteComponent element={<DepositPage />} title="Deposit" />,
             },
@@ -126,7 +131,7 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.EXPLORE,
                 element: <WrapperRouteComponent element={<ExplorePage />} title="Explore" />,
-            }
+            },
         ],
     },
     {
@@ -144,7 +149,7 @@ const routes: RouteObject[] = [
     {
         path: PATHS.OTP_RESET_PASSWORD,
         element: <WrapperRouteComponent element={<VerifyOtpResetPasswordPage />} title="OTP Reset Password" />,
-    }, 
+    },
     {
         path: PATHS.CREATE_NEW_PASSWORD,
         element: <WrapperRouteComponent element={<CreateNewPasswordPage />} title="Create new password" />,
