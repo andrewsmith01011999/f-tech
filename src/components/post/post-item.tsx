@@ -277,28 +277,28 @@ export const PostItem: FC<PostItemProps> = ({
                             <Dropdown
                                 menu={{
                                     items: [
-                                        {
-                                            key: '1',
-                                            icon: <GlobalOutlined />,
-                                            label: <span>Public</span>,
-                                            children: [
-                                                {
-                                                    key: '1.1',
-                                                    icon: <GlobalOutlined />,
-                                                    label: <span>Public</span>,
-                                                },
-                                                {
-                                                    key: '1.2',
-                                                    icon: <KeyOutlined />,
-                                                    label: <span>Private</span>,
-                                                },
-                                                {
-                                                    key: '1.3',
-                                                    icon: <EyeInvisibleOutlined />,
-                                                    label: <span>Hide</span>,
-                                                },
-                                            ],
-                                        },
+                                        // {
+                                        //     key: '1',
+                                        //     icon: <GlobalOutlined />,
+                                        //     label: <span>Public</span>,
+                                        //     children: [
+                                        //         {
+                                        //             key: '1.1',
+                                        //             icon: <GlobalOutlined />,
+                                        //             label: <span>Public</span>,
+                                        //         },
+                                        //         {
+                                        //             key: '1.2',
+                                        //             icon: <KeyOutlined />,
+                                        //             label: <span>Private</span>,
+                                        //         },
+                                        //         {
+                                        //             key: '1.3',
+                                        //             icon: <EyeInvisibleOutlined />,
+                                        //             label: <span>Hide</span>,
+                                        //         },
+                                        //     ],
+                                        // },
                                         {
                                             key: '2',
                                             icon: <EditOutlined />,
