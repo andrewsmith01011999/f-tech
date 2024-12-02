@@ -12,6 +12,7 @@ import ReportReason from '../user-profile/components/report-reason';
 import { ReportAccountReasons, reportAccountReasons } from '@/types/report/report';
 import { useMessage } from '@/hooks/use-message';
 import { useCreateReportPost } from '@/hooks/mutate/report/use-create-report';
+import { UpdatePost } from '../post/components/update-post';
 
 const PostDetailPage = () => {
     const { id } = useParams();
@@ -78,6 +79,8 @@ const PostDetailPage = () => {
                     </Button>
                 </Flex>
             </Modal>
+
+            <UpdatePost onCancel={() => handleCancel('update')} />
         </Flex>
     );
 };
