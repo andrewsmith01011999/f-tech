@@ -229,6 +229,9 @@ export const PostItem: FC<PostItemProps> = ({
                 queryClient.invalidateQueries({
                     queryKey: upvoteKeys.listing(),
                 });
+                queryClient.invalidateQueries({
+                    queryKey: bookmarkKeys.listing(),
+                })
             },
         });
     };

@@ -10,6 +10,7 @@ import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 import { useDeleteComment } from '@/hooks/mutate/comment/use-delete-comment';
 import { useQueryClient } from '@tanstack/react-query';
 import { commentKeys } from '@/consts/factory/comment';
+import { bookmarkKeys } from '@/consts/factory/bookmark';
 
 interface PostCommentProps {
     postId: string;
@@ -32,6 +33,9 @@ const PostComment = ({ postId, isShown }: PostCommentProps) => {
                     form.resetFields();
                     queryClient.invalidateQueries({
                         queryKey: commentKeys.byPost(postId),
+                    });
+                    queryClient.invalidateQueries({
+                        queryKey: bookmarkKeys.listing(),
                     });
                 },
             },
