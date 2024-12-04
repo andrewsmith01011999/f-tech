@@ -68,11 +68,12 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         if (
             notifications?.length !== undefined &&
             localStorage.getItem('count') !== undefined &&
+            localStorage.getItem('count') !== '' &&
             notifications?.length > Number(localStorage.getItem('count'))
         ) {
-            openNotification(notifications?.[0]?.title, notifications?.[0]?.message);
+            // openNotification(notifications?.[0]?.title, notifications?.[0]?.message);
             timeOut = setTimeout(() => {
-                localStorage.setItem('count', notifications?.length.toString() || '0');
+                localStorage.setItem('count', notifications?.length.toString() || '');
             }, 5000);
         } else {
             localStorage.setItem('count', notifications?.length.toString() || '0');
