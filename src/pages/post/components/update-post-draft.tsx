@@ -90,7 +90,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
         onSuccess: () => {
             success('Complete draft to post successfully!');
             queryClient.invalidateQueries({
-                queryKey: postKeys.listing(),
+                queryKey: postKeys.drafts(),
             });
             dispatch(setPost({ id: undefined, modal: { open: false, type: 'update' } }));
             navigate(-1);
@@ -122,6 +122,9 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                     setImgUrlList([]);
                     setUrlFileList([]);
                     setAnotherFileList([]);
+                    queryClient.invalidateQueries({
+                        queryKey: postKeys.drafts(),
+                    })
                 },
                 onError: err => {
                     error(err.message);
