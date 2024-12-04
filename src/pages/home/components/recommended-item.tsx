@@ -13,6 +13,8 @@ import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
 import { useMessage } from '@/hooks/use-message';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
+import { useDispatch } from 'react-redux';
+import { setAccountState } from '@/stores/account';
 
 interface RecommendedItemProps {
     account: Account;
@@ -23,6 +25,8 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
     const navigate = useNavigate();
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
+
+    const dispatch = useDispatch();
 
     const { mutate: toggleFollow } = useToggleFollow();
 
@@ -61,7 +65,15 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
                     preview={false}
                 />
 
-                <Flex vertical style={{ minWidth: 94 }}>
+                <Flex
+                    vertical
+                    style={{ minWidth: 94 }}
+                    onClick={e => {
+                        e.stopPropagation();
+                        navigate(`/user-profile/${account?.accountId}`);
+                        dispatch(setAccountState({ userInfo: account }));
+                    }}
+                >
                     <Typography.Text>{account?.username}</Typography.Text>
                     <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                         {account?.handle}

@@ -39,8 +39,6 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
 
     const isBlocked = blocks?.find(block => block?.accountId === userInfo?.accountId);
 
-    console.log(userInfo)
-
     const isFollowed = follows?.find(follow => follow?.followee?.accountId === userInfo?.accountId);
 
     const handleToggleBlock = () => {
@@ -120,10 +118,7 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                         />
                     </Dropdown>
 
-                    <Button
-                        onClick={handleToggleFollow}
-                        style={{ position: 'absolute', top: 280, right: 20 }}
-                    >
+                    <Button onClick={handleToggleFollow} style={{ position: 'absolute', top: 280, right: 20 }}>
                         {isFollowed ? 'UnFollow' : 'Follow'}
                     </Button>
                 </Flex>
