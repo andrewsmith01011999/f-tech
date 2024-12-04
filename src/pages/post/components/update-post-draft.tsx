@@ -10,6 +10,7 @@ import {
     Modal,
     Select,
     Space,
+    Tooltip,
     Upload,
     UploadFile,
     UploadProps,
@@ -36,7 +37,8 @@ import { PaperClipOutlined } from '@ant-design/icons';
 import Tiptap from '@/components/tiptap/tiptap';
 import { useCreatePost } from '@/hooks/mutate/post/use-create-post';
 import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
 
 interface UpdatePostProps {
     onCancel?: OnAction;
@@ -52,6 +54,8 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const watchContent = Form.useWatch('content', form);
 
     const dispatch = useDispatch();
@@ -59,6 +63,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
     const queryClient = useQueryClient();
     const { success, error } = useMessage();
     const id = useSelector((state: RootState) => state.post.id);
+    const { data: categories } = useCategoriesListing({ params: initialParams });
 
     const { imgUrl, imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
     const { imgUrlList: urlFileList, setImgUrlList: setUrlFileList, uploadFile: upLoadAnotherFile } = useUploadFile();
@@ -241,7 +246,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
             //         },
             //     },
             // );
-            draftToPost()
+            draftToPost();
         });
     };
 
@@ -333,17 +338,22 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                             >
                                 <Button type="text" icon={<img src={GallerySvg} />} />
                             </Upload>
-                            <Upload
-                                customRequest={upLoadAnotherFile}
-                                onChange={onChangeAnotherFile}
-                                onRemove={onRemoveAnotherFile}
-                                showUploadList={false}
-                                fileList={anotherFileList}
-                                maxCount={1}
-                                accept=".zip,.rar,.7zip,.tar,.tar.gz"
-                            >
-                                <Button type="text" icon={<PaperClipOutlined />} />
-                            </Upload>
+                            {categories?.find(category => category.categoryId === searchParams.get('category'))
+                                ?.name !== 'KNOWLEDGE SHARING' && (
+                                <Upload
+                                    customRequest={upLoadAnotherFile}
+                                    onChange={onChangeAnotherFile}
+                                    onRemove={onRemoveAnotherFile}
+                                    showUploadList={false}
+                                    fileList={anotherFileList}
+                                    maxCount={1}
+                                    accept=".zip,.rar,.7zip,.tar,.tar.gz"
+                                >
+                                    <Tooltip title="Upload File">
+                                        <Button type="text" icon={<PaperClipOutlined />} />
+                                    </Tooltip>
+                                </Upload>
+                            )}
 
                             <Button type="text" icon={<img src={EmojiSvg} />} />
                         </Space>

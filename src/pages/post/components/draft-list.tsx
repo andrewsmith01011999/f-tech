@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
 import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
 import { useMessage } from '@/hooks/use-message';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
 
 interface FormFieldValues {
@@ -29,6 +29,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
 
     const { type, open } = useSelector((state: RootState) => state.post.modal);
     const { success } = useMessage();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [deletedDrafts, setDeletedDrafts] = useState<string[]>([]);
     const navigate = useNavigate();
 
@@ -139,12 +140,15 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
                                                 showCheckbox
                                                 field={field}
                                                 showDetail={false}
+                                                showComment={false}
+                                                showLike={false}
+                                                showPublic={false}
                                                 onClick={() =>
                                                     navigate(
-                                                        PATHS.POST_DETAIL_DRAFT.replace(
+                                                        `${PATHS.POST_DETAIL_DRAFT.replace(
                                                             ':id',
                                                             remainingDrafts[index].postId,
-                                                        ),
+                                                        )}?category=${searchParams.get('category')}`,
                                                     )
                                                 }
                                             />

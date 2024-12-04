@@ -74,6 +74,7 @@ interface PostItemProps {
     showDetail?: boolean;
     showPublic?: boolean;
     onClick?: OnAction;
+    hideComment?: boolean;
 }
 
 export const useDownloadZip = (data: string, fileName: string, extension: string) => {
@@ -129,8 +130,13 @@ export const PostItem: FC<PostItemProps> = ({
     showComment = false,
     showDetail = true,
     showPublic = true,
+    hideComment = false,
     onClick,
 }) => {
+    if (!data) {
+        return null;
+    }
+
     const { title, content, createdDate, imageList, tag, postId, topic, linkFile } = data;
 
     const { id } = useParams();
@@ -570,7 +576,7 @@ export const PostItem: FC<PostItemProps> = ({
                         </Flex>
                     )}
 
-                    {isShowComment && <PostComment postId={data?.postId} isShown={isShowComment} />}
+                    {isShowComment && !hideComment && <PostComment postId={data?.postId} isShown={isShowComment} />}
                 </Flex>
             </Flex>
         </Card>

@@ -58,9 +58,11 @@ const PostDetailDraftPage = () => {
             {data && (
                 <PostItem
                     data={data}
-                    showComment={true}
+                    showComment={false}
                     showPublic={false}
-                    onClick={() => navigate(PATHS.POST_DETAIL_DRAFT.replace(':id', data?.postId))}
+                    onClick={() => navigate(`${PATHS.POST_DETAIL_DRAFT.replace(':id', data?.postId)}`)}
+                    showLike={false}
+                    hideComment={true}
                 />
             )}
             <Modal
