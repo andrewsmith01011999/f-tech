@@ -141,8 +141,6 @@ const AdminReportList = () => {
         setSelectedStatus(checkedValues as string[]);
     };
 
-    console.log(error)
-
     const content = (
         <Flex vertical justify="center" align="center" gap={12}>
             <Typography.Title level={5}>STATUS</Typography.Title>
@@ -263,7 +261,10 @@ const AdminReportList = () => {
                                                             APPROVED
                                                         </Tag>
                                                     ),
-                                                    onClick: () => updatePostReport('APPROVED'),
+                                                    onClick: e => {
+                                                        e.domEvent.stopPropagation();
+                                                        updatePostReport('APPROVED');
+                                                    },
                                                     disabled: report?.status !== 'PENDING',
                                                 },
                                                 {
@@ -282,15 +283,18 @@ const AdminReportList = () => {
                                                             REJECTED
                                                         </Tag>
                                                     ),
-                                                    onClick: () => updatePostReport('REJECTED'),
+                                                    onClick: e => {
+                                                        e.domEvent.stopPropagation();
+                                                        updatePostReport('REJECTED');
+                                                    },
                                                     disabled: report?.status !== 'PENDING',
                                                 },
-                                                {
-                                                    key: '3',
-                                                    icon: <DeleteOutlined />,
-                                                    label: <span>Delete post</span>,
-                                                    onClick: handleDelete,
-                                                },
+                                                // {
+                                                //     key: '3',
+                                                //     icon: <DeleteOutlined />,
+                                                //     label: <span>Delete post</span>,
+                                                //     onClick: handleDelete,
+                                                // },
                                             ],
                                         }}
                                     >

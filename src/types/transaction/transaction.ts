@@ -8,6 +8,7 @@ export type Transaction = {
     type: string;
     createdDate: string
     reward: RedeemDocument
+    transactionType: string
 };
 
 export type DailyPointTransaction = {

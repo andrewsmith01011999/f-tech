@@ -22,7 +22,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
 import { UpdatePostPayload } from '@/types/post/post';
 import { useMessage } from '@/hooks/use-message';
-import { useUpdatePost } from '@/hooks/mutate/post/use-update-post';
+import { useUpdatePost, useUpdatePostDraft } from '@/hooks/mutate/post/use-update-post';
 import { useGetPost } from '@/hooks/query/post/use-get-post';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
@@ -71,7 +71,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
     const { data: topics, isLoading: isLoadingTopics } = useTopicsListing({ params: initialParams });
     const { data: tags, isLoading: isLoadingTags } = useTagsListing({ params: initialParams });
     const { data: detail } = useGetPost(id ?? '');
-    const { mutate: updatePost, isPending: isPendingUpdatePost } = useUpdatePost(id ?? '', {
+    const { mutate: updatePost, isPending: isPendingUpdatePost } = useUpdatePostDraft(id ?? '', {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: postKeys.listing(),
@@ -286,7 +286,6 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                             <Tiptap
                                 onChange={content => form.setFieldValue('content', content)}
                                 content={watchContent || detail?.content || ''}
-                                key={detail?.content || watchContent}
                             />
                         </Form.Item>
                     </Form>

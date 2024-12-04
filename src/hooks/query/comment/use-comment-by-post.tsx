@@ -15,5 +15,6 @@ export const useCommentByPost = (postId: string, isShown: boolean) => {
         queryFn: fetchCommentByPost,
         placeholderData: keepPreviousData,
         enabled: !!postId && isShown,
+        refetchInterval: 1000,
     });
 };

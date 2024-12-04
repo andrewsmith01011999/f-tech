@@ -26,6 +26,7 @@ type FormatTransaction = {
     type: string;
     amount: number;
     createdDate: string;
+    transactionType?: string;
 };
 
 const Transactions: FC = () => {
@@ -64,6 +65,7 @@ const Transactions: FC = () => {
             type: transaction.type,
             amount: transaction.amount,
             createdDate: transaction.createdDate,
+            transactionType: transaction?.transactionType,
         })) || [];
 
     const orderPointTransactions: FormatTransaction[] =
