@@ -64,6 +64,8 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     };
 
     useEffect(() => {
+        localStorage.setItem('count', notifications?.length.toString() || '0');
+        console.log(notifications?.length, Number(localStorage.getItem('count')));
         if (
             notifications?.length !== undefined &&
             localStorage.getItem('count') !== undefined &&
@@ -71,8 +73,6 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         ) {
             openNotification(notifications?.[0]?.title, notifications?.[0]?.message);
         }
-
-        localStorage.setItem('count', notifications?.length.toString() || '0');
     }, [notifications]);
 
     // const searchCategoryDropdownItems = searchData?.categoryList.map(category => ({

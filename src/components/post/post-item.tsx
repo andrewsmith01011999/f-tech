@@ -193,7 +193,7 @@ export const PostItem: FC<PostItemProps> = ({
                     ? deletePostDraft([data?.postId], {
                           onSuccess: () => {
                               queryClient.invalidateQueries({
-                                  queryKey: postKeys.listing(),
+                                  queryKey: postKeys.drafts(),
                               });
                               success('Post deleted successfully!');
                               dispatch(setPost({ modal: { open: false, type: 'draft' } }));
