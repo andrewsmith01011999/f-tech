@@ -64,14 +64,22 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     };
 
     useEffect(() => {
+        let timeOut: NodeJS.Timeout;
         if (
             notifications?.length !== undefined &&
             localStorage.getItem('count') !== undefined &&
             notifications?.length > Number(localStorage.getItem('count'))
         ) {
             openNotification(notifications?.[0]?.title, notifications?.[0]?.message);
+            timeOut = setTimeout(() => {
+                localStorage.setItem('count', notifications?.length.toString() || '0');
+            }, 5000);
         } else {
             localStorage.setItem('count', notifications?.length.toString() || '0');
+        }
+
+        return () => {
+            clearTimeout(timeOut);
         }
     }, [notifications]);
 
@@ -152,6 +160,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
 
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
+            {contextHolder}
             {device !== 'MOBILE' && (
                 <div className="logo" style={{ width: collapsed ? 80 : 200, cursor: 'pointer' }} onClick={toHome}>
                     <img src={Logo} alt="logo.svg" style={{ marginRight: collapsed ? '2px' : '20px' }} />
