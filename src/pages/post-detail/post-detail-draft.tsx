@@ -14,6 +14,7 @@ import { useMessage } from '@/hooks/use-message';
 import { useCreateReportPost } from '@/hooks/mutate/report/use-create-report';
 import { UpdatePost } from '../post/components/update-post';
 import { PATHS } from '@/utils/paths';
+import { UpdatePostDraft } from '../post/components/update-post-draft';
 
 const PostDetailDraftPage = () => {
     const { id } = useParams();
@@ -89,7 +90,7 @@ const PostDetailDraftPage = () => {
                 </Flex>
             </Modal>
 
-            <UpdatePost onCancel={() => handleCancel('update')} />
+            <UpdatePostDraft onCancel={() => handleCancel('update')} />
         </Flex>
     );
 };
