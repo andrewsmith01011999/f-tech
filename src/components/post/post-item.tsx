@@ -190,6 +190,7 @@ export const PostItem: FC<PostItemProps> = ({
                                   queryKey: postKeys.listing(),
                               });
                               success('Post deleted successfully!');
+                              dispatch(setPost({ modal: { open: false, type: 'draft' } }));
                               navigate(-1)
                           },
                           onError: err => {

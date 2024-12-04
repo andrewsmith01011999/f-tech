@@ -35,6 +35,11 @@ const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, 
                             {description}
                         </Typography.Text>
                     </div>
+                    {amount < 0 && (
+                        <Typography.Text type="secondary" className="text-description">
+                            Report Post
+                        </Typography.Text>
+                    )}
                 </div>
             </Flex>
 
@@ -42,7 +47,7 @@ const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, 
                 {dayjs(createdDate).format(FULL_TIME_FORMAT)}
             </Typography.Text>
 
-            <Flex vertical gap={8} align='center'>
+            <Flex vertical gap={8} align="center">
                 <div
                     style={{
                         color: amount >= 0 ? '#18C07A' : '#FF0000',
@@ -50,11 +55,6 @@ const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, 
                 >
                     {formatSignedNumber(amount)} MC
                 </div>
-                {amount < 0 && (
-                    <Typography.Text type="secondary" className="text-description">
-                        Report Post
-                    </Typography.Text>
-                )}
             </Flex>
         </Flex>
     );
