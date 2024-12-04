@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { OnAction, PaginationParams } from '@/types';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { useDraftsListing } from '@/hooks/query/post/use-posts-listing';
@@ -14,7 +14,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
 import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
-import {v4} from "uuid"
+import { v4 } from 'uuid';
 
 interface FormFieldValues {
     post: {
@@ -49,7 +49,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
         },
     });
 
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
 
     const { mutate: deleteDraft } = useDeleteDraftPost();
 
@@ -92,14 +92,24 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             onSuccess: () => {
                 form.resetFields();
                 queryClient.invalidateQueries({
-                    queryKey: postKeys.drafts()
-                })
+                    queryKey: postKeys.drafts(),
+                });
                 success('Drafts deleted successfully');
             },
         });
     };
 
     const remainingDrafts = [...(data || [])]?.filter(post => !deletedDrafts.includes(post.postId));
+
+    useEffect(() => {
+        if (data) {
+            form.setFieldsValue({
+                post: data.map(post => ({
+                    postId: post.postId,
+                })),
+            });
+        }
+    }, [data]);
 
     return (
         <Modal
@@ -125,19 +135,10 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             <PostWrapper>
                 {data?.length ? (
                     <>
-                        <Form<FormFieldValues>
-                            name="draft"
-                            form={form}
-                            initialValues={{
-                                post: data.map(post => ({
-                                    postId: post.postId,
-                                })),
-                            }}
-                            onFinish={onFinish}
-                        >
+                        <Form<FormFieldValues> name="draft" form={form} onFinish={onFinish}>
                             <Form.List name="post">
                                 {fields => (
-                                    <PostWrapper key={v4()}>
+                                    <PostWrapper>
                                         {fields.map((field, index) => (
                                             <PostItem
                                                 data={data[index]}
