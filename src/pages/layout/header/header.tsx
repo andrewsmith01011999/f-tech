@@ -184,7 +184,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                 <div className="actions">
                     {logged && accountInfo ? (
                         <Flex gap={20} align="center">
-                            <Badge count={notifications?.length} showZero>
+                            <Badge count={notifications?.length}>
                                 <NotificationIcon />
                             </Badge>
                             <Dropdown

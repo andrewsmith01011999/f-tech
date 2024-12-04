@@ -53,3 +53,22 @@ export const useDraftsListing = ({ params }: PostListingProps) => {
         placeholderData: keepPreviousData,
     });
 };
+
+export const usePostsAnotherAccountListing = (id: string) => {
+    const fetchPosts = async (): Promise<Post[]> => {
+        const { entity } = await request<Post[]>('get', `/post/getall/other-user/${id}`, {}, {
+            paramsSerializer: {
+                indexes: null,
+            },
+        });
+
+        return entity;
+    };
+
+    return useQuery<Post[]>({
+        queryKey: postKeys.listingAnotherAccount(id),
+        queryFn: fetchPosts,
+        placeholderData: keepPreviousData,
+        enabled: !!id,
+    });
+};

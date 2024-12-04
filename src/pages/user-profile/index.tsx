@@ -6,7 +6,7 @@ import { Medias } from './components/medias';
 import { PostWrapper } from '../post/layout/post-wrapper';
 import { PaginationParams } from '@/types';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
+import { usePostsAnotherAccountListing, usePostsListing } from '@/hooks/query/post/use-posts-listing';
 import { RootState } from '@/stores';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
@@ -30,13 +30,7 @@ const UserProfilePage = () => {
         perPage: DEFAULT_PAGE_SIZE,
     };
 
-    const { data } = usePostsListing({
-        params: {
-            ...initialParams,
-            accountId: id || accountInfo?.accountId,
-            statuses: [PostStatus.PUBLIC],
-        },
-    });
+    const { data } = usePostsAnotherAccountListing(id as string);
 
     if (!accountInfo) {
         return null;
