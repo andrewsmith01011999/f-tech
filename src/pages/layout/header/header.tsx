@@ -24,6 +24,10 @@ import NotificationIcon from './components/notification';
 import { useCategorySearch } from '@/hooks/query/utility/use-category-search';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useNotifications } from '@/hooks/query/notification/use-notifications';
+import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
+import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
+import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 
 const { Header } = Layout;
 
@@ -58,6 +62,14 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     // });
 
     const { data: notifications } = useNotifications();
+    const { data: upvotes } = useUpvoteListing();
+    const { data: comments } = useGetAllComments();
+    const { data: posts } = usePostsListing({
+        params: {
+            page: DEFAULT_PAGE,
+            perPage: DEFAULT_PAGE_SIZE,
+        },
+    });
 
     const resetKeyword = () => {
         setKeyword('  ');
@@ -72,7 +84,28 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             localStorage.getItem('count') !== '' &&
             notifications?.length > Number(localStorage.getItem('count'))
         ) {
-            openNotification(notifications?.[0]?.title, notifications?.[0]?.message);
+            let content = '';
+            console.log(notifications?.[0]?.message);
+            const notiParsed = JSON.parse(notifications?.[0]?.message);
+
+            if (notiParsed?.entity === 'Upvote') {
+                content = `${
+                    upvotes?.find(upvote => upvote?.upvoteId === notiParsed?.id)?.account?.username
+                } liked your post`;
+            } else if (notiParsed?.entity === 'Comment') {
+                content = `${
+                    comments?.find(comment => comment?.commentId === notiParsed?.id)?.account?.username
+                } commented on your post`;
+            } else if (notiParsed?.entity === 'Report') {
+                content = `${
+                    posts?.find(post => post?.postId === notiParsed?.id)?.account?.username
+                } reported on your post`;
+            } else if (notiParsed?.entity === 'Daily point') {
+                content = 'You have received daily point';
+            }
+
+            openNotification(notifications?.[0]?.title, content);
+
             timeOut = setTimeout(() => {
                 localStorage.setItem('count', notifications?.length.toString() || '');
             }, 5000);
@@ -82,7 +115,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
 
         return () => {
             clearTimeout(timeOut);
-        }
+        };
     }, [notifications]);
 
     // const searchCategoryDropdownItems = searchData?.categoryList.map(category => ({
