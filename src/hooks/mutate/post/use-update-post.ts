@@ -24,9 +24,23 @@ export const useUpdatePostDraft = (
     };
 
     return useMutation<unknown, AxiosError<unknown>, UpdatePostPayload>({
-        mutationKey: ['post', 'update', postId],
+        mutationKey: ['post', 'update', 'draft', postId],
         mutationFn: payload => updatePost(payload),
         ...options,
     });
 };
 
+export const useUpdateDraftToPost = (
+    postId: string,
+    options: UseMutationOptions<unknown, AxiosError<unknown>> = {},
+) => {
+    const updatePost = async () => {
+        const { data } = await axiosInstance.put(`/post/update/draft/to-post/${postId}`);
+    };
+
+    return useMutation<unknown, AxiosError<unknown>>({
+        mutationKey: ['post', 'update', 'draft', 'to-post'],
+        mutationFn: updatePost,
+        ...options,
+    });
+};

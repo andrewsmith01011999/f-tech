@@ -22,7 +22,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
 import { UpdatePostPayload } from '@/types/post/post';
 import { useMessage } from '@/hooks/use-message';
-import { useUpdatePost, useUpdatePostDraft } from '@/hooks/mutate/post/use-update-post';
+import { useUpdateDraftToPost, useUpdatePost, useUpdatePostDraft } from '@/hooks/mutate/post/use-update-post';
 import { useGetPost } from '@/hooks/query/post/use-get-post';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
@@ -48,7 +48,7 @@ const initialParams: TopicListingParams = {
 };
 
 export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
 
@@ -79,7 +79,21 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
         },
     });
     const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
-        const { mutate: deletePostDraft, isPending: isPendingDeletePostDraft } = useDeleteDraftPost();
+    const { mutate: deletePostDraft, isPending: isPendingDeletePostDraft } = useDeleteDraftPost();
+
+    const { mutate: draftToPost } = useUpdateDraftToPost(id ?? '', {
+        onSuccess: () => {
+            success('Complete draft to post successfully!');
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            dispatch(setPost({ id: undefined, modal: { open: false, type: 'update' } }));
+            navigate(-1);
+        },
+        onError: err => {
+            error(err.message);
+        },
+    });
 
     const onFinish = (values: UpdatePostPayload) => {
         updatePost(
@@ -185,48 +199,49 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
     // TODO: Implement onPost function
     const onPost = () => {
         form.validateFields().then(() => {
-            createPost(
-                {
-                    ...form.getFieldsValue(),
-                    ...(fileList.length > 0 && {
-                        imageUrlList: fileList.map(file => ({
-                            url: file.url as string,
-                        })),
-                    }),
-                    ...(urlFileList.length > 0 && {
-                        linkFile: urlFileList[0] as string,
-                        postFileUrlRequest: [{ url: urlFileList[0] as string }],
-                    }),
-                },
-                {
-                    onSuccess: () => {
-                        success('Post created successfully!');
-                        queryClient.invalidateQueries({
-                            queryKey: postKeys.listing(),
-                        });
-                        deletePostDraft([detail?.postId], {
-                            onSuccess: () => {
-                                queryClient.invalidateQueries({
-                                    queryKey: postKeys.listing(),
-                                });
-                                navigate(-1);
-                            },
-                            onError: err => {
-                                error(err?.message ?? 'Failed to delete post');
-                            },
-                        });
-                        dispatch(setPost({ id: undefined, modal: { open: false, type: 'update' } }));
-                        onCancel && onCancel();
-                        form.resetFields();
-                        setImgUrlList([]);
-                        setUrlFileList([]);
-                        setAnotherFileList([]);
-                    },
-                    onError: err => {
-                        error(err.message);
-                    },
-                },
-            );
+            // createPost(
+            //     {
+            //         ...form.getFieldsValue(),
+            //         ...(fileList.length > 0 && {
+            //             imageUrlList: fileList.map(file => ({
+            //                 url: file.url as string,
+            //             })),
+            //         }),
+            //         ...(urlFileList.length > 0 && {
+            //             linkFile: urlFileList[0] as string,
+            //             postFileUrlRequest: [{ url: urlFileList[0] as string }],
+            //         }),
+            //     },
+            //     {
+            //         onSuccess: () => {
+            //             success('Post created successfully!');
+            //             queryClient.invalidateQueries({
+            //                 queryKey: postKeys.listing(),
+            //             });
+            //             deletePostDraft([detail?.postId], {
+            //                 onSuccess: () => {
+            //                     queryClient.invalidateQueries({
+            //                         queryKey: postKeys.listing(),
+            //                     });
+            //                     navigate(-1);
+            //                 },
+            //                 onError: err => {
+            //                     error(err?.message ?? 'Failed to delete post');
+            //                 },
+            //             });
+            //             dispatch(setPost({ id: undefined, modal: { open: false, type: 'update' } }));
+            //             onCancel && onCancel();
+            //             form.resetFields();
+            //             setImgUrlList([]);
+            //             setUrlFileList([]);
+            //             setAnotherFileList([]);
+            //         },
+            //         onError: err => {
+            //             error(err.message);
+            //         },
+            //     },
+            // );
+            draftToPost()
         });
     };
 
@@ -334,7 +349,9 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                         </Space>
 
                         <Space>
-                            <Button onClick={onPost} loading={isPendingCreatePost}>Post</Button>
+                            <Button onClick={onPost} loading={isPendingCreatePost}>
+                                Post
+                            </Button>
                             <Button loading={isPendingUpdatePost} form="updatePost" type="primary" htmlType="submit">
                                 Update
                             </Button>
