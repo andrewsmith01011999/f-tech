@@ -33,7 +33,6 @@ interface HeaderProps {
 }
 
 const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
-    const { userInfo } = useSelector((state: RootState) => state.account);
     const { logged, device, accountInfo } = useSelector((state: RootState) => state.account);
     const navigate = useNavigate();
     const token = antTheme.useToken();
@@ -218,7 +217,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                                     <Flex align="center" gap={5}>
                                         <Avatar
                                             size={42}
-                                            src={userInfo?.avatar || BackgroundPlaceholder}
+                                            src={accountInfo?.avatar || BackgroundPlaceholder}
                                             className="user-avator"
                                             alt="avator"
                                         />

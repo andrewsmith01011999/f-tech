@@ -19,6 +19,8 @@ import { blockKeys } from '@/consts/factory/block';
 import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
 import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
 import { followKeys } from '@/consts/factory/follow';
+import { useProfileById } from '@/hooks/query/auth/use-profile';
+import { useParams } from 'react-router-dom';
 
 const { confirm } = Modal;
 
@@ -27,7 +29,11 @@ interface ProfileInfoProps {
 }
 
 export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
-    const { accountInfo, userInfo } = useSelector((state: RootState) => state.account);
+    const { accountInfo } = useSelector((state: RootState) => state.account);
+
+    const { id } = useParams();
+
+    const { data: userInfo } = useProfileById(id);
 
     const { success, error } = useMessage();
     const queryClient = useQueryClient();
@@ -129,12 +135,12 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                 <Typography.Text>#Beingnobody_goingnowhere.</Typography.Text>
                 <Flex gap={24}>
                     <Space size="small">
-                        <Typography.Text>100</Typography.Text>
+                        <Typography.Text>{userInfo?.countFollowee}</Typography.Text>
                         <Typography.Text type="secondary">Followings</Typography.Text>
                     </Space>
 
                     <Space>
-                        <Typography.Text>118</Typography.Text>
+                        <Typography.Text>{userInfo?.countFollower}</Typography.Text>
                         <Typography.Text type="secondary">Followers</Typography.Text>
                     </Space>
                 </Flex>

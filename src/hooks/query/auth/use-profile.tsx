@@ -1,4 +1,5 @@
 import { apiGetAccount } from "@/apis/account.api";
+import { request } from "@/apis/request";
 import { authKeys } from "@/consts/factory/auth";
 import { LocalStorageKeys } from "@/consts/local-storage";
 import { RootState } from "@/stores";
@@ -42,4 +43,28 @@ export const useProfile = () => {
         placeholderData: keepPreviousData,
         enabled: !!logged
     });
+}
+
+export const useProfileById = (accountId: string | undefined) => {
+     const fetchBookmarks = async (): Promise<Account> => {
+         const { entity } = await request<Account>(
+             'get',
+             `/account/get-by-id/${accountId}`,
+             {},
+             {
+                 paramsSerializer: {
+                     indexes: null,
+                 },
+             },
+         );
+
+         return entity;
+     };
+
+     return useQuery<Account>({
+         queryKey: authKeys.userProfile(accountId || ''),
+         queryFn: fetchBookmarks,
+         placeholderData: keepPreviousData,
+         enabled: !!accountId
+     });
 }

@@ -1,3 +1,4 @@
 export const authKeys = {
-    profile: () => ["auth", "profile"] 
+    profile: () => ["auth", "profile"],
+    userProfile: (id: string) => ["auth", "userProfile", id]
 } as const
