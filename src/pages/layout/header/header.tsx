@@ -64,14 +64,14 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     };
 
     useEffect(() => {
-        localStorage.setItem('count', notifications?.length.toString() || '0');
-        console.log(notifications?.length, Number(localStorage.getItem('count')));
         if (
             notifications?.length !== undefined &&
             localStorage.getItem('count') !== undefined &&
             notifications?.length > Number(localStorage.getItem('count'))
         ) {
             openNotification(notifications?.[0]?.title, notifications?.[0]?.message);
+        } else {
+            localStorage.setItem('count', notifications?.length.toString() || '0');
         }
     }, [notifications]);
 

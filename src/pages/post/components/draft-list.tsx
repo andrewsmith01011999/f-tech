@@ -12,6 +12,9 @@ import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
 import { useMessage } from '@/hooks/use-message';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
+import { useQueryClient } from '@tanstack/react-query';
+import { postKeys } from '@/consts/factory/post';
+import {v4} from "uuid"
 
 interface FormFieldValues {
     post: {
@@ -45,6 +48,8 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             ...initialParams,
         },
     });
+
+    const queryClient = useQueryClient()
 
     const { mutate: deleteDraft } = useDeleteDraftPost();
 
@@ -85,9 +90,10 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             .map((post: FormFieldValues['post']) => post.postId);
         deleteDraft(deletedIds, {
             onSuccess: () => {
-                setDeletedDrafts(deletedIds);
                 form.resetFields();
-
+                queryClient.invalidateQueries({
+                    queryKey: postKeys.drafts()
+                })
                 success('Drafts deleted successfully');
             },
         });
@@ -117,13 +123,13 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             footer={null}
         >
             <PostWrapper>
-                {remainingDrafts?.length ? (
+                {data?.length ? (
                     <>
                         <Form<FormFieldValues>
                             name="draft"
                             form={form}
                             initialValues={{
-                                post: sortBy(remainingDrafts, 'createdDate').map(post => ({
+                                post: data.map(post => ({
                                     postId: post.postId,
                                 })),
                             }}
@@ -131,10 +137,10 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
                         >
                             <Form.List name="post">
                                 {fields => (
-                                    <PostWrapper>
+                                    <PostWrapper key={v4()}>
                                         {fields.map((field, index) => (
                                             <PostItem
-                                                data={remainingDrafts[index]}
+                                                data={data[index]}
                                                 key={field.key}
                                                 showActions={false}
                                                 showCheckbox
@@ -147,7 +153,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
                                                     navigate(
                                                         `${PATHS.POST_DETAIL_DRAFT.replace(
                                                             ':id',
-                                                            remainingDrafts[index].postId,
+                                                            data[index].postId,
                                                         )}?category=${searchParams.get('category')}`,
                                                     )
                                                 }
