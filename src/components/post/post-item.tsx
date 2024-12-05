@@ -151,6 +151,7 @@ export const PostItem: FC<PostItemProps> = ({
 
     const [expandable, setExpandable] = useState(false);
     const [isShowComment, setIsShowComment] = useState(showComment);
+    const [downloadPostId, setDownloadPostId] = useState<string | null>(null);
 
     const { data: wallet, isLoading } = useGetWalletByAccount(accountInfo?.accountId as string);
     const { data: upvotes } = useUpvoteListing();
@@ -165,7 +166,7 @@ export const PostItem: FC<PostItemProps> = ({
         error: errorDownload,
         isPending: isPendingDownload,
         isLoading: isLoadingDownload,
-    } = usePostDownload(postId);
+    } = usePostDownload(downloadPostId as string);
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -267,6 +268,7 @@ export const PostItem: FC<PostItemProps> = ({
     useEffect(() => {
         if (isSuccessDownload) {
             window.open(data?.postFileList?.[0]?.url, '_blank');
+            setDownloadPostId(null);
         }
     }, [isSuccessDownload]);
 
@@ -366,6 +368,7 @@ export const PostItem: FC<PostItemProps> = ({
                                             disabled: !data?.postFileList?.[0]?.url,
                                             onClick: e => {
                                                 e.domEvent.stopPropagation();
+                                                setDownloadPostId(postId);
                                                 download();
                                             },
                                         },
@@ -483,6 +486,7 @@ export const PostItem: FC<PostItemProps> = ({
                                         </>
                                     ),
                                     onOk: () => {
+                                        setDownloadPostId(postId);
                                         download();
                                     },
                                 });

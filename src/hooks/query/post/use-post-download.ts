@@ -19,18 +19,18 @@ export const usePostDownload = (postId: string) => {
     const query = useQuery({
         queryKey: postKeys.download(postId),
         queryFn: () => getPostDownload(),
-        enabled,
+        enabled: enabled && !!postId,
     });
 
     const trigger = () => {
         setEnabled(true);
     };
 
-    if (query.isSuccess) {
-        queryClient.resetQueries({
-            queryKey: postKeys.download(postId),
-        });
-    }
+    // if (query.isSuccess) {
+    //     queryClient.resetQueries({
+    //         queryKey: postKeys.download(postId),
+    //     });
+    // }
 
     if ((query.isSuccess || query.isError) && enabled) {
         setEnabled(false);
