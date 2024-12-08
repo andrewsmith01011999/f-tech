@@ -1,7 +1,7 @@
 import { request } from '@/apis/request';
 import { userKeys } from '@/consts/factory/user';
 import { PaginationParams } from '@/types';
-import { Account } from '@/types/account';
+import { Account, Statistic } from '@/types/account';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 export type UserListingParams = PaginationParams & {
@@ -30,3 +30,17 @@ export const useUsersListing = ({ params }: UserListingProps) => {
         placeholderData: keepPreviousData,
     });
 };
+
+export const useStatistics = () => {
+    const fetchStatistics = async () : Promise<Statistic> => {
+        const { entity } = await request<Statistic>('get', '/statistic/get/dod-statistic');
+
+        return entity;
+    };
+
+    return useQuery<Statistic>({
+        queryKey: userKeys.statistics(),
+        queryFn: fetchStatistics,
+        placeholderData: keepPreviousData
+    });
+}

@@ -193,6 +193,12 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         }
     };
 
+    useEffect(() => {
+        if (accountInfo?.role?.name === 'ADMIN') {
+            navigate(PATHS.ADMIN_DASHBOARD);
+        }
+    }, [accountInfo])
+
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
             {contextHolder}

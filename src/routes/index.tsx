@@ -44,6 +44,7 @@ const AdminTopicPage = lazy(() => import('@/pages/admin/topic'));
 const AdminTagPage = lazy(() => import('@/pages/admin/tag'));
 const AdminRewardPage = lazy(() => import('@/pages/admin/reward'));
 const AdminUserPage = lazy(() => import('@/pages/admin/user'));
+const AdminDashboardPage = lazy(() => import('@/pages/admin/dashboard'));
 
 const RenderRouter: FC = () => {
     const dispatch = useDispatch();
@@ -172,6 +173,10 @@ const RenderRouter: FC = () => {
                 {
                     path: PATHS.ADMIN_USERS,
                     element: <WrapperRouteComponent element={<AdminUserPage />} title="Admin Users" />,
+                },
+                {
+                    path: PATHS.ADMIN_DASHBOARD,
+                    element: <WrapperRouteComponent element={<AdminDashboardPage />} title="Admin Dashboard" />,
                 }
             ],
         },
