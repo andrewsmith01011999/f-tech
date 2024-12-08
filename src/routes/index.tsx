@@ -43,6 +43,7 @@ const AdminCategoryPage = lazy(() => import('@/pages/admin/category'));
 const AdminTopicPage = lazy(() => import('@/pages/admin/topic'));
 const AdminTagPage = lazy(() => import('@/pages/admin/tag'));
 const AdminRewardPage = lazy(() => import('@/pages/admin/reward'));
+const AdminUserPage = lazy(() => import('@/pages/admin/user'));
 
 const RenderRouter: FC = () => {
     const dispatch = useDispatch();
@@ -168,6 +169,10 @@ const RenderRouter: FC = () => {
                     path: PATHS.ADMIN_REWARDS,
                     element: <WrapperRouteComponent element={<AdminRewardPage />} title="Admin Rewards" />,
                 },
+                {
+                    path: PATHS.ADMIN_USERS,
+                    element: <WrapperRouteComponent element={<AdminUserPage />} title="Admin Users" />,
+                }
             ],
         },
         {

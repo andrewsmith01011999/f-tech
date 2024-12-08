@@ -1,5 +1,11 @@
 import BaseMenu from '@/components/core/menu';
-import Icon, { FlagOutlined, MoneyCollectOutlined, TagOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import Icon, {
+    FlagOutlined,
+    MoneyCollectOutlined,
+    TagOutlined,
+    UnorderedListOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
 import { Flex, GetProp, MenuProps, Space, Tooltip, Typography } from 'antd';
 import AppleSvg from '/public/apple.svg';
 import AndroidSvg from '/public/android.svg';
@@ -40,7 +46,13 @@ export const PopularMenuAdmin = () => {
             label: 'Reward',
             icon: <MoneyCollectOutlined />,
             onClick: () => navigate(PATHS.ADMIN_REWARDS),
-        }
+        },
+        {
+            key: '5',
+            label: 'Users',
+            icon: <UserOutlined />,
+            onClick: () => navigate(PATHS.ADMIN_USERS),
+        },
     ];
 
     return (

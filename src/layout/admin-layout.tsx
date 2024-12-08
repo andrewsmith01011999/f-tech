@@ -49,10 +49,6 @@ const AdminLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
                         <CardMenu title="Page">
                             <PopularMenuAdmin />
                         </CardMenu>
-
-                        <CardMenu title="Resource">
-                            <ResourceMenu />
-                        </CardMenu>
                     </MenuWrapper>
 
                     <div style={{ minWidth: 1108, minHeight: '100vh' }}>{children}</div>
