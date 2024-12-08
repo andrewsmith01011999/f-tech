@@ -28,4 +28,5 @@ export const PATHS = {
     RECOMMENDATIONS: '/recommendations',
     EXPLORE: '/explore',
     ADMIN_CATEGORY: '/admin/category',
+    ADMIN_TOPICS: '/admin/topics',
 };

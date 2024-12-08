@@ -10,7 +10,6 @@ import MainLayout from '@/layout/main-layout';
 import { RootState } from '@/stores';
 import VerifyOtpResetPasswordPage from '@/pages/auth/forgot-password/verify-otp';
 import PostDetailDraftPage from '@/pages/post-detail/post-detail-draft';
-import AdminCategoryPage from '@/pages/admin/category';
 
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
@@ -39,6 +38,8 @@ const PostDetailPage = lazy(() => import('@/pages/post-detail'));
 const DepositPage = lazy(() => import('@/pages/deposit'));
 const RecommendationsPage = lazy(() => import('@/pages/recommendations'));
 const ExplorePage = lazy(() => import('@/pages/explore'));
+const AdminCategoryPage = lazy(() => import('@/pages/admin/category'));
+const AdminTopicPage = lazy(() => import('@/pages/admin/topic'));
 
 const routes: RouteObject[] = [
     {
@@ -136,6 +137,10 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.ADMIN_CATEGORY,
                 element: <WrapperRouteComponent element={<AdminCategoryPage />} title="Admin Category" />,
+            },
+            {
+                path: PATHS.ADMIN_TOPICS,
+                element: <WrapperRouteComponent element={<AdminTopicPage />} title="Admin Topics" />,
             }
         ],
     },
