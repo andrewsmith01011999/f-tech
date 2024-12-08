@@ -246,7 +246,7 @@ const AdminCategoryPage = () => {
                     loading={isFetching}
                     columns={columns}
                     dataSource={data}
-                    rowKey="id"
+                    rowKey="categoryId"
                     pagination={{
                         showQuickJumper: true,
                         showSizeChanger: true,

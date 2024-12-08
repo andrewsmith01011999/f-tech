@@ -81,7 +81,7 @@ const AdminUserPage = () => {
                     loading={isFetching}
                     columns={columns}
                     dataSource={data}
-                    rowKey="rewardId"
+                    rowKey="accountId"
                     pagination={{
                         showQuickJumper: true,
                         showSizeChanger: true,

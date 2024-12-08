@@ -244,7 +244,11 @@ const AdminTopicPage = () => {
                     </SecondaryButton>
                 </Flex>
 
-                <Table<Topic> loading={isFetching} columns={columns} dataSource={data} rowKey="id"
+                <Table<Topic>
+                    loading={isFetching}
+                    columns={columns}
+                    dataSource={data}
+                    rowKey="topicId"
                     pagination={{
                         showQuickJumper: true,
                         showSizeChanger: true,

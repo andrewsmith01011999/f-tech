@@ -245,7 +245,7 @@ const AdminTagPage = () => {
                     loading={isFetching}
                     columns={columns}
                     dataSource={data}
-                    rowKey="id"
+                    rowKey="tagId"
                     pagination={{
                         showQuickJumper: true,
                         showSizeChanger: true,

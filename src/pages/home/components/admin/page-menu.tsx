@@ -19,7 +19,7 @@ export const PageMenuAdmin = () => {
 
     const items: MenuItem[] = [
         {
-            key: PATHS.HOME,
+            key: PATHS.ADMIN_DASHBOARD,
             icon: <Icon component={() => <img src={HomeSvg} alt="home" />} />,
             label: 'Home',
             onClick: () => navigate(PATHS.HOME),

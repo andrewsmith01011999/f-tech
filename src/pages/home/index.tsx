@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Empty, Spin } from 'antd';
 import {
     CategoryListingParams,
@@ -10,6 +10,8 @@ import { PostSummary } from './components/post-summary';
 import { PostWrapper } from './layout/post-wrapper';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores';
+import { PATHS } from '@/utils/paths';
+import { useNavigate } from 'react-router-dom';
 
 const initialParams: CategoryListingParams = {
     page: DEFAULT_PAGE,
@@ -26,6 +28,14 @@ const HomePage: FC = props => {
         params: initialParams,
         enabled: accountInfo?.role?.name === 'STAFF',
     });
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (accountInfo?.role?.name === 'ADMIN') {
+            navigate(PATHS.ADMIN_DASHBOARD);
+        }
+    }, [accountInfo]);
 
     const dataSource = accountInfo?.role?.name === 'USER' ? data : staffData;
 
