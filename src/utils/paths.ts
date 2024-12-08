@@ -29,4 +29,5 @@ export const PATHS = {
     EXPLORE: '/explore',
     ADMIN_CATEGORY: '/admin/category',
     ADMIN_TOPICS: '/admin/topics',
+    ADMIN_TAGS: '/admin/tags',
 };

@@ -40,6 +40,7 @@ const RecommendationsPage = lazy(() => import('@/pages/recommendations'));
 const ExplorePage = lazy(() => import('@/pages/explore'));
 const AdminCategoryPage = lazy(() => import('@/pages/admin/category'));
 const AdminTopicPage = lazy(() => import('@/pages/admin/topic'));
+const AdminTagPage = lazy(() => import('@/pages/admin/tag'));
 
 const routes: RouteObject[] = [
     {
@@ -141,6 +142,10 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.ADMIN_TOPICS,
                 element: <WrapperRouteComponent element={<AdminTopicPage />} title="Admin Topics" />,
+            },
+            {
+                path: PATHS.ADMIN_TAGS,
+                element: <WrapperRouteComponent element={<AdminTagPage />} title="Admin Tags" />,
             }
         ],
     },

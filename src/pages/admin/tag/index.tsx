@@ -1,20 +1,20 @@
 import { SecondaryButton } from '@/components/core/secondary-button';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { topicKeys } from '@/consts/factory/topic';
-import { useCreateTopic } from '@/hooks/mutate/topic/use-create-topic';
-import { useDeleteTopic } from '@/hooks/mutate/topic/use-delete-topic';
-import { useUpdateTopic } from '@/hooks/mutate/topic/use-update-topic';
-import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
-import { useTopic, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
+import { tagKeys } from '@/consts/factory/tag';
+import { useCreateTag } from '@/hooks/mutate/tag/use-create-tag';
+import { useDeleteTag } from '@/hooks/mutate/tag/use-delete-tag';
+import { useUpdateTag } from '@/hooks/mutate/tag/use-update-tag';
+import { useTag, useTagsListing } from '@/hooks/query/tag/use-tags-listing';
 import { useMessage } from '@/hooks/use-message';
 import { useUploadFile } from '@/hooks/use-upload-file';
 import { RootState } from '@/stores';
-import { Topic } from '@/types/topic/topic';
+import { Tag } from '@/types/tag/tag';
 import { CameraOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     Card,
+    ColorPicker,
     Flex,
     Form,
     Image,
@@ -27,6 +27,7 @@ import {
     Upload,
     UploadProps,
 } from 'antd';
+import { Color } from 'antd/es/color-picker';
 import { ColumnsType } from 'antd/es/table';
 import { UploadFile } from 'antd/lib';
 import React, { useEffect, useState } from 'react';
@@ -42,10 +43,11 @@ interface ModalState {
 
 type FormValue = {
     name: string;
-    categoryId: string;
+    backgroundColorHex: Color;
+    textColorHex: Color;
 };
 
-const AdminTopicPage = () => {
+const AdminTagPage = () => {
     const [form] = Form.useForm();
     const message = useMessage();
     const queryClient = useQueryClient();
@@ -60,38 +62,32 @@ const AdminTopicPage = () => {
     const { imgUrlList, setImgUrlList, uploadFile } = useUploadFile();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-    const { data, isFetching } = useTopicsListing({
-        params: {
-            page: DEFAULT_PAGE,
-            perPage: DEFAULT_PAGE_SIZE,
-        },
-    });
-    const { data: categories, isFetching: isFetchingCategories } = useCategoriesListing({
+    const { data, isFetching } = useTagsListing({
         params: {
             page: DEFAULT_PAGE,
             perPage: DEFAULT_PAGE_SIZE,
         },
     });
 
-    const { data: detail } = useTopic(modalState.id ?? '');
-    const { mutate: createTopic, isPending: isPendingCreateTopic } = useCreateTopic();
-    const { mutate: updateTopic, isPending: isPendingUpdateTopic } = useUpdateTopic(modalState.id ?? '');
-    const { mutate: deleteTopic, isPending: isPendingDeleteTopic } = useDeleteTopic();
+    const { data: detail } = useTag(modalState.id ?? '');
+    const { mutate: createTag, isPending: isPendingCreateTag } = useCreateTag();
+    const { mutate: updateTag, isPending: isPendingUpdateTag } = useUpdateTag(modalState.id ?? '');
+    const { mutate: deleteTag, isPending: isPendingDeleteTag } = useDeleteTag();
 
     const handleDelete = (id: string) => {
         confirm({
-            title: 'Do you want to delete this topic?',
+            title: 'Do you want to delete this tag?',
             onOk() {
-                deleteTopic(id, {
+                deleteTag(id, {
                     onSuccess: () => {
-                        message.success('Topic deleted successfully');
+                        message.success('Tag deleted successfully');
                         queryClient.invalidateQueries({
-                            queryKey: topicKeys.listing(),
+                            queryKey: tagKeys.listing(),
                         });
                         setModalState({ type: 'detail', open: false });
                     },
                     onError: () => {
-                        message.error('Topic deletion failed');
+                        message.error('Tag deletion failed');
                     },
                 });
             },
@@ -99,7 +95,7 @@ const AdminTopicPage = () => {
         });
     };
 
-    const columns: ColumnsType<Topic> = [
+    const columns: ColumnsType<Tag> = [
         {
             title: 'Name',
             dataIndex: 'name',
@@ -107,16 +103,16 @@ const AdminTopicPage = () => {
             render: (name, record) => <Typography.Text>{name}</Typography.Text>,
         },
         {
-            title: 'Category',
-            dataIndex: 'category',
-            key: 'category',
-            render: (_, record) => record?.category?.name,
+            title: 'Background Color Hex',
+            dataIndex: 'backgroundColorHex',
+            key: 'backgroundColorHex',
+            render: (backgroundColorHex, record) => <ColorPicker format="hex" value={backgroundColorHex} disabled />,
         },
         {
-            title: 'Image',
-            dataIndex: 'imageUrl',
-            key: 'imageUrl',
-            render: (image: string) => <Image src={image} alt="topic" style={{ width: '100px', height: '100px' }} />,
+            title: 'Text Color Hex',
+            dataIndex: 'textColorHex',
+            key: 'textColorHex',
+            render: (backgroundColorHex, record) => <ColorPicker format="hex" value={backgroundColorHex} disabled />,
         },
         {
             title: 'Actions',
@@ -127,10 +123,10 @@ const AdminTopicPage = () => {
                     <Button
                         icon={<EditOutlined />}
                         onClick={() => {
-                            setModalState({ type: 'edit', open: true, id: record.topicId });
+                            setModalState({ type: 'edit', open: true, id: record.tagId });
                         }}
                     />
-                    <Button danger icon={<DeleteOutlined />} onClick={() => handleDelete(record?.topicId)} />
+                    <Button danger icon={<DeleteOutlined />} onClick={() => handleDelete(record?.tagId)} />
                 </Space>
             ),
         },
@@ -153,16 +149,21 @@ const AdminTopicPage = () => {
     };
 
     const onFinish = (values: FormValue) => {
-        createTopic(
+        createTag(
             {
                 ...values,
-                imageUrl: imgUrlList[0],
+                backgroundColorHex:
+                    typeof values.backgroundColorHex === 'string'
+                        ? values.backgroundColorHex
+                        : values.backgroundColorHex.toHexString(),
+                textColorHex:
+                    typeof values.textColorHex === 'string' ? values.textColorHex : values.textColorHex.toHexString(),
             },
             {
                 onSuccess: () => {
                     message.success('Topic created successfully');
                     queryClient.invalidateQueries({
-                        queryKey: topicKeys.listing(),
+                        queryKey: tagKeys.listing(),
                     });
                     setModalState({ type: 'add', open: false });
                     form.resetFields();
@@ -177,16 +178,21 @@ const AdminTopicPage = () => {
     };
 
     const onFinishUpdate = (values: FormValue) => {
-        updateTopic(
+        updateTag(
             {
                 ...values,
-                imageUrl: imgUrlList[0],
+                backgroundColorHex:
+                    typeof values.backgroundColorHex === 'string'
+                        ? values.backgroundColorHex
+                        : values.backgroundColorHex.toHexString(),
+                textColorHex:
+                    typeof values.textColorHex === 'string' ? values.textColorHex : values.textColorHex.toHexString(),
             },
             {
                 onSuccess: () => {
                     message.success('Topic updated successfully');
                     queryClient.invalidateQueries({
-                        queryKey: topicKeys.listing(),
+                        queryKey: tagKeys.listing(),
                     });
                     setModalState({ type: 'edit', open: false });
                     form.resetFields();
@@ -212,18 +218,9 @@ const AdminTopicPage = () => {
         if (detail) {
             form.setFieldsValue({
                 name: detail.name,
-                categoryId: detail.category?.categoryId,
+                backgroundColorHex: detail.backgroundColorHex,
+                textColorHex: detail.textColorHex,
             });
-            setImgUrlList([detail.imageUrl]);
-            setFileList([
-                {
-                    uid: '-1',
-                    name: detail.imageUrl,
-                    status: 'done',
-                    url: detail.imageUrl,
-                },
-            ]);
-            setPreviewImage(detail.imageUrl);
         }
     }, [detail]);
 
@@ -231,7 +228,7 @@ const AdminTopicPage = () => {
         <Card>
             <Flex vertical gap={20}>
                 <Flex justify="space-between" align="center">
-                    <Typography.Title level={4}>Category</Typography.Title>
+                    <Typography.Title level={4}>Tag</Typography.Title>
                     <SecondaryButton
                         onClick={() => {
                             setModalState({ type: 'add', open: true });
@@ -240,11 +237,15 @@ const AdminTopicPage = () => {
                             setPreviewImage('');
                         }}
                     >
-                        Add New Topic
+                        Add New Tag
                     </SecondaryButton>
                 </Flex>
 
-                <Table<Topic> loading={isFetching} columns={columns} dataSource={data} rowKey="id"
+                <Table<Tag>
+                    loading={isFetching}
+                    columns={columns}
+                    dataSource={data}
+                    rowKey="id"
                     pagination={{
                         showQuickJumper: true,
                         showSizeChanger: true,
@@ -254,48 +255,19 @@ const AdminTopicPage = () => {
             </Flex>
 
             <Modal
-                title="Add New Topic"
+                title="Add New Tag"
                 open={modalState.type === 'add' && modalState.open}
                 footer={null}
                 onCancel={onCancelCreate}
             >
                 <Form layout="vertical" form={form} name="topic-form" onFinish={onFinish}>
-                    <Flex vertical align="center" justify="center" gap={10}>
-                        <Upload
-                            accept="image/*"
-                            customRequest={uploadFile}
-                            listType="picture-circle"
-                            maxCount={1}
-                            showUploadList={false}
-                            onChange={onChangeFile}
-                            onRemove={onRemoveFile}
-                        >
-                            {uploadButton()}
-                        </Upload>
-
-                        <Flex gap={10} wrap>
-                            <Upload listType="picture-card" fileList={fileList} onRemove={onRemoveFile} />
-                            {previewImage && (
-                                <Image
-                                    wrapperStyle={{ display: 'none' }}
-                                    preview={{
-                                        visible: previewOpen,
-                                        onVisibleChange: visible => setPreviewOpen(visible),
-                                        afterOpenChange: visible => !visible && setPreviewImage(''),
-                                    }}
-                                    src={previewImage}
-                                />
-                            )}
-                        </Flex>
-                    </Flex>
-
                     <Form.Item<FormValue>
-                        label="Topic Name"
+                        label="Tag Name"
                         name="name"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please enter topic name',
+                                message: 'Please enter tag name',
                             },
                         ]}
                     >
@@ -303,32 +275,36 @@ const AdminTopicPage = () => {
                     </Form.Item>
 
                     <Form.Item<FormValue>
-                        label="Choose Category"
-                        name="categoryId"
+                        label="Background Color Hex"
+                        name="backgroundColorHex"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please choose category',
+                                message: 'Please choose background color',
                             },
                         ]}
                     >
-                        <Select
-                            size="large"
-                            options={
-                                categories?.map(category => ({
-                                    label: category.name,
-                                    value: category.categoryId,
-                                })) ?? []
-                            }
-                            loading={isFetchingCategories}
-                        />
+                        <ColorPicker format="hex" size="large" />
+                    </Form.Item>
+
+                    <Form.Item<FormValue>
+                        label="Text Color Hex"
+                        name="textColorHex"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please choose text color',
+                            },
+                        ]}
+                    >
+                        <ColorPicker format="hex" size="large" />
                     </Form.Item>
 
                     <Flex justify="end">
                         <Button htmlType="button" onClick={onCancelCreate}>
                             Cancel
                         </Button>
-                        <Button type="primary" loading={isPendingCreateTopic} htmlType="submit">
+                        <Button type="primary" loading={isPendingCreateTag} htmlType="submit">
                             Save
                         </Button>
                     </Flex>
@@ -336,48 +312,19 @@ const AdminTopicPage = () => {
             </Modal>
 
             <Modal
-                title="Update Topic"
+                title="Update Tag"
                 open={modalState.type === 'edit' && modalState.open}
                 footer={null}
                 onCancel={onCancelUpdate}
             >
                 <Form layout="vertical" form={form} name="topic-form" onFinish={onFinishUpdate}>
-                    <Flex vertical align="center" justify="center" gap={10}>
-                        <Upload
-                            accept="image/*"
-                            customRequest={uploadFile}
-                            listType="picture-circle"
-                            maxCount={1}
-                            showUploadList={false}
-                            onChange={onChangeFile}
-                            onRemove={onRemoveFile}
-                        >
-                            {uploadButton()}
-                        </Upload>
-
-                        <Flex gap={10} wrap>
-                            <Upload listType="picture-card" fileList={fileList} onRemove={onRemoveFile} />
-                            {previewImage && (
-                                <Image
-                                    wrapperStyle={{ display: 'none' }}
-                                    preview={{
-                                        visible: previewOpen,
-                                        onVisibleChange: visible => setPreviewOpen(visible),
-                                        afterOpenChange: visible => !visible && setPreviewImage(''),
-                                    }}
-                                    src={previewImage}
-                                />
-                            )}
-                        </Flex>
-                    </Flex>
-
                     <Form.Item<FormValue>
-                        label="Topic Name"
+                        label="Category Name"
                         name="name"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please enter topic name',
+                                message: 'Please enter category name',
                             },
                         ]}
                     >
@@ -385,8 +332,8 @@ const AdminTopicPage = () => {
                     </Form.Item>
 
                     <Form.Item<FormValue>
-                        label="Choose Category"
-                        name="categoryId"
+                        label="Background Color Hex"
+                        name="backgroundColorHex"
                         rules={[
                             {
                                 required: true,
@@ -394,23 +341,27 @@ const AdminTopicPage = () => {
                             },
                         ]}
                     >
-                        <Select
-                            size="large"
-                            options={
-                                categories?.map(category => ({
-                                    label: category.name,
-                                    value: category.categoryId,
-                                })) ?? []
-                            }
-                            loading={isFetchingCategories}
-                        />
+                        <ColorPicker format="hex" size="large" />
+                    </Form.Item>
+
+                    <Form.Item<FormValue>
+                        label="Text Color Hex"
+                        name="textColorHex"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please choose category',
+                            },
+                        ]}
+                    >
+                        <ColorPicker format="hex" size="large" />
                     </Form.Item>
 
                     <Flex justify="end">
                         <Button htmlType="button" onClick={onCancelUpdate}>
                             Cancel
                         </Button>
-                        <Button type="primary" loading={isPendingUpdateTopic} htmlType="submit">
+                        <Button type="primary" loading={isPendingUpdateTag} htmlType="submit">
                             Save
                         </Button>
                     </Flex>
@@ -420,4 +371,4 @@ const AdminTopicPage = () => {
     );
 };
 
-export default AdminTopicPage;
+export default AdminTagPage;
