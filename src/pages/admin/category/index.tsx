@@ -106,7 +106,7 @@ const AdminCategoryPage = () => {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
-            render: (description: string) => <ToggleTruncateTextTypography content={description} maxLength={200} />,
+            render: (description: string) => <ToggleTruncateTextTypography key={description} content={description} maxLength={200} />,
         },
         {
             title: 'Image',
