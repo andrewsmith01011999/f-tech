@@ -3,12 +3,15 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { UserListingParams, useUsersListing } from '@/hooks/query/user/use-user-listing';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Account } from '@/types/account';
+import { PATHS } from '@/utils/paths';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Badge, Button, Card, Flex, Input, Space, Table, Tag, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AdminUserPage = () => {
+    const navigate = useNavigate();
     const [params, setParams] = useState<UserListingParams>({ page: DEFAULT_PAGE, perPage: DEFAULT_PAGE_SIZE });
     const [search, setSearch] = useState('');
 
@@ -25,6 +28,20 @@ const AdminUserPage = () => {
             title: 'User Name',
             dataIndex: 'username',
             key: 'username',
+            render: (_, record) => (
+                <Typography.Text
+                    style={{
+                        color: '#1890ff',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                       navigate(PATHS.USER_PROFILE.replace(':id', record.accountId));
+                    }}
+                >
+                    {record.username}
+                </Typography.Text>
+            ),
         },
         {
             title: 'Email',
