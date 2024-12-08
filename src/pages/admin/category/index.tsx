@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 const { confirm } = Modal;
 
 interface ModalState {
-    type: 'add' | 'edit';
+    type: 'add' | 'edit' | 'detail';
     open: boolean;
     id?: string;
 }
@@ -67,6 +67,7 @@ const AdminCategoryPage = () => {
                         queryClient.invalidateQueries({
                             queryKey: categoryKeys.listing(),
                         });
+                        setModalState({ type: 'detail', open: false });
                     },
                     onError: () => {
                         message.error('Category deletion failed');
@@ -82,6 +83,24 @@ const AdminCategoryPage = () => {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
+            render: (name, record) => (
+                <Typography.Text
+                    style={{
+                        color: '#1890ff',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                        setModalState({
+                            type: 'detail',
+                            open: true,
+                            id: record.categoryId,
+                        });
+                    }}
+                >
+                    {name}
+                </Typography.Text>
+            ),
         },
         {
             title: 'Description',
@@ -380,6 +399,54 @@ const AdminCategoryPage = () => {
                         </Button>
                     </Flex>
                 </Form>
+            </Modal>
+
+            <Modal
+                title="Category Detail"
+                open={modalState.type === 'detail' && modalState.open}
+                footer={null}
+                onCancel={() => setModalState({ type: 'detail', open: false })}
+                width={'80vw'}
+            >
+                <Flex gap={20}>
+                    <Image
+                        src={detail?.image}
+                        alt="category"
+                        style={{
+                            objectFit: 'contain',
+                            borderRadius: 16,
+                            width: '100%',
+                            height: '100%',
+                        }}
+                    />
+
+                    <Flex vertical gap={10}>
+                        <Flex justify="space-between">
+                            <Typography.Title level={4}>{detail?.name}</Typography.Title>
+
+                            <Button.Group>
+                                <Button
+                                    icon={<EditOutlined />}
+                                    onClick={() => {
+                                        setModalState({ type: 'edit', open: true, id: detail?.categoryId });
+                                    }}
+                                />
+                                <Button
+                                    danger
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => handleDelete(detail?.categoryId ?? '')}
+                                />
+                            </Button.Group>
+                        </Flex>
+                        <Typography.Paragraph>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: detail?.description ?? '',
+                                }}
+                            />
+                        </Typography.Paragraph>
+                    </Flex>
+                </Flex>
             </Modal>
         </Card>
     );
