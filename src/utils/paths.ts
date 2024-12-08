@@ -27,4 +27,5 @@ export const PATHS = {
     DEPOSIT: '/deposit',
     RECOMMENDATIONS: '/recommendations',
     EXPLORE: '/explore',
+    ADMIN_CATEGORY: '/admin/category',
 };
