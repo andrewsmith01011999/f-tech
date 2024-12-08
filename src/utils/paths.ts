@@ -30,4 +30,5 @@ export const PATHS = {
     ADMIN_CATEGORY: '/admin/category',
     ADMIN_TOPICS: '/admin/topics',
     ADMIN_TAGS: '/admin/tags',
+    ADMIN_REWARDS: '/admin/rewards',
 };
