@@ -32,4 +32,5 @@ export const PATHS = {
     ADMIN_TAGS: '/admin/tags',
     ADMIN_REWARDS: '/admin/rewards',
     ADMIN_USERS: '/admin/users',
+    ADMIN_DASHBOARD: '/admin/dashboard',
 };
