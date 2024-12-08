@@ -244,7 +244,13 @@ const AdminTopicPage = () => {
                     </SecondaryButton>
                 </Flex>
 
-                <Table<Topic> loading={isFetching} columns={columns} dataSource={data} rowKey="id" />
+                <Table<Topic> loading={isFetching} columns={columns} dataSource={data} rowKey="id"
+                    pagination={{
+                        showQuickJumper: true,
+                        showSizeChanger: true,
+                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                    }}
+                />
             </Flex>
 
             <Modal

@@ -242,7 +242,17 @@ const AdminCategoryPage = () => {
                     </SecondaryButton>
                 </Flex>
 
-                <Table<Category> loading={isFetching} columns={columns} dataSource={data} rowKey="id" />
+                <Table<Category>
+                    loading={isFetching}
+                    columns={columns}
+                    dataSource={data}
+                    rowKey="id"
+                    pagination={{
+                        showQuickJumper: true,
+                        showSizeChanger: true,
+                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                    }}
+                />
             </Flex>
 
             <Modal
