@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState, type FC } from 'react';
+import React, { useEffect, useState, type FC } from 'react';
 import '../index.less';
 
-import { theme as antTheme, Avatar, Badge, Dropdown, Flex, Layout, Modal, notification, Typography } from 'antd';
+import { theme as antTheme, Avatar, Badge, Dropdown, Flex, Layout, notification, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,13 +21,13 @@ import BackgroundPlaceholder from '/public/background-placeholder.svg';
 import { RootState } from '@/stores';
 import { loggout } from '@/stores/account';
 import NotificationIcon from './components/notification';
-import { useCategorySearch } from '@/hooks/query/utility/use-category-search';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useNotifications } from '@/hooks/query/notification/use-notifications';
 import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
 import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
 import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { useWebSocket } from '@/utils/socket';
 
 const { Header } = Layout;
 
@@ -43,6 +43,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     const dispatch = useDispatch();
     const [keyword, setKeyword] = useState('  ');
     const [openSearch, setOpenSearch] = useState(false);
+    const socket = useWebSocket();
 
     const [api, contextHolder] = notification.useNotification();
 
@@ -118,49 +119,6 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         };
     }, [notifications]);
 
-    // const searchCategoryDropdownItems = searchData?.categoryList.map(category => ({
-    //     key: category.categoryId,
-    //     label: category.name,
-    //     onClick: () => {
-    //         navigate(`${PATHS.POSTS}?category=${category.categoryId}`);
-    //         resetKeyword();
-    //     },
-    // }));
-
-    // const searchTopicDropdownItems = searchData?.topicList.map(topic => ({
-    //     key: topic.topicId,
-    //     label: topic.name,
-    //     onClick: () => {
-    //         navigate(`${PATHS.POSTS}?topic=${topic.topicId}`);
-    //         resetKeyword();
-    //     },
-    // }));
-
-    // const searchPostDropdownItems = searchData?.postList.map(post => ({
-    //     key: post.postId,
-    //     label: post.title,
-    //     onClick: () => {
-    //         navigate(PATHS.POSTS);
-    //         resetKeyword();
-    //     },
-    // }));
-
-    // const searchAccountDropdownItems = searchData?.accountList.map(account => ({
-    //     key: account.accountId,
-    //     label: account.username,
-    //     onClick: () => {
-    //         navigate(PATHS.USER_PROFILE.replace(':id', account?.accountId));
-    //         resetKeyword();
-    //     },
-    // }));
-
-    // const searchDropdownItems = [
-    //     ...(searchCategoryDropdownItems || []),
-    //     ...(searchTopicDropdownItems || []),
-    //     ...(searchPostDropdownItems || []),
-    //     ...(searchAccountDropdownItems || []),
-    // ];
-
     const onLogout = async () => {
         localStorage.clear();
         dispatch(loggout());
@@ -192,6 +150,21 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             navigate(`${PATHS.SEARCH}?keyword=${keyword}`);
         }
     };
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('connected');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('disconnected');
+        });
+
+        return () => {
+            socket.off('connect');
+            socket.off('disconnect');
+        };
+    }, []);
 
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
