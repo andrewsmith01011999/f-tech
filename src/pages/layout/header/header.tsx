@@ -171,6 +171,15 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             });
         });
 
+        socket.on(SOCKET_EVENT.UPDATE_DELETE_COMMENT, () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: bookmarkKeys.listing(),
+            });
+        });
+
         socket.on(SOCKET_EVENT.LIKE, () => {
             queryClient.invalidateQueries({
                 queryKey: upvoteKeys.listing(),

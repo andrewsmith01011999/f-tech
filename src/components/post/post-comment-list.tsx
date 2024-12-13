@@ -10,11 +10,13 @@ import { useDeleteComment } from '@/hooks/mutate/comment/use-delete-comment';
 import { useMessage } from '@/hooks/use-message';
 import { useQueryClient } from '@tanstack/react-query';
 import { commentKeys } from '@/consts/factory/comment';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useOnClickOutside } from 'usehooks-ts';
 import { useUpdateComment } from '@/hooks/mutate/comment/use-update-comment';
 import { useCreateReply } from '@/hooks/mutate/comment/use-create-comment';
 import { postKeys } from '@/consts/factory/post';
+import { SOCKET_EVENT } from '@/consts/common';
+import { useWebSocket } from '@/utils/socket';
 
 const { confirm } = Modal;
 
@@ -24,6 +26,7 @@ interface PostCommentListProps {
 }
 
 const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
+    const socket = useWebSocket();
     const inputRef = useRef<any>(null);
     const [form] = Form.useForm();
     const [formReply] = Form.useForm();
@@ -42,6 +45,18 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
     const { mutate: deleteComment } = useDeleteComment();
     const { mutate: updateComment } = useUpdateComment();
     const { mutate: createReply } = useCreateReply();
+
+    useEffect(() => {
+        socket.on(SOCKET_EVENT.UPDATE_DELETE_COMMENT, () => {
+            queryClient.invalidateQueries({
+                queryKey: commentKeys.byPost(postId),
+            });
+        });
+
+        return () => {
+            socket.off(SOCKET_EVENT.COMMENT);
+        };
+    }, []);
 
     if (!comments) {
         return null;
@@ -65,9 +80,9 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                         queryClient.invalidateQueries({
                             queryKey: postKeys.listing(),
                         });
-                        queryClient.invalidateQueries({
-                            queryKey: commentKeys.byPost(postId),
-                        });
+                        // queryClient.invalidateQueries({
+                        //     queryKey: commentKeys.byPost(postId),
+                        // });
                     },
                 });
             },
