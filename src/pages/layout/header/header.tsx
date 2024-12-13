@@ -26,8 +26,13 @@ import { useNotifications } from '@/hooks/query/notification/use-notifications';
 import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
 import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
 import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, SOCKET_EVENT } from '@/consts/common';
 import { useWebSocket } from '@/utils/socket';
+import { useQueryClient } from '@tanstack/react-query';
+import { commentKeys } from '@/consts/factory/comment';
+import { upvoteKeys } from '@/consts/factory/upvote';
+import { postKeys } from '@/consts/factory/post';
+import { bookmarkKeys } from '@/consts/factory/bookmark';
 
 const { Header } = Layout;
 
@@ -44,6 +49,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     const [keyword, setKeyword] = useState('  ');
     const [openSearch, setOpenSearch] = useState(false);
     const socket = useWebSocket();
+    const queryClient = useQueryClient();
 
     const [api, contextHolder] = notification.useNotification();
 
@@ -154,6 +160,39 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     useEffect(() => {
         socket.on('connect', () => {
             console.log('connected');
+        });
+
+        socket.on(SOCKET_EVENT.COMMENT, () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: bookmarkKeys.listing(),
+            });
+        });
+
+        socket.on(SOCKET_EVENT.LIKE, () => {
+            queryClient.invalidateQueries({
+                queryKey: upvoteKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: bookmarkKeys.listing(),
+            });
+        });
+
+        socket.on(SOCKET_EVENT.DISLIKE, () => {
+            queryClient.invalidateQueries({
+                queryKey: upvoteKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: bookmarkKeys.listing(),
+            });
         });
 
         socket.on('disconnect', () => {

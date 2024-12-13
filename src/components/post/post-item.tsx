@@ -224,15 +224,7 @@ export const PostItem: FC<PostItemProps> = ({
     const handleUpvote = (id: string) => {
         upvote(id, {
             onSuccess: () => {
-                // queryClient.invalidateQueries({
-                //     queryKey: postKeys.listing(),
-                // });
-                queryClient.invalidateQueries({
-                    queryKey: upvoteKeys.listing(),
-                });
-                queryClient.invalidateQueries({
-                    queryKey: bookmarkKeys.listing(),
-                })
+              
             },
         });
     };
