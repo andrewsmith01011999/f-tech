@@ -236,6 +236,7 @@ const AdminReportList = () => {
                     width="80vw"
                 >
                     <PostItem
+                        onClick={() => {}}
                         data={detail}
                         showActions={false}
                         showLike={false}

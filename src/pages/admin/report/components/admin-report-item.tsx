@@ -18,7 +18,7 @@ import { reportKeys } from '@/consts/factory/report';
 
 interface AdminReportItemProps {
     data: PostReport;
-    setPostId: Dispatch<SetStateAction<null| string>>;
+    setPostId: Dispatch<SetStateAction<null | string>>;
     setReport: Dispatch<SetStateAction<PostReport | null>>;
 }
 
@@ -42,9 +42,12 @@ const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) =
     });
 
     return (
-        <Card onClick={() => {setPostId(data?.postId)
-            setReport(data as PostReport)
-        }}>
+        <Card
+            onClick={() => {
+                setPostId(data?.postId);
+                setReport(data as PostReport);
+            }}
+        >
             <Flex vertical gap={8}>
                 <Flex align="center" justify="space-between">
                     <Space size="large">
@@ -87,8 +90,11 @@ const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) =
                                                 APPROVED
                                             </Tag>
                                         ),
-                                        onClick: () => updatePostReport('APPROVED'),
-                                        // disabled: data?.status !== 'PENDING',
+                                        onClick: e => {
+                                            e.domEvent.stopPropagation();
+                                            updatePostReport('APPROVED');
+                                        },
+                                        disabled: data?.status !== 'PENDING',
                                     },
                                     {
                                         key: '2',
@@ -106,13 +112,20 @@ const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) =
                                                 REJECTED
                                             </Tag>
                                         ),
-                                        onClick: () => updatePostReport('REJECTED'),
+                                        onClick: e => {
+                                            e.domEvent.stopPropagation();
+                                            updatePostReport('REJECTED');
+                                        },
                                         disabled: data?.status !== 'PENDING',
                                     },
                                 ],
                             }}
                         >
-                            <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                            <Button
+                                onClick={e => e.stopPropagation()}
+                                type="text"
+                                icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+                            />
                         </Dropdown>
                     </Flex>
                 </Flex>
