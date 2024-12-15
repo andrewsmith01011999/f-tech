@@ -4,12 +4,16 @@ import PlaceholderSvg from '/public/placeholder.svg';
 import { Flex, Typography } from 'antd';
 import { Event } from '@/types/event';
 import dayjsConfig from '@/utils/dayjs';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/utils/paths';
 
 interface EventItemProps {
     event: Event;
 }
 
 const EventItem = ({ event }: EventItemProps) => {
+    const navigate = useNavigate();
+
     return (
         <RewardCard
             hoverable
@@ -17,6 +21,7 @@ const EventItem = ({ event }: EventItemProps) => {
             cover={
                 <img alt="example" src={event?.image || PlaceholderSvg} style={{ height: 180, objectFit: 'cover' }} />
             }
+            onClick={() => navigate(PATHS.EVENT_DETAIL.replace(':id', event?.eventId))}
         >
             <Flex gap={10} align="center">
                 <Flex vertical justify="space-between" align="center" className="event-date-wrapper">
