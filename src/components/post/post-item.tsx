@@ -349,21 +349,21 @@ export const PostItem: FC<PostItemProps> = ({
                                                 handleDelete();
                                             },
                                         },
-                                        {
-                                            key: '4',
-                                            icon: <DownloadOutlined />,
-                                            label: (
-                                                <a href={data?.postFileList?.[0]?.url} download>
-                                                    Download
-                                                </a>
-                                            ),
-                                            disabled: !data?.postFileList?.[0]?.url,
-                                            onClick: e => {
-                                                e.domEvent.stopPropagation();
-                                                setDownloadPostId(postId);
-                                                download();
-                                            },
-                                        },
+                                        // {
+                                        //     key: '4',
+                                        //     icon: <DownloadOutlined />,
+                                        //     label: (
+                                        //         <a href={data?.postFileList?.[0]?.url} download>
+                                        //             Download
+                                        //         </a>
+                                        //     ),
+                                        //     disabled: !data?.postFileList?.[0]?.url,
+                                        //     onClick: e => {
+                                        //         e.domEvent.stopPropagation();
+                                        //         setDownloadPostId(postId);
+                                        //         download();
+                                        //     },
+                                        // },
                                     ],
                                 }}
                             >
