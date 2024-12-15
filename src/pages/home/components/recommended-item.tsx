@@ -57,7 +57,7 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
                         borderRadius: 10,
                         width: 58,
                         height: 58,
-                        objectFit: 'contain',
+                        objectFit: 'cover',
                         boxShadow: '0px 3px 4px 0px #FA89240F',
                     }}
                     src={account?.avatar || AmdSvg}
