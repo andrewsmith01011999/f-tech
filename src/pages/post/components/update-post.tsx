@@ -279,8 +279,6 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                             >
                                 <Button type="text" icon={<PaperClipOutlined />} />
                             </Upload>
-
-                            <Button type="text" icon={<img src={EmojiSvg} />} />
                         </Space>
 
                         <Space>

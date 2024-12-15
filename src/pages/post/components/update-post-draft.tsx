@@ -357,8 +357,6 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                                     </Tooltip>
                                 </Upload>
                             )}
-
-                            <Button type="text" icon={<img src={EmojiSvg} />} />
                         </Space>
 
                         <Space>
