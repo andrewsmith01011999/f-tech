@@ -298,7 +298,11 @@ const AdminReportList = () => {
                                             ],
                                         }}
                                     >
-                                        <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                                        <Button
+                                            onClick={e => e.stopPropagation()}
+                                            type="text"
+                                            icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+                                        />
                                     </Dropdown>
                                 </Flex>
                             </>

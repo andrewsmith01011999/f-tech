@@ -75,6 +75,7 @@ const Transactions: FC = () => {
             type: 'Order Point',
             amount: orderPoint?.monkeyCoinPack?.point,
             createdDate: orderPoint.orderDate,
+            status: orderPoint.status === 'SUCCESS' ? 'SUCCESS' : 'FAILED',
         })) || [];
 
     const allTransactions = [

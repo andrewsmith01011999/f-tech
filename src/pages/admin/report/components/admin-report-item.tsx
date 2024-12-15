@@ -88,7 +88,7 @@ const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) =
                                             </Tag>
                                         ),
                                         onClick: () => updatePostReport('APPROVED'),
-                                        disabled: data?.status !== 'PENDING',
+                                        // disabled: data?.status !== 'PENDING',
                                     },
                                     {
                                         key: '2',

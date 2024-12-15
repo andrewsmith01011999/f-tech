@@ -13,6 +13,8 @@ import { walletKeys } from '@/consts/factory/wallet';
 import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
 import { redeemKeys } from '@/consts/factory/redeem';
 import { OnAction } from '@/types';
+import { PATHS } from '@/utils/paths';
+import { useNavigate } from 'react-router-dom';
 
 const { confirm } = Modal;
 
@@ -29,6 +31,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward, onClick }) => {
     const { data: wallet, isLoading } = useGetWalletByAccount(accountInfo?.accountId as string);
 
     const { success, error } = useMessage();
+    const navigate = useNavigate();
 
     const { mutate: createRedeem, isPending: isPendingCreateRedeem } = useCreateRedeem();
 
@@ -91,6 +94,7 @@ const RewardItem: FC<RewardItemProps> = ({ reward, onClick }) => {
                         },
                         onError: err => {
                             error(err.message);
+                            navigate(PATHS.DEPOSIT);
                         },
                     },
                 );

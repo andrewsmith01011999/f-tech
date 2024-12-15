@@ -34,6 +34,7 @@ import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
 import { PaperClipOutlined } from '@ant-design/icons';
 import Tiptap from '@/components/tiptap/tiptap';
+import { getStorage, ref } from 'firebase/storage';
 
 interface UpdatePostProps {
     onCancel?: OnAction;
@@ -47,6 +48,7 @@ const initialParams: TopicListingParams = {
 export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
+    const storage = getStorage();
 
     const watchContent = Form.useWatch('content', form);
 
@@ -86,6 +88,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                 }),
                 ...(urlFileList.length > 0 && {
                     linkFile: urlFileList[0] as string,
+                    postFileUrlRequest: [{ url: urlFileList[0] as string }],
                 }),
             },
             {
@@ -166,7 +169,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                     ? [
                           {
                               uid: detail?.postFileList?.[0]?.url,
-                              name: detail?.postFileList?.[0]?.url,
+                              name: ref(storage, detail?.postFileList?.[0]?.url)?.name,
                               url: detail?.postFileList?.[0]?.url,
                               status: 'done',
                           },

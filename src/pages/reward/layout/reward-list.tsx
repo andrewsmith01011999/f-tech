@@ -14,6 +14,8 @@ import { redeemKeys } from '@/consts/factory/redeem';
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { FULL_TIME_FORMAT } from '@/consts/common';
+import { PATHS } from '@/utils/paths';
+import { useNavigate } from 'react-router-dom';
 
 const { confirm } = Modal;
 
@@ -30,6 +32,8 @@ const RewardList = () => {
     const queryClient = useQueryClient();
 
     const { mutate: createRedeem, isPending: isPendingCreateRedeem } = useCreateRedeem();
+    
+    const navigate = useNavigate();
 
     const handleCreateRedeem = () => {
         confirm({
@@ -92,6 +96,7 @@ const RewardList = () => {
                         },
                         onError: err => {
                             error(err.message);
+                            navigate(PATHS.DEPOSIT)
                         },
                     },
                 );
