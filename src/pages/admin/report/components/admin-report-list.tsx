@@ -203,9 +203,8 @@ const AdminReportList = () => {
                     <Button
                         icon={<IoIosRefresh />}
                         onClick={() =>
-                            setParams({
-                                page: DEFAULT_PAGE,
-                                perPage: DEFAULT_PAGE_SIZE,
+                            queryClient.invalidateQueries({
+                                queryKey: reportKeys.reportPostListing(params),
                             })
                         }
                     />
