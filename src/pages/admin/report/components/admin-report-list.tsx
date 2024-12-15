@@ -16,6 +16,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useMessage } from '@/hooks/use-message';
 import { reportKeys } from '@/consts/factory/report';
 import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
+import { IoIosRefresh } from 'react-icons/io';
 
 const { confirm } = Modal;
 
@@ -194,9 +195,21 @@ const AdminReportList = () => {
                     }}
                 />
 
-                <Popover content={content} trigger="click" arrow={false}>
-                    <Button icon={<FilterOutlined />}>Filter</Button>
-                </Popover>
+                <Flex gap={8}>
+                    <Popover content={content} trigger="click" arrow={false}>
+                        <Button icon={<FilterOutlined />}>Filter</Button>
+                    </Popover>
+
+                    <Button
+                        icon={<IoIosRefresh />}
+                        onClick={() =>
+                            setParams({
+                                page: DEFAULT_PAGE,
+                                perPage: DEFAULT_PAGE_SIZE,
+                            })
+                        }
+                    />
+                </Flex>
             </Flex>
 
             {reportPosts ? (
