@@ -69,61 +69,9 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     // });
 
     const { data: notifications } = useNotifications();
-    const { data: upvotes } = useUpvoteListing();
-    const { data: comments } = useGetAllComments();
-    const { data: posts } = usePostsListing({
-        params: {
-            page: DEFAULT_PAGE,
-            perPage: DEFAULT_PAGE_SIZE,
-        },
-    });
-
     const resetKeyword = () => {
         setKeyword('  ');
     };
-
-    useEffect(() => {
-        let timeOut: NodeJS.Timeout;
-
-        if (
-            notifications?.length !== undefined &&
-            localStorage.getItem('count') !== undefined &&
-            localStorage.getItem('count') !== '' &&
-            notifications?.length > Number(localStorage.getItem('count'))
-        ) {
-            let content = '';
-            console.log(notifications?.[0]?.message);
-            const notiParsed = JSON.parse(notifications?.[0]?.message);
-
-            if (notiParsed?.entity === 'Upvote') {
-                content = `${
-                    upvotes?.find(upvote => upvote?.upvoteId === notiParsed?.id)?.account?.username
-                } liked your post`;
-            } else if (notiParsed?.entity === 'Comment') {
-                content = `${
-                    comments?.find(comment => comment?.commentId === notiParsed?.id)?.account?.username
-                } commented on your post`;
-            } else if (notiParsed?.entity === 'Report') {
-                content = `${
-                    posts?.find(post => post?.postId === notiParsed?.id)?.account?.username
-                } reported on your post`;
-            } else if (notiParsed?.entity === 'Daily point') {
-                content = 'You have received daily point';
-            }
-
-            openNotification(notifications?.[0]?.title, content);
-
-            timeOut = setTimeout(() => {
-                localStorage.setItem('count', notifications?.length.toString() || '');
-            }, 5000);
-        } else {
-            localStorage.setItem('count', notifications?.length.toString() || '');
-        }
-
-        return () => {
-            clearTimeout(timeOut);
-        };
-    }, [notifications]);
 
     const onLogout = async () => {
         localStorage.clear();
@@ -203,6 +151,10 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                 queryKey: bookmarkKeys.listing(),
             });
         });
+
+        socket.on(SOCKET_EVENT.NOTIFICATION, (data) => {
+            console.log('notification', data);
+        })
 
         socket.on('disconnect', () => {
             console.log('disconnected');

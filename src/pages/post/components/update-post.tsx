@@ -10,6 +10,7 @@ import {
     Modal,
     Select,
     Space,
+    Tooltip,
     Upload,
     UploadFile,
     UploadProps,
@@ -35,6 +36,8 @@ import { setPost } from '@/stores/post';
 import { PaperClipOutlined } from '@ant-design/icons';
 import Tiptap from '@/components/tiptap/tiptap';
 import { getStorage, ref } from 'firebase/storage';
+import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
+import { useSearchParams } from 'react-router-dom';
 
 interface UpdatePostProps {
     onCancel?: OnAction;
@@ -53,6 +56,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const watchContent = Form.useWatch('content', form);
 
     const dispatch = useDispatch();
+    const [searchParams] = useSearchParams();
     const { type, open } = useSelector((state: RootState) => state.post.modal);
     const queryClient = useQueryClient();
     const { success, error } = useMessage();
@@ -65,6 +69,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const [anotherFileList, setAnotherFileList] = useState<UploadFile[]>([]);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
+    const { data: categories } = useCategoriesListing({ params: initialParams });
 
     const { data: topics, isLoading: isLoadingTopics } = useTopicsListing({ params: initialParams });
     const { data: tags, isLoading: isLoadingTags } = useTagsListing({ params: initialParams });
@@ -268,17 +273,23 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                             >
                                 <Button type="text" icon={<img src={GallerySvg} />} />
                             </Upload>
-                            <Upload
-                                customRequest={upLoadAnotherFile}
-                                onChange={onChangeAnotherFile}
-                                onRemove={onRemoveAnotherFile}
-                                showUploadList={false}
-                                fileList={anotherFileList}
-                                maxCount={1}
-                                accept=".zip,.rar,.7zip,.tar,.tar.gz"
-                            >
-                                <Button type="text" icon={<PaperClipOutlined />} />
-                            </Upload>
+
+                            {categories?.find(category => category.categoryId === searchParams.get('category'))
+                                ?.name !== 'KNOWLEDGE SHARING' && (
+                                <Upload
+                                    customRequest={upLoadAnotherFile}
+                                    onChange={onChangeAnotherFile}
+                                    onRemove={onRemoveAnotherFile}
+                                    showUploadList={false}
+                                    fileList={anotherFileList}
+                                    maxCount={1}
+                                    accept=".zip,.rar,.7zip,.tar,.tar.gz"
+                                >
+                                    <Tooltip title="Upload File">
+                                        <Button type="text" icon={<PaperClipOutlined />} />
+                                    </Tooltip>
+                                </Upload>
+                            )}
                         </Space>
 
                         <Space>
