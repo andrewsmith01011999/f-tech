@@ -5,10 +5,12 @@ import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
 import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
 import { Notification } from '@/types/notification';
 import { StarIcon } from '@/utils/asset';
+import { PATHS } from '@/utils/paths';
 import { css } from '@emotion/react';
 import { Avatar, Card, Flex, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface NotificationItemProps {
     notification: Notification;
@@ -23,6 +25,7 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
             perPage: DEFAULT_PAGE_SIZE,
         },
     });
+    const navigate = useNavigate()
 
     if (!notification) return null;
 
@@ -30,7 +33,9 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
      ? JSON.parse(notification?.message ?? '{}') : notification?.message;
 
     return (
-        <Card css={styles}>
+        <Card css={styles} onClick={() => {
+            notiParsed?.id && notiParsed?.entity === 'Post' && navigate(PATHS.POST_DETAIL.replace(':id', notiParsed?.id))
+        }}>
             <Flex vertical gap={6}>
                 <Flex align="center" gap={10}>
                     <div>
