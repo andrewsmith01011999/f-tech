@@ -212,6 +212,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                                     label: topic.name,
                                     value: topic.topicId,
                                 }))}
+                                disabled
                             />
                         </Form.Item>
 
@@ -228,6 +229,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                                     label: tag.name,
                                     value: tag.tagId,
                                 }))}
+                                disabled
                             />
                         </Form.Item>
 
