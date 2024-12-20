@@ -14,7 +14,7 @@ export const PATHS = {
     NOTIFICATION: '/notification',
     REWARDS: '/rewards',
     FEEDBACKS: '/feedback',
-    ADMIN_FEEDBACKS: '/admin/feedback-manager',
+    ADMIN_FEEDBACKS: '/feedback-manager',
     USER_PROFILE: '/user-profile/:id',
     ADMIN_REPORTS: '/reports',
     SEARCH: '/search',
