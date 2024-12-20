@@ -53,7 +53,7 @@ const MainLayout: FC<MainLayoutProps> = ({ children = <Outlet /> }) => {
                         </CardMenu>
                     </MenuWrapper>
 
-                    <div style={{ minWidth: 760 }}>{children}</div>
+                    <div style={{ minWidth: 760, maxHeight: 'calc(100vh - 100px)', overflow: 'auto' }}>{children}</div>
 
                     <EventsWrapper>
                         <EventList />
