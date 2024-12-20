@@ -79,6 +79,9 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
             queryClient.invalidateQueries({
                 queryKey: postKeys.listing(),
             });
+            queryClient.invalidateQueries({
+                queryKey: postKeys.get(id ?? ''),
+            })
         },
     });
 
