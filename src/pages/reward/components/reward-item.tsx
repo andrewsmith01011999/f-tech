@@ -4,7 +4,7 @@ import { useCreateRedeem } from '@/hooks/mutate/redeem/use-create-redeem';
 import { RootState } from '@/stores';
 import { RedeemDocument } from '@/types/redeem/redeem';
 import { Divider, Flex, Modal, Space, Typography } from 'antd';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PlaceholderSvg from '/public/placeholder.svg';
 import { useMessage } from '@/hooks/use-message';
@@ -77,6 +77,18 @@ const RewardItem: FC<RewardItemProps> = ({ reward, onClick }) => {
                         </Typography.Title>
                     </Flex>
                     <Divider />
+                    <Flex align="center" justify="center">
+                        {true && (
+                            <SecondaryButton
+                                onClick={() => {
+                                    Modal.destroyAll();
+                                    navigate(PATHS.DEPOSIT);
+                                }}
+                            >
+                                Deposit
+                            </SecondaryButton>
+                        )}
+                    </Flex>
                 </>
             ),
             onOk: () => {
