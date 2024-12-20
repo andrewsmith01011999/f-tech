@@ -185,7 +185,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                     : [],
             );
         }
-    }, [detail]);
+    }, [detail, type, open]);
 
     return (
         <Modal title="Update Post" open={type === 'update' && open} onCancel={onCancel} footer={null} width={'80vw'}>
