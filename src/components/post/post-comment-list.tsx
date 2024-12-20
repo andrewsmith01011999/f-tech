@@ -17,6 +17,7 @@ import { useCreateReply } from '@/hooks/mutate/comment/use-create-comment';
 import { postKeys } from '@/consts/factory/post';
 import { SOCKET_EVENT } from '@/consts/common';
 import { useWebSocket } from '@/utils/socket';
+import { useSearchParams } from 'react-router-dom';
 
 const { confirm } = Modal;
 
@@ -28,6 +29,9 @@ interface PostCommentListProps {
 const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
     const socket = useWebSocket();
     const inputRef = useRef<any>(null);
+
+    const [searchParams] = useSearchParams();
+
     const [form] = Form.useForm();
     const [formReply] = Form.useForm();
 
@@ -35,6 +39,7 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
     const [isEdit, setIsEdit] = useState(false);
     const [isEditReply, setIsEditReply] = useState(false);
     const [isShowReply, setIsShowReply] = useState(false);
+    const [isCommentHighlighted, setIsCommentHighlighted] = useState(false);
 
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
@@ -57,6 +62,33 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
             socket.off(SOCKET_EVENT.COMMENT);
         };
     }, []);
+
+    const searchCommentId = searchParams.get('commentId');
+
+    useEffect(() => {
+        console.log('searchCommentId', searchCommentId);
+
+        // Scroll to comment
+
+        if (searchCommentId) {
+            setIsCommentHighlighted(true);
+            const commentElement = document.getElementById(searchCommentId);
+
+            console.log('commentElement', commentElement);
+
+            if (commentElement) {
+                commentElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        const timeout = setTimeout(() => {
+            setIsCommentHighlighted(false);
+        }, 3000);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [searchCommentId, comments]);
 
     if (!comments) {
         return null;
@@ -297,7 +329,13 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                     style={{
                         position: 'relative',
                         width: '100%',
+                        ...(item.commentId === searchCommentId &&
+                            isCommentHighlighted && {
+                                border: '1px solid #1890ff',
+                                borderRadius: 8,
+                            }),
                     }}
+                    id={item.commentId}
                 >
                     <Comment
                         actions={[
