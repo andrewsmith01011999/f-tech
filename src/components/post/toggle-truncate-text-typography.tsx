@@ -26,18 +26,20 @@ const ToggleTruncateTextTypography = ({ content, maxLength }: ToggleTruncateText
     useEffect(() => {
         if (text?.length > maxLength) {
             setText(`${text.slice(0, maxLength)}... `);
-        }
-    }, []);
+        } 
+    }, [content]);
 
     useEffect(() => {
         if (text?.length > maxLength) {
             setIsShowMore(true);
         }
+
+        setText(content)
     }, [content]);
 
     return (
         // write logic to show more or less text
-        <Typography.Paragraph onClick={e => e.stopPropagation()}>
+        <Typography.Paragraph  onClick={e => e.stopPropagation()}>
             <div
                 onClick={e => e.stopPropagation()}
                 dangerouslySetInnerHTML={{
