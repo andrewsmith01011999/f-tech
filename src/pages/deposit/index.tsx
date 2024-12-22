@@ -1,3 +1,14 @@
+import type { RootState } from '@/stores';
+import type { CreatePackPayload } from '@/types/pack/pack';
+import type { UploadFile } from 'antd';
+import type { UploadProps } from 'antd/lib';
+
+import { useQueryClient } from '@tanstack/react-query';
+import { Button, Card, Col, Divider, Flex, Form, Image, Input, InputNumber, Modal, Row, Upload } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import GallerySvg from '/public/gallery.svg';
 import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
 import { SecondaryButton } from '@/components/core/secondary-button';
 import { UserInfo } from '@/components/user/user-info';
@@ -9,29 +20,8 @@ import { usePacksListing } from '@/hooks/query/pack/use-packs-listing';
 import { useAuthorize } from '@/hooks/use-authorize';
 import { useMessage } from '@/hooks/use-message';
 import { useUploadFile } from '@/hooks/use-upload-file';
-import { RootState } from '@/stores';
-import { CreatePackPayload } from '@/types/pack/pack';
-import { useQueryClient } from '@tanstack/react-query';
-import {
-    Card,
-    Flex,
-    Form,
-    Input,
-    Modal,
-    Divider,
-    Button,
-    Upload,
-    Image,
-    UploadFile,
-    InputNumber,
-    Row,
-    Col,
-} from 'antd';
-import { UploadProps } from 'antd/lib';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+
 import DepositItem from './components/deposit-item';
-import GallerySvg from '/public/gallery.svg';
 
 const DepositPage = () => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
@@ -137,7 +127,7 @@ const DepositPage = () => {
                 },
                 onError: err => {
                     error(err.message);
-                }
+                },
             },
         );
     };

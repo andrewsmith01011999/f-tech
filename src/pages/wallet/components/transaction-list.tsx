@@ -1,15 +1,16 @@
-import {
-    FilterTransactionParams,
-    useTransactionsCurrentAccount,
-} from '@/hooks/query/transaction/use-transactions-current-account';
-import { RootState } from '@/stores';
+import type { FilterTransactionParams } from '@/hooks/query/transaction/use-transactions-current-account';
+import type { RootState } from '@/stores';
+
 import { DatePicker, Flex, Select, Space, Typography } from 'antd';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import TransactionItem from './transaction-item';
-import { TransactionType } from './transaction';
+
 import { DATE_FORMAT } from '@/consts/common';
-import dayjs from 'dayjs';
+import { useTransactionsCurrentAccount } from '@/hooks/query/transaction/use-transactions-current-account';
+
+import { TransactionType } from './transaction';
+import TransactionItem from './transaction-item';
 
 type FormatTransaction = {
     id: string;
@@ -77,6 +78,7 @@ const TransactionList = () => {
 
     const handleChangeType = (value: string) => {
         console.log(value);
+
         if (value === 'Bonus Point') {
             setParams(prev => ({
                 ...prev,
@@ -119,6 +121,7 @@ const TransactionList = () => {
             });
         }
     };
+
     return (
         <Flex vertical gap={16}>
             <Flex justify="space-between" className="transaction-header">
@@ -172,6 +175,7 @@ const TransactionList = () => {
                         description={transaction?.type}
                         title={transaction?.title}
                         createdDate={transaction?.createdDate}
+                        status={transaction?.transactionType ? 'SUCCESS' : 'FAILED'}
                     />
                 ))}
             </Flex>
