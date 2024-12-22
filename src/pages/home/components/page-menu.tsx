@@ -1,14 +1,17 @@
-import BaseMenu from '@/components/core/menu';
+import type { RootState } from '@/stores';
+import type { GetProp, MenuProps } from 'antd';
+
 import Icon from '@ant-design/icons';
-import { GetProp, MenuProps } from 'antd';
-import HomeSvg from '/public/home.svg';
-import BookMarkSvg from '/public/android.svg';
-import ExploreSvg from '/public/source-code.svg';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { PATHS } from '@/utils/paths';
-import { RootState } from '@/stores';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import BookMarkSvg from '/public/android.svg';
+import HomeSvg from '/public/home.svg';
+import ExploreSvg from '/public/source-code.svg';
+import BaseMenu from '@/components/core/menu';
 import { setAccountState } from '@/stores/account';
+import { PATHS } from '@/utils/paths';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
@@ -16,12 +19,24 @@ export const PageMenu = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const selectedKeys = useSelector((state: RootState) => state.account.selectedKeys);
+    const location = useLocation();
+
+    useEffect(() => {
+        const selectedItems = document.getElementsByClassName('ant-menu-item-selected');
+
+        Array.from(selectedItems).forEach(item => {
+            if (item.getAttribute('title') !== location.pathname) {
+                item.classList.remove('ant-menu-item-selected');
+            }
+        });
+    }, [location]);
 
     const items: MenuItem[] = [
         {
             key: PATHS.HOME,
             icon: <Icon component={() => <img src={HomeSvg} alt="home" />} />,
             label: 'Home',
+            title: PATHS.HOME,
             onClick: () => navigate(PATHS.HOME),
         },
         {
