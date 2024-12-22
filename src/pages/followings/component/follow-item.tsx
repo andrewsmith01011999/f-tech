@@ -37,6 +37,9 @@ export const FollowItem = ({ account, isFollow }: FollowItemProps) => {
                     queryKey: followKeys.listing(),
                 });
                 queryClient.invalidateQueries({
+                    queryKey: followKeys.listingFollower(),
+                });
+                queryClient.invalidateQueries({
                     queryKey: followKeys.recommendations(),
                 });
             },
@@ -86,7 +89,7 @@ export const FollowItem = ({ account, isFollow }: FollowItemProps) => {
                         handleToggleFollow();
                     }}
                 >
-                    <MinusOutlined style={{ fontSize: 12 }} />
+                    <MinusOutlined style={{ fontSize: 12, marginRight: 1 }} />
                     Unfollow
                 </Button>
             ) : (
@@ -100,12 +103,12 @@ export const FollowItem = ({ account, isFollow }: FollowItemProps) => {
                 >
                     {account?.following ? (
                         <>
-                            <MinusOutlined style={{ fontSize: 12 }} />
+                            <MinusOutlined style={{ fontSize: 12, marginRight: 10 }} />
                             Unfollow
                         </>
                     ) : (
                         <>
-                            <PlusOutlined style={{ fontSize: 12 }} />
+                            <PlusOutlined style={{ fontSize: 12, marginRight: 10 }} />
                             Follow
                         </>
                     )}

@@ -78,9 +78,9 @@ export const useOtherUserCommentListing = (id: string) => {
     };
 
     return useQuery<Post[]>({
-        queryKey: commentKeys.listingAnotherAccount(id),
+        queryKey: commentKeys.listingAnotherComment(id),
         queryFn: fetchComments,
         placeholderData: keepPreviousData,
-        enabled: Boolean(id),
+        enabled: !!id,
     });
 };

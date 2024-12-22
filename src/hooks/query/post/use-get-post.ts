@@ -1,8 +1,9 @@
-import axiosInstance, { request } from '@/apis/request';
-import { postKeys } from '@/consts/factory/post';
-import { Response } from '@/types';
-import { Post } from '@/types/post/post';
+import type { Post } from '@/types/post/post';
+
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
+import { request } from '@/apis/request';
+import { postKeys } from '@/consts/factory/post';
 
 export const useGetPost = (id: string) => {
     const fetchPost = async (): Promise<Post> => {
@@ -18,4 +19,3 @@ export const useGetPost = (id: string) => {
         enabled: !!id,
     });
 };
-

@@ -1,13 +1,16 @@
 import { Card, Divider, Empty, Flex, Typography } from 'antd';
+import { useLocation } from 'react-router-dom';
 
 import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
-import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
+import { useGetFollows, useGetOtherFollow } from '@/hooks/query/follow/use-follow-listing';
 
 import { EventsWrapper } from '../home/layout/events-wrapper';
 import { FollowItem } from './component/follow-item';
 
 const FollowPage = () => {
-    const { data: follows } = useGetFollows();
+    const location = useLocation();
+    const state = location.state as { id?: string };
+    const { data: follows } = state?.id ? useGetOtherFollow(state.id) : useGetFollows();
 
     return (
         <Card>

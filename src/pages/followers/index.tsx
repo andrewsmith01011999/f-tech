@@ -1,14 +1,16 @@
 import { Card, Divider, Empty, Flex, Typography } from 'antd';
+import { useLocation } from 'react-router-dom';
 
 import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
-import { useGetFollowers } from '@/hooks/query/follow/use-follow-listing';
-import { useGetRecommendations } from '@/hooks/query/follow/use-follow-top-accounts';
+import { useGetFollowers, useGetOtherFollower } from '@/hooks/query/follow/use-follow-listing';
 
 import { FollowItem } from '../followings/component/follow-item';
 import { EventsWrapper } from '../home/layout/events-wrapper';
 
 const FollowerPage = () => {
-    const { data: followers } = useGetFollowers();
+    const location = useLocation();
+    const state = location.state as { id?: string };
+    const { data: followers } = state?.id ? useGetOtherFollower(state.id) : useGetFollowers();
 
     return (
         <Card>
@@ -22,7 +24,7 @@ const FollowerPage = () => {
                             <FollowItem key={account?.accountId} account={account} isFollow={false} />
                         ))
                     ) : (
-                        <Empty description="No recommendation" />
+                        <Empty description="No followers" />
                     )}
                 </EventsWrapper>
             </Flex>

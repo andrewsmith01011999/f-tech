@@ -3,7 +3,7 @@ import type { PaginationParams } from '@/types';
 import type { ReportAccountReasons } from '@/types/report/report';
 import type { TabsProps } from 'antd';
 
-import { Button, Empty, Flex, Form, Modal } from 'antd';
+import { Button, Empty, Flex, Modal } from 'antd';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -12,10 +12,9 @@ import { BaseTab } from '@/components/core/tab';
 import { PostItem } from '@/components/post/post-item';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { useCreateReport } from '@/hooks/mutate/report/use-create-report';
-import { useCurrentUserCommentListing, useOtherUserCommentListing } from '@/hooks/query/comment/use-comment-listing';
-import { usePostsAnotherAccountListing, usePostsListing } from '@/hooks/query/post/use-posts-listing';
+import { useOtherUserCommentListing } from '@/hooks/query/comment/use-comment-listing';
+import { usePostsAnotherAccountListing } from '@/hooks/query/post/use-posts-listing';
 import { useMessage } from '@/hooks/use-message';
-import { PostStatus } from '@/types/post/post';
 import { reportAccountReasons } from '@/types/report/report';
 
 import { PostWrapper } from '../post/layout/post-wrapper';
