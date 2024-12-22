@@ -1,7 +1,7 @@
 import { useCommentByPost } from '@/hooks/query/comment/use-comment-by-post';
 import { CommentCreatePayload, CreateReplyPayload, TComment } from '@/types/comment/comment';
 import { Comment } from '@ant-design/compatible';
-import { Button, Dropdown, Flex, Form, Input, InputRef, List, Modal, Tooltip } from 'antd';
+import { Button, Dropdown, Flex, Form, Input, InputRef, List, Modal, Tooltip, Typography } from 'antd';
 import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 import { CloseOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
@@ -15,9 +15,11 @@ import { useOnClickOutside } from 'usehooks-ts';
 import { useUpdateComment } from '@/hooks/mutate/comment/use-update-comment';
 import { useCreateReply } from '@/hooks/mutate/comment/use-create-comment';
 import { postKeys } from '@/consts/factory/post';
-import { SOCKET_EVENT } from '@/consts/common';
+import { DATE_FORMAT, FULL_TIME_FORMAT, SOCKET_EVENT } from '@/consts/common';
 import { useWebSocket } from '@/utils/socket';
 import { useSearchParams } from 'react-router-dom';
+import dayjs from 'dayjs';
+import dayjsConfig from '@/utils/dayjs';
 
 const { confirm } = Modal;
 
@@ -235,9 +237,17 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                                                 />
                                             </Flex>
                                         ) : (
-                                            <Button type="text" onClick={() => handleShowReply(rep.commentId)}>
-                                                Reply
-                                            </Button>
+                                            <Flex vertical gap={8}>
+                                                {rep?.updatedDate && (
+                                                    <Typography.Text type="secondary">
+                                                        {dayjsConfig(rep?.updatedDate).fromNow()}
+                                                    </Typography.Text>
+                                                )}
+
+                                                <Button type="text" onClick={() => handleShowReply(rep.commentId)}>
+                                                    Reply
+                                                </Button>
+                                            </Flex>
                                         )}
                                     </>,
                                 ]}
@@ -367,9 +377,17 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                                         />
                                     </Flex>
                                 ) : (
-                                    <Button type="text" onClick={() => handleShowReply(item.commentId)}>
-                                        Reply
-                                    </Button>
+                                    <Flex vertical gap={8}>
+                                        {item?.updatedDate && (
+                                            <Typography.Text type="secondary">
+                                                {dayjsConfig(item?.updatedDate).fromNow()}
+                                            </Typography.Text>
+                                        )}
+
+                                        <Button type="text" onClick={() => handleShowReply(item.commentId)}>
+                                            Reply
+                                        </Button>
+                                    </Flex>
                                 )}
                             </>,
                         ]}

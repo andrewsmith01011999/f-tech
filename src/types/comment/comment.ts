@@ -11,6 +11,9 @@ export type TComment = {
     content: string;
     account: Account;
     post: Post;
+    replies: TComment[];
+    createdDate: string;
+    updatedDate: string;
 };
 
 export type UpdateCommentPayload = {
