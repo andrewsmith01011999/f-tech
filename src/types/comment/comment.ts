@@ -1,4 +1,5 @@
-import { Account } from '../account';
+import type { Account } from '../account';
+import type { Post } from '../post/post';
 
 export type CommentCreatePayload = {
     content: string;
@@ -9,17 +10,17 @@ export type TComment = {
     commentId: string;
     content: string;
     account: Account;
-    replies: TComment[];
+    post: Post;
 };
 
 export type UpdateCommentPayload = {
-    content: string
-}
+    content: string;
+};
 
 export type CreateReplyPayload = {
     content: string;
     parentCommentId: string;
     postId: string;
-}
+};
 
-export type TReply = {}
+export type TReply = {};

@@ -26,6 +26,8 @@ export const PATHS = {
     BOOKMARKS: '/bookmarks',
     DEPOSIT: '/deposit',
     RECOMMENDATIONS: '/recommendations',
+    FOLLOWING: '/followings',
+    FOLLOWER: '/followers',
     EXPLORE: '/explore',
     ADMIN_CATEGORY: '/admin/category',
     ADMIN_TOPICS: '/admin/topics',

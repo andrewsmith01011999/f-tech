@@ -1,18 +1,20 @@
-import { Avatar, Button, Flex, Form, Image, Input, Space, Typography, Upload, UploadProps } from 'antd';
-import BackgroundPlaceholder from '/public/background-placeholder.svg';
-import AvatarPlaceholder from '/public/avatar-placeholder.svg';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
-import { useState } from 'react';
+import type { RootState } from '@/stores';
+
 import { CameraOutlined } from '@ant-design/icons';
-import { useUploadFile } from '@/hooks/use-upload-file';
-import { useUpdateProfile } from '@/hooks/mutate/profile/use-update-profile';
 import { useQueryClient } from '@tanstack/react-query';
-import { useMessage } from '@/hooks/use-message';
+import { Avatar, Button, Flex, Image, Input, Space, Typography, Upload } from 'antd';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import AvatarPlaceholder from '/public/avatar-placeholder.svg';
+import BackgroundPlaceholder from '/public/background-placeholder.svg';
 import { authKeys } from '@/consts/factory/auth';
-import { useDispatch } from 'react-redux';
-import { setAccountState } from '@/stores/account';
-import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
+import { useUpdateProfile } from '@/hooks/mutate/profile/use-update-profile';
+import { useGetFollowers, useGetFollows } from '@/hooks/query/follow/use-follow-listing';
+import { useMessage } from '@/hooks/use-message';
+import { useUploadFile } from '@/hooks/use-upload-file';
+import { PATHS } from '@/utils/paths';
 
 export const ProfileInfo = () => {
     const dispatch = useDispatch();
@@ -25,10 +27,12 @@ export const ProfileInfo = () => {
 
     const queryClient = useQueryClient();
     const { success, error } = useMessage();
+    const navigate = useNavigate();
 
     const { mutate: updateProfile } = useUpdateProfile();
 
     const { data: follows } = useGetFollows();
+    const { data: followers } = useGetFollowers();
 
     const update = () => {
         updateProfile(
@@ -142,17 +146,13 @@ export const ProfileInfo = () => {
                     <Typography.Text>{bio || accountInfo?.bio}</Typography.Text>
                 )}
                 <Flex gap={24}>
-                    <Space size="small">
-                        <Typography.Text>
-                            {follows?.filter(follow => follow?.follower?.accountId === accountInfo?.accountId)?.length}
-                        </Typography.Text>
+                    <Space size="small" onClick={() => navigate(PATHS.FOLLOWING)}>
+                        <Typography.Text>{follows?.length}</Typography.Text>
                         <Typography.Text type="secondary">Followings</Typography.Text>
                     </Space>
 
-                    <Space>
-                        <Typography.Text>
-                            {follows?.filter(follow => follow?.followee?.accountId === accountInfo?.accountId)?.length}
-                        </Typography.Text>
+                    <Space onClick={() => navigate(PATHS.FOLLOWER)}>
+                        <Typography.Text>{followers?.length}</Typography.Text>
                         <Typography.Text type="secondary">Followers</Typography.Text>
                     </Space>
                 </Flex>

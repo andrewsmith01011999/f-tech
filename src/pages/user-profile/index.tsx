@@ -1,21 +1,27 @@
-import { Button, Empty, Flex, Form, Modal, TabsProps } from 'antd';
-import { ProfileInfo } from './components/profile-info';
+import type { RootState } from '@/stores';
+import type { PaginationParams } from '@/types';
+import type { ReportAccountReasons } from '@/types/report/report';
+import type { TabsProps } from 'antd';
+
+import { Button, Empty, Flex, Form, Modal } from 'antd';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
 import { BaseTab } from '@/components/core/tab';
 import { PostItem } from '@/components/post/post-item';
-import { Medias } from './components/medias';
-import { PostWrapper } from '../post/layout/post-wrapper';
-import { PaginationParams } from '@/types';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { usePostsAnotherAccountListing, usePostsListing } from '@/hooks/query/post/use-posts-listing';
-import { RootState } from '@/stores';
-import { useSelector } from 'react-redux';
-import { useState } from 'react';
-import { ReportAccountReasons, reportAccountReasons } from '@/types/report/report';
-import ReportReason from './components/report-reason';
 import { useCreateReport } from '@/hooks/mutate/report/use-create-report';
+import { useCurrentUserCommentListing, useOtherUserCommentListing } from '@/hooks/query/comment/use-comment-listing';
+import { usePostsAnotherAccountListing, usePostsListing } from '@/hooks/query/post/use-posts-listing';
 import { useMessage } from '@/hooks/use-message';
-import { useParams } from 'react-router-dom';
 import { PostStatus } from '@/types/post/post';
+import { reportAccountReasons } from '@/types/report/report';
+
+import { PostWrapper } from '../post/layout/post-wrapper';
+import { Medias } from './components/medias';
+import { ProfileInfo } from './components/profile-info';
+import ReportReason from './components/report-reason';
 
 const UserProfilePage = () => {
     const { id } = useParams<{ id: string }>();
@@ -36,6 +42,8 @@ const UserProfilePage = () => {
         return null;
     }
 
+    const { data: comments } = useOtherUserCommentListing(id as string);
+
     const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReport(id as string);
 
     const items: TabsProps['items'] = [
@@ -51,7 +59,15 @@ const UserProfilePage = () => {
         {
             key: '2',
             label: 'Replies',
-            children: <div></div>,
+            children: (
+                <PostWrapper showHeader={false}>
+                    {!comments || !comments.length ? (
+                        <Empty />
+                    ) : (
+                        comments.map(c => <PostItem data={c.post} key={c.post.postId} showComment={true} />)
+                    )}
+                </PostWrapper>
+            ),
         },
         {
             key: '3',

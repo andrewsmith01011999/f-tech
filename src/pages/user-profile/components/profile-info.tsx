@@ -1,8 +1,5 @@
-import { Avatar, Button, Dropdown, Flex, Image, Modal, Space, Typography } from 'antd';
-import BackgroundPlaceholder from '/public/background-placeholder.svg';
-import AvatarPlaceholder from '/public/avatar-placeholder.svg';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
+import type { RootState } from '@/stores';
+
 import {
     CheckCircleOutlined,
     EllipsisOutlined,
@@ -11,16 +8,21 @@ import {
     PlusCircleFilled,
     StopOutlined,
 } from '@ant-design/icons';
-import { useToggleBlock } from '@/hooks/mutate/block/use-toggle-block';
-import { useBlocksListing } from '@/hooks/query/block/use-block-listing';
-import { useMessage } from '@/hooks/use-message';
 import { useQueryClient } from '@tanstack/react-query';
-import { blockKeys } from '@/consts/factory/block';
-import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
-import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
-import { followKeys } from '@/consts/factory/follow';
-import { useProfileById } from '@/hooks/query/auth/use-profile';
+import { Avatar, Button, Dropdown, Flex, Image, Modal, Space, Typography } from 'antd';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
+import AvatarPlaceholder from '/public/avatar-placeholder.svg';
+import BackgroundPlaceholder from '/public/background-placeholder.svg';
+import { blockKeys } from '@/consts/factory/block';
+import { followKeys } from '@/consts/factory/follow';
+import { useToggleBlock } from '@/hooks/mutate/block/use-toggle-block';
+import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
+import { useProfileById } from '@/hooks/query/auth/use-profile';
+import { useBlocksListing } from '@/hooks/query/block/use-block-listing';
+import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
+import { useMessage } from '@/hooks/use-message';
 
 const { confirm } = Modal;
 

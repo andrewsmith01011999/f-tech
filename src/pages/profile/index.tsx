@@ -1,14 +1,19 @@
-import { Empty, TabsProps } from 'antd';
-import { ProfileInfo } from './components/profile-info';
+import type { RootState } from '@/stores';
+import type { PaginationParams } from '@/types';
+import type { TabsProps } from 'antd';
+
+import { Empty } from 'antd';
+import { useSelector } from 'react-redux';
+
 import { BaseTab } from '@/components/core/tab';
 import { PostItem } from '@/components/post/post-item';
-import { Medias } from './components/medias';
-import { PostWrapper } from '../post/layout/post-wrapper';
-import { PaginationParams } from '@/types';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
-import { RootState } from '@/stores';
-import { useSelector } from 'react-redux';
+import { useCurrentUserCommentListing } from '@/hooks/query/comment/use-comment-listing';
+import { useCurrentUserPostListing, usePostsListing } from '@/hooks/query/post/use-posts-listing';
+
+import { PostWrapper } from '../post/layout/post-wrapper';
+import { Medias } from './components/medias';
+import { ProfileInfo } from './components/profile-info';
 
 const ProfilePage = () => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
@@ -18,11 +23,13 @@ const ProfilePage = () => {
         perPage: DEFAULT_PAGE_SIZE,
     };
 
-    const { data } = usePostsListing({
-        params: {
-            ...initialParams,
-            accountId: accountInfo?.accountId,
-        },
+    const { data } = useCurrentUserPostListing({
+        ...initialParams,
+        accountId: accountInfo?.accountId,
+    });
+
+    const { data: comments } = useCurrentUserCommentListing({
+        ...initialParams,
     });
 
     const items: TabsProps['items'] = [
@@ -38,7 +45,15 @@ const ProfilePage = () => {
         {
             key: '2',
             label: 'Replies',
-            children: <div></div>,
+            children: (
+                <PostWrapper showHeader={false}>
+                    {!comments || !comments.length ? (
+                        <Empty />
+                    ) : (
+                        comments.map(c => <PostItem data={c.post} key={c.post.postId} showComment={true} />)
+                    )}
+                </PostWrapper>
+            ),
         },
         {
             key: '3',
