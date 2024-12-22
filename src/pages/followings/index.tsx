@@ -1,13 +1,8 @@
-import type { Account } from '@/types/account';
-import type { Follow } from '@/types/follow';
-
 import { Card, Divider, Empty, Flex, Typography } from 'antd';
 
 import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
 import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
-import { useGetRecommendations } from '@/hooks/query/follow/use-follow-top-accounts';
 
-import { RecommendedItem } from '../home/components/recommended-item';
 import { EventsWrapper } from '../home/layout/events-wrapper';
 import { FollowItem } from './component/follow-item';
 

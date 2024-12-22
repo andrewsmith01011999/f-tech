@@ -98,8 +98,17 @@ export const FollowItem = ({ account, isFollow }: FollowItemProps) => {
                         handleToggleFollow();
                     }}
                 >
-                    <PlusOutlined style={{ fontSize: 12 }} />
-                    Follow
+                    {account?.following ? (
+                        <>
+                            <MinusOutlined style={{ fontSize: 12 }} />
+                            Unfollow
+                        </>
+                    ) : (
+                        <>
+                            <PlusOutlined style={{ fontSize: 12 }} />
+                            Follow
+                        </>
+                    )}
                 </Button>
             )}
         </Flex>

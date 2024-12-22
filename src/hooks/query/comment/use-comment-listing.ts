@@ -1,5 +1,6 @@
 import type { PaginationParams } from '@/types';
 import type { TComment } from '@/types/comment/comment';
+import type { Post } from '@/types/post/post';
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
@@ -25,8 +26,8 @@ export const useCommentListing = () => {
 };
 
 export const useCurrentUserCommentListing = (params: CommentListingProps) => {
-    const fetchCommentByCurrentUser = async (): Promise<TComment[]> => {
-        const { entity } = await request<TComment[]>('get', `/comment/getall/by-current-user`, params, {
+    const fetchCommentByCurrentUser = async (): Promise<Post[]> => {
+        const { entity } = await request<Post[]>('get', `/post/getall/reply-tab/by-current-user`, params, {
             paramsSerializer: {
                 indexes: null,
             },
@@ -35,7 +36,7 @@ export const useCurrentUserCommentListing = (params: CommentListingProps) => {
         return entity;
     };
 
-    return useQuery<TComment[]>({
+    return useQuery<Post[]>({
         queryKey: commentKeys.listingParam(params),
         queryFn: fetchCommentByCurrentUser,
         placeholderData: keepPreviousData,
@@ -61,10 +62,10 @@ export const useCurrentUserCommentListing = (params: CommentListingProps) => {
 // };
 
 export const useOtherUserCommentListing = (id: string) => {
-    const fetchComments = async (): Promise<TComment[]> => {
-        const { entity } = await request<TComment[]>(
+    const fetchComments = async (): Promise<Post[]> => {
+        const { entity } = await request<Post[]>(
             'get',
-            `/comment/getall/other-user/${id}`,
+            `/post/getall/reply-tab/other-user/${id}`,
             {},
             {
                 paramsSerializer: {
@@ -76,10 +77,10 @@ export const useOtherUserCommentListing = (id: string) => {
         return entity;
     };
 
-    return useQuery<TComment[]>({
+    return useQuery<Post[]>({
         queryKey: commentKeys.listingAnotherAccount(id),
         queryFn: fetchComments,
         placeholderData: keepPreviousData,
-        enabled: !!id,
+        enabled: Boolean(id),
     });
 };

@@ -23,6 +23,7 @@ export interface Account {
     bio?: string;
     countFollower?: number;
     countFollowee?: number;
+    following?: boolean;
 }
 
 export interface Wallet {
