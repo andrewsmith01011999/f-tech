@@ -25,17 +25,27 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
             perPage: DEFAULT_PAGE_SIZE,
         },
     });
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     if (!notification) return null;
 
-    const notiParsed = notification?.message?.includes('{') 
-     ? JSON.parse(notification?.message ?? '{}') : notification?.message;
+    const notiParsed = notification?.message?.includes('{')
+        ? JSON.parse(notification?.message ?? '{}')
+        : notification?.message;
 
     return (
-        <Card css={styles} onClick={() => {
-            notiParsed?.id && notiParsed?.entity === 'Post' && navigate(PATHS.POST_DETAIL.replace(':id', notiParsed?.id))
-        }}>
+        <Card
+            css={styles}
+            onClick={() => {
+                notiParsed?.id &&
+                    notiParsed?.entity === 'Post' &&
+                    navigate(
+                        `${PATHS.POST_DETAIL.replace(':id', notiParsed?.id)}${
+                            notification?.commentId ? `&commentId=${notification.commentId}` : ''
+                        }`,
+                    );
+            }}
+        >
             <Flex vertical gap={6}>
                 <Flex align="center" gap={10}>
                     <div>
