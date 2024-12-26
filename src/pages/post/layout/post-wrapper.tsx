@@ -1,24 +1,30 @@
-import { SecondaryButton } from '@/components/core/secondary-button';
-import { Avatar, Button, Card, Divider, Dropdown, Flex, Input, Modal, Space, Tag } from 'antd';
-import React, { FC, useState } from 'react';
-import { CreatePost } from '../components/create-post';
+import type { TagListingParams } from '@/hooks/query/tag/use-tags-listing';
+import type { RootState } from '@/stores';
+import type { PostModalType } from '@/stores/post';
+import type { ReportAccountReasons } from '@/types/report/report';
+import type { FC } from 'react';
+
 import { CaretDownFilled } from '@ant-design/icons';
-import { TagListingParams, useTagsListing } from '@/hooks/query/tag/use-tags-listing';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { useDispatch } from 'react-redux';
-import { PostModalType, setPost } from '@/stores/post';
+import { Avatar, Button, Card, Divider, Dropdown, Flex, Input, Modal, Space, Tag } from 'antd';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { UpdatePost } from '../components/update-post';
-import DraftList from '../components/draft-list';
-import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
-import { ReportAccountReasons, reportAccountReasons } from '@/types/report/report';
+
+import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
+import { SecondaryButton } from '@/components/core/secondary-button';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { useCreateReportPost } from '@/hooks/mutate/report/use-create-report';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
+import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
+import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
+import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
 import { useMessage } from '@/hooks/use-message';
 import ReportReason from '@/pages/user-profile/components/report-reason';
-import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
-import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
+import { setPost } from '@/stores/post';
+import { reportAccountReasons } from '@/types/report/report';
+
+import { CreatePost } from '../components/create-post';
+import DraftList from '../components/draft-list';
+import { UpdatePost } from '../components/update-post';
 
 interface PostWrapperProps {
     children: React.ReactNode;
