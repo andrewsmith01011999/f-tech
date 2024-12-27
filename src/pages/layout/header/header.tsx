@@ -1,11 +1,7 @@
-import React, { useEffect, useState, type FC } from 'react';
+import type { RootState } from '@/stores';
+
 import '../index.less';
 
-import { theme as antTheme, Avatar, Badge, Dropdown, Flex, Layout, notification, Typography } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
-import Logo from '/public/ftech-logo.svg';
 import {
     CaretDownFilled,
     LogoutOutlined,
@@ -15,24 +11,30 @@ import {
     UserOutlined,
     WalletOutlined,
 } from '@ant-design/icons';
-import BaseInput from '@/components/core/input';
-import { PATHS } from '@/utils/paths';
-import BackgroundPlaceholder from '/public/background-placeholder.svg';
-import { RootState } from '@/stores';
-import { loggout } from '@/stores/account';
-import NotificationIcon from './components/notification';
-import { useDebounce } from '@/hooks/use-debounce';
-import { useNotifications } from '@/hooks/query/notification/use-notifications';
-import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
-import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
-import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, SOCKET_EVENT } from '@/consts/common';
-import { useWebSocket } from '@/utils/socket';
 import { useQueryClient } from '@tanstack/react-query';
-import { commentKeys } from '@/consts/factory/comment';
-import { upvoteKeys } from '@/consts/factory/upvote';
-import { postKeys } from '@/consts/factory/post';
+import { Avatar, Badge, Dropdown, Flex, Layout, notification, theme as antTheme, Typography } from 'antd';
+import React, { type FC, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import BackgroundPlaceholder from '/public/background-placeholder.svg';
+import Logo from '/public/ftech-logo.svg';
+import BaseInput from '@/components/core/input';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, SOCKET_EVENT } from '@/consts/common';
 import { bookmarkKeys } from '@/consts/factory/bookmark';
+import { commentKeys } from '@/consts/factory/comment';
+import { postKeys } from '@/consts/factory/post';
+import { upvoteKeys } from '@/consts/factory/upvote';
+import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
+import { useNotifications } from '@/hooks/query/notification/use-notifications';
+import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
+import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
+import { useDebounce } from '@/hooks/use-debounce';
+import { loggout } from '@/stores/account';
+import { PATHS } from '@/utils/paths';
+import { useWebSocket } from '@/utils/socket';
+
+import NotificationIcon from './components/notification';
 
 const { Header } = Layout;
 
@@ -69,6 +71,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     // });
 
     const { data: notifications } = useNotifications();
+
     const resetKeyword = () => {
         setKeyword('  ');
     };
@@ -152,9 +155,9 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             });
         });
 
-        socket.on(SOCKET_EVENT.NOTIFICATION, (data) => {
+        socket.on(SOCKET_EVENT.NOTIFICATION, data => {
             console.log('notification', data);
-        })
+        });
 
         socket.on('disconnect', () => {
             console.log('disconnected');
@@ -177,7 +180,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
 
             <div className="layout-page-header-main">
                 <div onClick={toggle}>
-                    <span id="sidebar-trigger">{collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}</span>
+                    {/* <span id="sidebar-trigger">{collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}</span> */}
                 </div>
 
                 <div className="search-container">
@@ -190,7 +193,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
                     <BaseInput.Search
                         placeholder="Type here to search..."
                         className="search"
-                        onChange={e => setKeyword(e.target.value)}
+                        onChange={e => setKeyword(encodeURIComponent(e.target.value))}
                         // onBlur={() => setOpenSearch(false)}
                         // onFocus={() => setOpenSearch(true)}
                         onKeyDown={handleNavigateWithParams}

@@ -11,7 +11,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, Button, Dropdown, Flex, Image, Modal, Space, Typography } from 'antd';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
@@ -21,8 +21,9 @@ import { useToggleBlock } from '@/hooks/mutate/block/use-toggle-block';
 import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
 import { useProfileById } from '@/hooks/query/auth/use-profile';
 import { useBlocksListing } from '@/hooks/query/block/use-block-listing';
-import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
+import { useGetFollows, useGetOtherFollow, useGetOtherFollower } from '@/hooks/query/follow/use-follow-listing';
 import { useMessage } from '@/hooks/use-message';
+import { PATHS } from '@/utils/paths';
 
 const { confirm } = Modal;
 
@@ -32,6 +33,7 @@ interface ProfileInfoProps {
 
 export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
+    const navigate = useNavigate();
 
     const { id } = useParams();
 
@@ -40,14 +42,18 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
     const { success, error } = useMessage();
     const queryClient = useQueryClient();
 
-    const { data: follows } = useGetFollows();
+    // const { data: follows } = useGetFollows();
     const { data: blocks } = useBlocksListing();
     const { mutate: toggleBlock } = useToggleBlock();
     const { mutate: toggleFollow } = useToggleFollow();
 
     const isBlocked = blocks?.find(block => block?.accountId === userInfo?.accountId);
 
-    const isFollowed = follows?.find(follow => follow?.followee?.accountId === userInfo?.accountId);
+    // const isFollowed = follows?.find(follow => follow?.followee?.accountId === userInfo?.accountId);
+
+    const { data: currentFollow } = useGetFollows();
+    const { data: follows } = useGetOtherFollow(id as string);
+    const { data: followers } = useGetOtherFollower(id as string);
 
     const handleToggleBlock = () => {
         confirm({
@@ -127,7 +133,7 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                     </Dropdown>
 
                     <Button onClick={handleToggleFollow} style={{ position: 'absolute', top: 280, right: 20 }}>
-                        {isFollowed ? 'UnFollow' : 'Follow'}
+                        {currentFollow?.find(f => f.accountId === userInfo?.accountId) ? 'UnFollow' : 'Follow'}
                     </Button>
                 </Flex>
             </div>
@@ -136,13 +142,13 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                 <Typography.Text type="secondary">@{userInfo?.handle || accountInfo?.handle}</Typography.Text>
                 <Typography.Text>#Beingnobody_goingnowhere.</Typography.Text>
                 <Flex gap={24}>
-                    <Space size="small">
-                        <Typography.Text>{userInfo?.countFollowee}</Typography.Text>
+                    <Space size="small" onClick={() => navigate(PATHS.FOLLOWING, { state: { id: id } })}>
+                        <Typography.Text>{follows?.length}</Typography.Text>
                         <Typography.Text type="secondary">Followings</Typography.Text>
                     </Space>
 
-                    <Space>
-                        <Typography.Text>{userInfo?.countFollower}</Typography.Text>
+                    <Space onClick={() => navigate(PATHS.FOLLOWER, { state: { id: id } })}>
+                        <Typography.Text>{followers?.length}</Typography.Text>
                         <Typography.Text type="secondary">Followers</Typography.Text>
                     </Space>
                 </Flex>

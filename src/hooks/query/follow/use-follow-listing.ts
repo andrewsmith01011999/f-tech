@@ -34,6 +34,36 @@ export const useGetFollows = () => {
     });
 };
 
+export const useGetOtherFollow = (id: string) => {
+    const fetchOtherFollow = async (): Promise<Account[]> => {
+        const { entity } = await request<Account[]>('get', `/follow/get-another-follows/${id}`);
+
+        return entity;
+    };
+
+    return useQuery({
+        queryKey: followKeys.getFollow(id),
+        queryFn: fetchOtherFollow,
+        placeholderData: keepPreviousData,
+        enabled: !!id,
+    });
+};
+
+export const useGetOtherFollower = (id: string) => {
+    const fetchOtherFollower = async (): Promise<Account[]> => {
+        const { entity } = await request<Account[]>('get', `/follow/get-another-followers/${id}`);
+
+        return entity;
+    };
+
+    return useQuery({
+        queryKey: followKeys.getFollower(id),
+        queryFn: fetchOtherFollower,
+        placeholderData: keepPreviousData,
+        enabled: !!id,
+    });
+};
+
 export const useGetFollowers = () => {
     const fetchFollowers = async (): Promise<Account[]> => {
         const { entity } = await request<Account[]>('get', `/follow/get-followers`);

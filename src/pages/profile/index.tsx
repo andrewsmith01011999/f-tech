@@ -50,7 +50,7 @@ const ProfilePage = () => {
                     {!comments || !comments.length ? (
                         <Empty />
                     ) : (
-                        comments.map(c => <PostItem data={c.post} key={c.post.postId} showComment={true} />)
+                        comments.map(c => <PostItem data={c} key={c.postId} showComment={true} />)
                     )}
                 </PostWrapper>
             ),

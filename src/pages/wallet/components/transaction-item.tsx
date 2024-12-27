@@ -1,10 +1,12 @@
-import { FULL_TIME_FORMAT } from '@/consts/common';
-import { formatSignedNumber } from '@/utils/number';
+import type { FC } from 'react';
+
 import { css } from '@emotion/react';
 import { Avatar, Flex, Tooltip, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { title } from 'process';
-import { FC } from 'react';
+
+import { FULL_TIME_FORMAT } from '@/consts/common';
+import { formatSignedNumber } from '@/utils/number';
 
 interface TransactionItemProps {
     image: string;

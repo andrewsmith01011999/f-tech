@@ -90,7 +90,7 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
                         handleToggleFollow();
                     }}
                 >
-                    <MinusOutlined style={{ fontSize: 12 }} />
+                    <MinusOutlined style={{ fontSize: 12, marginRight: 2 }} />
                     Unfollow
                 </Button>
             ) : (
@@ -102,7 +102,7 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
                         handleToggleFollow();
                     }}
                 >
-                    <PlusOutlined style={{ fontSize: 12 }} />
+                    <PlusOutlined style={{ fontSize: 12, marginRight: 2 }} />
                     Follow
                 </Button>
             )}
