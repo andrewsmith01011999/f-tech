@@ -93,7 +93,7 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
         <Flex vertical gap={92}>
             <div style={{ position: 'relative' }}>
                 <Image
-                    src={userInfo?.coverImage || accountInfo?.coverImage || BackgroundPlaceholder}
+                    src={userInfo?.coverImage || BackgroundPlaceholder}
                     alt="logo"
                     width="100%"
                     height={260}
@@ -102,20 +102,20 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                 <Avatar
                     shape="circle"
                     size={136}
-                    src={userInfo?.avatar || accountInfo?.avatar || AvatarPlaceholder}
+                    src={userInfo?.avatar || AvatarPlaceholder}
                     style={{ position: 'absolute', top: 200, left: 20 }}
                 />
 
                 <Flex gap={20}>
-                    <Dropdown
+                    {/* <Dropdown
                         menu={{
                             items: [
-                                {
-                                    key: '1',
-                                    icon: <ExclamationCircleOutlined />,
-                                    label: 'Report',
-                                    onClick: () => setIsShowReportReasons(true),
-                                },
+                                // {
+                                //     key: '1',
+                                //     icon: <ExclamationCircleOutlined />,
+                                //     label: 'Report',
+                                //     onClick: () => setIsShowReportReasons(true),
+                                // },
                                 {
                                     key: '2',
                                     icon: isBlocked ? <CheckCircleOutlined /> : <StopOutlined />,
@@ -130,8 +130,10 @@ export const ProfileInfo = ({ setIsShowReportReasons }: ProfileInfoProps) => {
                             variant="outlined"
                             style={{ position: 'absolute', top: 280, right: 120 }}
                         />
-                    </Dropdown>
-
+                    </Dropdown> */}
+                    <Button onClick={handleToggleBlock} style={{ position: 'absolute', top: 280, right: 120 }}>
+                        {isBlocked ? 'Unblock' : 'Block'}
+                    </Button>
                     <Button onClick={handleToggleFollow} style={{ position: 'absolute', top: 280, right: 20 }}>
                         {currentFollow?.find(f => f.accountId === userInfo?.accountId) ? 'UnFollow' : 'Follow'}
                     </Button>

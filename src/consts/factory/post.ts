@@ -5,5 +5,5 @@ export const postKeys = {
     get: (id: string) => [...postKeys.all, 'get', id] as const,
     download: (id: string) => [...postKeys.all, 'download', id] as const,
     drafts: (params: object = {}) => [...postKeys.all, 'drafts', params] as const,
+    updateStatus: (id: string, status: string) => [...postKeys.all, 'updateStatus', id, status] as const,
 };
-

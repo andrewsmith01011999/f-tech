@@ -1,44 +1,34 @@
-import { UserInfo } from '@/components/user/user-info';
-import {
-    Button,
-    Card,
-    Flex,
-    Form,
-    Image,
-    Input,
-    message,
-    Modal,
-    Select,
-    Space,
-    Tooltip,
-    Upload,
-    UploadFile,
-    UploadProps,
-} from 'antd';
-import GallerySvg from '/public/gallery.svg';
-import EmojiSvg from '/public/emoji.svg';
-import { OnAction } from '@/types';
-import { FC, useEffect, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { postKeys } from '@/consts/factory/post';
-import { UpdatePostPayload } from '@/types/post/post';
-import { useMessage } from '@/hooks/use-message';
-import { useUpdateDraftToPost, useUpdatePost, useUpdatePostDraft } from '@/hooks/mutate/post/use-update-post';
-import { useGetPost } from '@/hooks/query/post/use-get-post';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
-import { useUploadFile } from '@/hooks/use-upload-file';
-import { TopicListingParams, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
-import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { useDispatch } from 'react-redux';
-import { setPost } from '@/stores/post';
+import type { TopicListingParams } from '@/hooks/query/topic/use-topics-listing';
+import type { RootState } from '@/stores';
+import type { OnAction } from '@/types';
+import type { UpdatePostPayload } from '@/types/post/post';
+import type { UploadFile, UploadProps } from 'antd';
+import type { FC } from 'react';
+
 import { PaperClipOutlined } from '@ant-design/icons';
+import { useQueryClient } from '@tanstack/react-query';
+import { Button, Card, Flex, Form, Image, Input, message, Modal, Select, Space, Tooltip, Upload } from 'antd';
+import { getStorage, ref } from 'firebase/storage';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import EmojiSvg from '/public/emoji.svg';
+import GallerySvg from '/public/gallery.svg';
 import Tiptap from '@/components/tiptap/tiptap';
+import { UserInfo } from '@/components/user/user-info';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { postKeys } from '@/consts/factory/post';
 import { useCreatePost } from '@/hooks/mutate/post/use-create-post';
 import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useUpdateDraftToPost, useUpdatePost, useUpdatePostDraft } from '@/hooks/mutate/post/use-update-post';
 import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
+import { useGetPost } from '@/hooks/query/post/use-get-post';
+import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
+import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
+import { useMessage } from '@/hooks/use-message';
+import { useUploadFile } from '@/hooks/use-upload-file';
+import { setPost } from '@/stores/post';
 
 interface UpdatePostProps {
     onCancel?: OnAction;
@@ -100,6 +90,8 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
         },
     });
 
+    console.log(urlFileList);
+
     const onFinish = (values: UpdatePostPayload) => {
         updatePost(
             {
@@ -111,6 +103,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                 }),
                 ...(urlFileList.length > 0 && {
                     linkFile: urlFileList[0] as string,
+                    postFileUrlRequest: urlFileList.map(url => ({ url: url as string })),
                 }),
             },
             {
@@ -124,7 +117,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                     setAnotherFileList([]);
                     queryClient.invalidateQueries({
                         queryKey: postKeys.drafts(),
-                    })
+                    });
                 },
                 onError: err => {
                     error(err.message);
@@ -139,8 +132,10 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
 
     const onRemoveFile = (file: UploadFile) => {
         const index = fileList.indexOf(file);
+
         if (index > -1) {
             const newImgUrlList = imgUrlList.slice();
+
             newImgUrlList.splice(index, 1);
             setImgUrlList(newImgUrlList);
             setFileList(fileList.filter(item => item.uid !== file.uid));
@@ -153,8 +148,10 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
 
     const onRemoveAnotherFile = (file: UploadFile) => {
         const index = anotherFileList.indexOf(file);
+
         if (index > -1) {
             const newImgUrlList = urlFileList.slice();
+
             newImgUrlList.splice(index, 1);
             setUrlFileList(newImgUrlList);
             setAnotherFileList(anotherFileList.filter(item => item.uid !== file.uid));
@@ -168,8 +165,10 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                 url: imgUrlList[index],
             };
         });
+
         setFileList(appendFieldFileList);
     }, [imgUrlList]);
+    const storage = getStorage();
 
     useEffect(() => {
         if (detail) {
@@ -188,17 +187,15 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                 topicId: detail?.topic?.topicId,
                 tagId: detail?.tag?.tagId,
             });
-            setUrlFileList(detail?.postFileList?.[0]?.url ? [detail?.postFileList?.[0]?.url] : []);
+            setUrlFileList(detail?.postFileList?.length > 0 ? detail?.postFileList?.map(file => file.url) : []);
             setAnotherFileList(
-                detail?.postFileList?.[0]?.url
-                    ? [
-                          {
-                              uid: detail?.postFileList?.[0]?.url,
-                              name: detail?.postFileList?.[0]?.url,
-                              url: detail?.postFileList?.[0]?.url,
-                              status: 'done',
-                          },
-                      ]
+                detail?.postFileList?.length > 0
+                    ? detail?.postFileList?.map(file => ({
+                          uid: file?.url,
+                          name: ref(storage, file?.url)?.name,
+                          url: file?.url,
+                          status: 'done',
+                      }))
                     : [],
             );
         }

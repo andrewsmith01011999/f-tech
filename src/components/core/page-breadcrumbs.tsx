@@ -1,14 +1,15 @@
+import { RightOutlined } from '@ant-design/icons';
 import { Breadcrumb, Button } from 'antd';
 import React, { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+
 import TagXSvg from '/public/tag-x.svg';
-import { RightOutlined } from '@ant-design/icons';
 
 interface Props {
     title?: string;
 }
 
-const PageBreadcrumbs = ({title} : Props) => {
+const PageBreadcrumbs = ({ title }: Props) => {
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -22,11 +23,14 @@ const PageBreadcrumbs = ({title} : Props) => {
 
     const pathSnippets = splitPath.filter(i => i);
     const extraBreadcrumbItems = pathSnippets.map((_, index) => {
-        let url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+        const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+
         return {
-            path: url,
-            breadcrumbName: (
-                <Link to={url} onClick={() => setHistory(location.pathname)}>
+            path: '',
+            breadcrumbName: title ? (
+                <div>{title || url.split('/').splice(-1)?.[0]}</div>
+            ) : (
+                <Link to={''} onClick={() => setHistory(location.pathname)}>
                     {title || url.split('/').splice(-1)?.[0]}
                 </Link>
             ),
@@ -59,6 +63,7 @@ const PageBreadcrumbs = ({title} : Props) => {
                 }),
         },
     ];
+
     return (
         <Breadcrumb>
             {breadcrumbItems.map(item => (

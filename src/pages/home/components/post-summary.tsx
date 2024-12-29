@@ -1,10 +1,12 @@
+import type { Category } from '@/types/category/category';
+import type { FC } from 'react';
+
 import { Card, Flex, Image, Tag, Typography } from 'antd';
-import PlaceholderSvg from '/public/placeholder.svg';
-import ArrowRightSvg from '/public/arrow-right.svg';
 import { useNavigate } from 'react-router-dom';
+
+import ArrowRightSvg from '/public/arrow-right.svg';
+import PlaceholderSvg from '/public/placeholder.svg';
 import { PATHS } from '@/utils/paths';
-import { Category } from '@/types/category/category';
-import { FC } from 'react';
 
 interface PostSummaryProps {
     data: Category;
@@ -24,7 +26,7 @@ export const PostSummary: FC<PostSummaryProps> = ({ data }) => {
             <Flex vertical gap={10}>
                 <Flex gap={20}>
                     <Image
-                        style={{ borderRadius: 16, width: 156, height: 156, objectFit: 'contain' }}
+                        style={{ borderRadius: 16, width: 250, height: 250, objectFit: 'contain' }}
                         src={image ?? PlaceholderSvg}
                         alt="post"
                         preview={false}
