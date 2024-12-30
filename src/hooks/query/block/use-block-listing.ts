@@ -1,7 +1,9 @@
+import type { Account } from '@/types/account';
+
+import { useQuery } from '@tanstack/react-query';
+
 import { request } from '@/apis/request';
 import { blockKeys } from '@/consts/factory/block';
-import { Account } from '@/types/account';
-import { useQuery } from '@tanstack/react-query';
 
 export const useBlocksListing = () => {
     const fetchBlocks = async (): Promise<Account[]> => {

@@ -1,20 +1,23 @@
-import { FC, useEffect, useState } from 'react';
-import { OnAction, PaginationParams } from '@/types';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { useDraftsListing } from '@/hooks/query/post/use-posts-listing';
-import { Button, Divider, Empty, Flex, Form, Modal } from 'antd';
-import { PostItem } from '@/components/post/post-item';
-import { PostWrapper } from '@/pages/home/layout/post-wrapper';
-import { sortBy } from 'lodash';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
-import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
-import { useMessage } from '@/hooks/use-message';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { PATHS } from '@/utils/paths';
+import type { RootState } from '@/stores';
+import type { OnAction, PaginationParams } from '@/types';
+import type { FC } from 'react';
+
 import { useQueryClient } from '@tanstack/react-query';
-import { postKeys } from '@/consts/factory/post';
+import { Button, Divider, Empty, Flex, Form, Modal } from 'antd';
+import { sortBy } from 'lodash';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { v4 } from 'uuid';
+
+import { PostItem } from '@/components/post/post-item';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { postKeys } from '@/consts/factory/post';
+import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
+import { useDraftsListing } from '@/hooks/query/post/use-posts-listing';
+import { useMessage } from '@/hooks/use-message';
+import { PostWrapper } from '@/pages/home/layout/post-wrapper';
+import { PATHS } from '@/utils/paths';
 
 interface FormFieldValues {
     post: {
@@ -49,6 +52,8 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
         },
     });
 
+    const filteredData = data?.filter(post => post?.topic?.category?.categoryId === searchParams.get('category'));
+
     const queryClient = useQueryClient();
 
     const { mutate: deleteDraft } = useDeleteDraftPost();
@@ -61,7 +66,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
         toggleSelectAll();
         form.setFieldValue(
             'post',
-            sortBy(data, 'createdDate').map(post => ({
+            sortBy(filteredData, 'createdDate').map(post => ({
                 postId: post.postId,
                 checked: true,
             })),
@@ -72,7 +77,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
         toggleSelectAll();
         form.setFieldValue(
             'post',
-            sortBy(data, 'createdDate').map(post => ({
+            sortBy(filteredData, 'createdDate').map(post => ({
                 postId: post.postId,
                 checked: false,
             })),
@@ -88,6 +93,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             .getFieldValue('post')
             .filter((post: FormFieldValues['post']) => post.checked)
             .map((post: FormFieldValues['post']) => post.postId);
+
         deleteDraft(deletedIds, {
             onSuccess: () => {
                 form.resetFields();
@@ -133,7 +139,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
             footer={null}
         >
             <PostWrapper>
-                {data?.length ? (
+                {filteredData?.length ? (
                     <>
                         <Form<FormFieldValues> name="draft" form={form} onFinish={onFinish}>
                             <Form.List name="post">
@@ -141,7 +147,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
                                     <PostWrapper>
                                         {fields.map((field, index) => (
                                             <PostItem
-                                                data={data[index]}
+                                                data={filteredData[index]}
                                                 key={field.key}
                                                 showActions={false}
                                                 showCheckbox
@@ -154,7 +160,7 @@ const DraftList: FC<DraftListProps> = ({ onCancel }) => {
                                                     navigate(
                                                         `${PATHS.POST_DETAIL_DRAFT.replace(
                                                             ':id',
-                                                            data[index].postId,
+                                                            filteredData[index].postId,
                                                         )}?category=${searchParams.get('category')}`,
                                                     )
                                                 }

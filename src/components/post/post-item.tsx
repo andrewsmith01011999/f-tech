@@ -5,15 +5,12 @@ import type { FormListFieldData } from 'antd';
 import type { FC } from 'react';
 
 import {
-    BarChartOutlined,
     CommentOutlined,
     DeleteOutlined,
-    DownloadOutlined,
     EditOutlined,
     EllipsisOutlined,
     ExclamationCircleOutlined,
     EyeInvisibleOutlined,
-    EyeOutlined,
     FileZipOutlined,
     GlobalOutlined,
     KeyOutlined,
@@ -27,12 +24,11 @@ import { Button, Card, Checkbox, Divider, Dropdown, Flex, Form, Image, Modal, Sp
 import { useEffect, useState } from 'react';
 import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { DOWNLOAD_POINT } from '@/consts/common';
 import { bookmarkKeys } from '@/consts/factory/bookmark';
 import { postKeys } from '@/consts/factory/post';
-import { upvoteKeys } from '@/consts/factory/upvote';
 import { useToggleBookmark } from '@/hooks/mutate/bookmark/use-toggle-bookmark';
 import { useDeleteDraftPost, useDeletePost } from '@/hooks/mutate/post/use-delete-post';
 import { useToggleUpvote } from '@/hooks/mutate/upvote/use-toggle-upvote';
@@ -44,6 +40,7 @@ import { useMessage } from '@/hooks/use-message';
 import { setPost } from '@/stores/post';
 import dayjsConfig from '@/utils/dayjs';
 import { PATHS } from '@/utils/paths';
+import { put } from '@/utils/service';
 
 import { UserInfo } from '../user/user-info';
 import { IconButton } from './icon-button';
@@ -259,314 +256,345 @@ export const PostItem: FC<PostItemProps> = ({
         }
     }, [isErrorDownload, errorDownload]);
 
+    const handleUpdateStatus = async (status: string) => {
+        let url = '';
+
+        if (status === 'Hide') {
+            url = `status?status/hidden`;
+        } else {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            url = `status?status=${status}`;
+        }
+
+        try {
+            const endpoint = `/post/update/${id}/${url}`;
+            const data = { status }; // Adjust the data structure as needed
+            const response = await put(endpoint, data);
+
+            if (response.status === 200) {
+                window.location.reload();
+            }
+
+            success('Status updated successfully');
+        } catch (error) {
+            console.error('Failed to update status:', error);
+        }
+    };
+
     return (
-        <Card
-            style={{ cursor: 'pointer' }}
-            onClick={() => (onClick ? onClick() : navigate(PATHS.POST_DETAIL.replace(':id', data?.postId)))}
-        >
-            <Flex vertical gap={8}>
-                <Flex justify="space-between" align="flex-start">
-                    <Flex align="center" gap={8}>
-                        <UserInfo account={data.account} />
-                        {topic && (
-                            <Tag
-                                style={{
-                                    padding: '0 10px',
-                                    fontSize: 16,
-                                    height: 24,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                                onClick={e => e.stopPropagation()}
-                            >
-                                {topic?.name}
-                            </Tag>
-                        )}
-                        {tag && (
-                            <PostTag backgroundColor={tag?.backgroundColorHex} textColor={tag?.textColorHex}>
-                                <TagOutlined style={{ marginRight: 8 }} />
-                                {tag?.name}
-                            </PostTag>
-                        )}
-                    </Flex>
-                    <Flex align="center" gap={8}>
-                        {showActions && isAllowShowActions && (
-                            <Dropdown
-                                menu={{
-                                    items: [
-                                        ...(showPublic
-                                            ? [
-                                                  {
-                                                      key: '1',
-                                                      icon: <GlobalOutlined />,
-                                                      label: <span>Public</span>,
-                                                      children: [
-                                                          {
-                                                              key: '1.1',
-                                                              icon: <GlobalOutlined />,
-                                                              label: <span>Public</span>,
-                                                          },
-                                                          {
-                                                              key: '1.2',
-                                                              icon: <KeyOutlined />,
-                                                              label: <span>Private</span>,
-                                                          },
-                                                          {
-                                                              key: '1.3',
-                                                              icon: <EyeInvisibleOutlined />,
-                                                              label: <span>Hide</span>,
-                                                          },
-                                                      ],
-                                                  },
-                                              ]
-                                            : []),
-                                        {
-                                            key: '2',
-                                            icon: <EditOutlined />,
-                                            label: <span>Edit post</span>,
-                                            onClick: e => {
-                                                e.domEvent.stopPropagation();
-                                                handleUpdate();
-                                            },
-                                        },
-                                        {
-                                            key: '3',
-                                            icon: <DeleteOutlined />,
-                                            label: <span>Delete post</span>,
-                                            onClick: e => {
-                                                e.domEvent.stopPropagation();
-                                                handleDelete();
-                                            },
-                                        },
-                                        // {
-                                        //     key: '4',
-                                        //     icon: <DownloadOutlined />,
-                                        //     label: (
-                                        //         <a href={data?.postFileList?.[0]?.url} download>
-                                        //             Download
-                                        //         </a>
-                                        //     ),
-                                        //     disabled: !data?.postFileList?.[0]?.url,
-                                        //     onClick: e => {
-                                        //         e.domEvent.stopPropagation();
-                                        //         setDownloadPostId(postId);
-                                        //         download();
-                                        //     },
-                                        // },
-                                    ],
-                                }}
-                            >
-                                <Button
+        data && (
+            <Card
+                style={{ cursor: 'pointer' }}
+                onClick={() => (onClick ? onClick() : navigate(PATHS.POST_DETAIL.replace(':id', data?.postId)))}
+            >
+                <Flex vertical gap={8}>
+                    <Flex justify="space-between" align="flex-start">
+                        <Flex align="center" gap={8}>
+                            <UserInfo account={data.account} />
+                            {topic && (
+                                <Tag
+                                    style={{
+                                        padding: '0 10px',
+                                        fontSize: 16,
+                                        height: 24,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
                                     onClick={e => e.stopPropagation()}
-                                    type="text"
-                                    icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
-                                />
-                            </Dropdown>
-                        )}
-                        {/* {!id && showDetail && (
-                            <IconButton
-                                icon={<EyeOutlined />}
-                                children=""
-                                onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
-                            />
-                        )} */}
-                        {showCheckbox && field && (
-                            <Form.Item name={[field.name, 'checked']} valuePropName="checked">
-                                <Checkbox onClick={e => e.stopPropagation()} />
-                            </Form.Item>
-                        )}
+                                >
+                                    {topic?.name}
+                                </Tag>
+                            )}
+                            {tag && (
+                                <PostTag backgroundColor={tag?.backgroundColorHex} textColor={tag?.textColorHex}>
+                                    <TagOutlined style={{ marginRight: 8 }} />
+                                    {tag?.name}
+                                </PostTag>
+                            )}
+                        </Flex>
+                        <Flex align="center" gap={8}>
+                            {showActions && isAllowShowActions && (
+                                <Dropdown
+                                    menu={{
+                                        items: [
+                                            ...(showPublic
+                                                ? [
+                                                      {
+                                                          key: '1',
+                                                          icon: <GlobalOutlined />,
+                                                          label: <span>{data?.status}</span>,
+                                                          children: [
+                                                              {
+                                                                  key: '1.1',
+                                                                  icon: <GlobalOutlined />,
+                                                                  label: <span>Public</span>,
+                                                                  onClick: () => handleUpdateStatus('PUBLIC'),
+                                                              },
+                                                              {
+                                                                  key: '1.2',
+                                                                  icon: <KeyOutlined />,
+                                                                  label: <span>Private</span>,
+                                                                  onClick: () => handleUpdateStatus('PRIVATE'),
+                                                              },
+                                                              {
+                                                                  key: '1.3',
+                                                                  icon: <EyeInvisibleOutlined />,
+                                                                  label: <span>Hidden</span>,
+                                                                  onClick: () => handleUpdateStatus('Hide'),
+                                                              },
+                                                          ],
+                                                      },
+                                                  ]
+                                                : []),
+                                            {
+                                                key: '2',
+                                                icon: <EditOutlined />,
+                                                label: <span>Edit post</span>,
+                                                onClick: e => {
+                                                    e.domEvent.stopPropagation();
+                                                    handleUpdate();
+                                                },
+                                            },
+                                            {
+                                                key: '3',
+                                                icon: <DeleteOutlined />,
+                                                label: <span>Delete post</span>,
+                                                onClick: e => {
+                                                    e.domEvent.stopPropagation();
+                                                    handleDelete();
+                                                },
+                                            },
+                                            // {
+                                            //     key: '4',
+                                            //     icon: <DownloadOutlined />,
+                                            //     label: (
+                                            //         <a href={data?.postFileList?.[0]?.url} download>
+                                            //             Download
+                                            //         </a>
+                                            //     ),
+                                            //     disabled: !data?.postFileList?.[0]?.url,
+                                            //     onClick: e => {
+                                            //         e.domEvent.stopPropagation();
+                                            //         setDownloadPostId(postId);
+                                            //         download();
+                                            //     },
+                                            // },
+                                        ],
+                                    }}
+                                >
+                                    <Button
+                                        onClick={e => e.stopPropagation()}
+                                        type="text"
+                                        icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+                                    />
+                                </Dropdown>
+                            )}
+                            {/* {!id && showDetail && (
+                        <IconButton
+                            icon={<EyeOutlined />}
+                            children=""
+                            onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
+                        />
+                    )} */}
+                            {showCheckbox && field && (
+                                <Form.Item name={[field.name, 'checked']} valuePropName="checked">
+                                    <Checkbox onClick={e => e.stopPropagation()} />
+                                </Form.Item>
+                            )}
+                        </Flex>
+
+                        {extra && extra}
                     </Flex>
 
-                    {extra && extra}
-                </Flex>
-
-                <Typography.Title
-                    level={4}
-                    style={{
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
-                    }}
-                    onClick={e => e.stopPropagation()}
-                >
-                    {title}
-                </Typography.Title>
-
-                <ToggleTruncateTextTypography content={content} maxLength={200} />
-
-                <Flex gap={10} wrap onClick={e => e.stopPropagation()}>
-                    {imageList?.map(file => (
-                        <div className="ant-upload" key={file.imageId} onClick={e => e.stopPropagation()}>
-                            <Image src={file.url} alt={file.url} onClick={e => e.stopPropagation()} />
-                        </div>
-                    ))}
-                </Flex>
-
-                <Spin spinning={isLoadingDownload} size="small">
-                    <Flex
-                        gap={8}
-                        onClick={e => {
-                            e.stopPropagation();
-                        }}
+                    <Typography.Title
+                        level={4}
                         style={{
-                            color: '#007AFF',
+                            textDecoration: 'underline',
+                            cursor: 'pointer',
                         }}
+                        onClick={e => e.stopPropagation()}
                     >
-                        {getFileNameFromUrl(data?.postFileList?.[0]?.url) && <FileZipOutlined />}
-                        <Typography.Link
+                        {title}
+                    </Typography.Title>
+
+                    <ToggleTruncateTextTypography content={content} maxLength={200} />
+
+                    <Flex gap={10} wrap onClick={e => e.stopPropagation()}>
+                        {imageList?.map(file => (
+                            <div className="ant-upload" key={file.imageId} onClick={e => e.stopPropagation()}>
+                                <Image src={file.url} alt={file.url} onClick={e => e.stopPropagation()} />
+                            </div>
+                        ))}
+                    </Flex>
+
+                    <Spin spinning={isLoadingDownload} size="small">
+                        <Flex
+                            gap={8}
                             onClick={e => {
                                 e.stopPropagation();
-                                confirm({
-                                    title: 'Confirm',
-                                    content: (
-                                        <>
-                                            <Typography.Text type="secondary">
-                                                Do you want to download this file?
-                                            </Typography.Text>
-                                            <Flex vertical align="center">
-                                                <Typography.Title
-                                                    level={3}
-                                                    color="#FF6934"
-                                                    style={{
-                                                        color: '#FF6934',
-                                                        marginTop: 24,
-                                                    }}
-                                                >
-                                                    -{DOWNLOAD_POINT} MC
-                                                </Typography.Title>
-                                            </Flex>
-                                            <Divider />
-                                            <Flex justify="space-between">
-                                                <Typography.Title level={4}>Balance:</Typography.Title>
-                                                <Typography.Title level={4}>{wallet?.balance} MC</Typography.Title>
-                                            </Flex>
-                                            <Flex justify="space-between">
-                                                <Typography.Title
-                                                    level={4}
-                                                    style={{
-                                                        color:
-                                                            (wallet?.balance || 0) - (DOWNLOAD_POINT || 0) < 0
-                                                                ? 'red'
-                                                                : 'black',
-                                                    }}
-                                                >
-                                                    Remaining:
-                                                </Typography.Title>
-                                                <Typography.Title
-                                                    level={4}
-                                                    style={{
-                                                        color:
-                                                            (wallet?.balance || 0) - (DOWNLOAD_POINT || 0) < 0
-                                                                ? 'red'
-                                                                : 'black',
-                                                    }}
-                                                >
-                                                    {(wallet?.balance || 0) - (DOWNLOAD_POINT || 0)} MC
-                                                </Typography.Title>
-                                            </Flex>
-                                            <Divider />
-                                        </>
-                                    ),
-                                    onOk: () => {
-                                        setDownloadPostId(postId);
-                                        download();
-                                    },
-                                });
                             }}
                             style={{
                                 color: '#007AFF',
                             }}
                         >
-                            {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
-                        </Typography.Link>
-                    </Flex>
-                </Spin>
+                            {data?.postFileList.length > 0 &&
+                                data?.postFileList?.map(post => getFileNameFromUrl(post.url)) && <FileZipOutlined />}
+                            <Typography.Link
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    confirm({
+                                        title: 'Confirm',
+                                        content: (
+                                            <>
+                                                <Typography.Text type="secondary">
+                                                    Do you want to download this file?
+                                                </Typography.Text>
+                                                <Flex vertical align="center">
+                                                    <Typography.Title
+                                                        level={3}
+                                                        color="#FF6934"
+                                                        style={{
+                                                            color: '#FF6934',
+                                                            marginTop: 24,
+                                                        }}
+                                                    >
+                                                        -{DOWNLOAD_POINT} MC
+                                                    </Typography.Title>
+                                                </Flex>
+                                                <Divider />
+                                                <Flex justify="space-between">
+                                                    <Typography.Title level={4}>Balance:</Typography.Title>
+                                                    <Typography.Title level={4}>{wallet?.balance} MC</Typography.Title>
+                                                </Flex>
+                                                <Flex justify="space-between">
+                                                    <Typography.Title
+                                                        level={4}
+                                                        style={{
+                                                            color:
+                                                                (wallet?.balance || 0) - (DOWNLOAD_POINT || 0) < 0
+                                                                    ? 'red'
+                                                                    : 'black',
+                                                        }}
+                                                    >
+                                                        Remaining:
+                                                    </Typography.Title>
+                                                    <Typography.Title
+                                                        level={4}
+                                                        style={{
+                                                            color:
+                                                                (wallet?.balance || 0) - (DOWNLOAD_POINT || 0) < 0
+                                                                    ? 'red'
+                                                                    : 'black',
+                                                        }}
+                                                    >
+                                                        {(wallet?.balance || 0) - (DOWNLOAD_POINT || 0)} MC
+                                                    </Typography.Title>
+                                                </Flex>
+                                                <Divider />
+                                            </>
+                                        ),
+                                        onOk: () => {
+                                            setDownloadPostId(postId);
+                                            download();
+                                        },
+                                    });
+                                }}
+                                style={{
+                                    color: '#007AFF',
+                                }}
+                            >
+                                {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
+                            </Typography.Link>
+                        </Flex>
+                    </Spin>
 
-                <Typography.Text type="secondary" onClick={e => e.stopPropagation()}>
-                    Posted {dayjsConfig(createdDate).fromNow()}
-                </Typography.Text>
+                    <Typography.Text type="secondary" onClick={e => e.stopPropagation()}>
+                        Posted {dayjsConfig(createdDate).fromNow()}
+                    </Typography.Text>
 
-                <Flex gap={32} vertical onClick={e => e.stopPropagation()}>
-                    {showLike && (
-                        <Flex justify="end" gap={20}>
-                            <IconButton
-                                icon={
-                                    !upvotes?.find(
-                                        upvote =>
-                                            upvote?.post?.postId === data?.postId &&
-                                            upvote?.account?.accountId === accountInfo?.accountId,
-                                    ) ? (
-                                        <LikeOutlined />
-                                    ) : (
-                                        <LikeFilled
-                                            color="#007AFF"
-                                            style={{
-                                                color: '#007AFF',
-                                            }}
-                                        />
-                                    )
-                                }
-                                children={
-                                    <Typography.Text
-                                        style={{
-                                            color: !upvotes?.find(
-                                                upvote =>
-                                                    upvote?.post?.postId === data?.postId &&
-                                                    upvote?.account?.accountId === accountInfo?.accountId,
-                                            )
-                                                ? 'unset'
-                                                : '#007AFF',
-                                        }}
-                                    >
-                                        {data?.upvoteCount} {data?.upvoteCount > 1 ? 'Likes' : 'Like'}
-                                    </Typography.Text>
-                                }
-                                onClick={() => handleUpvote(data?.postId)}
-                                disabled={isPendingUpvote}
-                            />
-                            <IconButton
-                                icon={<CommentOutlined />}
-                                children={
-                                    <Typography.Text>
-                                        {data?.commentCount} {data?.commentCount > 1 ? 'Comments' : 'Comment'}
-                                    </Typography.Text>
-                                }
-                                onClick={handleComment}
-                            />
-                            <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
-                            {bookmarks?.find(bookmark => bookmark?.postId === data?.postId) ? (
+                    <Flex gap={32} vertical onClick={e => e.stopPropagation()}>
+                        {showLike && (
+                            <Flex justify="end" gap={20}>
                                 <IconButton
                                     icon={
-                                        <FaBookmark
-                                            style={{
-                                                color: '#EEA956',
-                                            }}
-                                        />
+                                        !upvotes?.find(
+                                            upvote =>
+                                                upvote?.post?.postId === data?.postId &&
+                                                upvote?.account?.accountId === accountInfo?.accountId,
+                                        ) ? (
+                                            <LikeOutlined />
+                                        ) : (
+                                            <LikeFilled
+                                                color="#007AFF"
+                                                style={{
+                                                    color: '#007AFF',
+                                                }}
+                                            />
+                                        )
                                     }
-                                    children="Bookmark"
-                                    onClick={() => handleBookmark(data?.postId)}
-                                    disabled={isPendingToggleBookmark}
+                                    children={
+                                        <Typography.Text
+                                            style={{
+                                                color: !upvotes?.find(
+                                                    upvote =>
+                                                        upvote?.post?.postId === data?.postId &&
+                                                        upvote?.account?.accountId === accountInfo?.accountId,
+                                                )
+                                                    ? 'unset'
+                                                    : '#007AFF',
+                                            }}
+                                        >
+                                            {data?.upvoteCount} {data?.upvoteCount > 1 ? 'Likes' : 'Like'}
+                                        </Typography.Text>
+                                    }
+                                    onClick={() => handleUpvote(data?.postId)}
+                                    disabled={isPendingUpvote}
                                 />
-                            ) : (
                                 <IconButton
-                                    icon={<FaRegBookmark />}
-                                    children="Bookmark"
-                                    onClick={() => handleBookmark(data?.postId)}
-                                    disabled={isPendingToggleBookmark}
+                                    icon={<CommentOutlined />}
+                                    children={
+                                        <Typography.Text>
+                                            {data?.commentCount} {data?.commentCount > 1 ? 'Comments' : 'Comment'}
+                                        </Typography.Text>
+                                    }
+                                    onClick={handleComment}
                                 />
-                            )}
-                            {isAllowShowReport && (
-                                <IconButton
-                                    icon={<ExclamationCircleOutlined />}
-                                    children="Report"
-                                    onClick={handleReport}
-                                />
-                            )}
-                        </Flex>
-                    )}
+                                <IconButton icon={<ShareAltOutlined />} children="Share" onClick={copyLink} />
+                                {bookmarks?.find(bookmark => bookmark?.postId === data?.postId) ? (
+                                    <IconButton
+                                        icon={
+                                            <FaBookmark
+                                                style={{
+                                                    color: '#EEA956',
+                                                }}
+                                            />
+                                        }
+                                        children="Bookmark"
+                                        onClick={() => handleBookmark(data?.postId)}
+                                        disabled={isPendingToggleBookmark}
+                                    />
+                                ) : (
+                                    <IconButton
+                                        icon={<FaRegBookmark />}
+                                        children="Bookmark"
+                                        onClick={() => handleBookmark(data?.postId)}
+                                        disabled={isPendingToggleBookmark}
+                                    />
+                                )}
+                                {isAllowShowReport && (
+                                    <IconButton
+                                        icon={<ExclamationCircleOutlined />}
+                                        children="Report"
+                                        onClick={handleReport}
+                                    />
+                                )}
+                            </Flex>
+                        )}
 
-                    {isShowComment && !hideComment && <PostComment postId={data?.postId} isShown={isShowComment} />}
+                        {isShowComment && !hideComment && <PostComment postId={data?.postId} isShown={isShowComment} />}
+                    </Flex>
                 </Flex>
-            </Flex>
-        </Card>
+            </Card>
+        )
     );
 };

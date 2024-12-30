@@ -1,11 +1,11 @@
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { useState } from 'react';
+
 import { storage } from '@/utils/firebase';
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 
 export const useUploadFile = () => {
     const [imgUrl, setImgUrl] = useState<string | null>(null);
     const [imgUrlList, setImgUrlList] = useState<string[]>([]);
-
 
     const uploadFile = (options: any) => {
         const { onSuccess, onError, file, onProgress } = options;
@@ -19,6 +19,7 @@ export const useUploadFile = () => {
             'state_changed',
             snapshot => {
                 const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+
                 onProgress(
                     {
                         percent: progress,

@@ -1,22 +1,25 @@
+import type { Notification } from '@/types/notification';
+import type { FC } from 'react';
+
+import { css } from '@emotion/react';
+import { Avatar, Card, Flex, Tag, Typography } from 'antd';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
+
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
 import { useCommentListing } from '@/hooks/query/comment/use-comment-listing';
 import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
 import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
-import { Notification } from '@/types/notification';
 import { StarIcon } from '@/utils/asset';
 import { PATHS } from '@/utils/paths';
-import { css } from '@emotion/react';
-import { Avatar, Card, Flex, Typography } from 'antd';
-import dayjs from 'dayjs';
-import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { put } from '@/utils/service';
 
 interface NotificationItemProps {
     notification: Notification;
 }
 
-const NotificationItem = ({ notification }: NotificationItemProps) => {
+const NotificationItem: FC<NotificationItemProps> = ({ notification }) => {
     const { data: upvotes } = useUpvoteListing();
     const { data: comments } = useGetAllComments();
     const { data: posts } = usePostsListing({
@@ -33,27 +36,32 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
         ? JSON.parse(notification?.message ?? '{}')
         : notification?.message;
 
+    const handleReadNotification = async () => {
+        const endpoint = `/notification/update-status/${notification?.notificationId}`;
+        const updatedData = { read: true };
+        const response = await put<Notification>(endpoint, updatedData);
+
+        if (response.status === 200) {
+            notiParsed?.id && notiParsed?.entity === 'Post';
+            // navigate(PATHS.POST_DETAIL.replace(':id', notiParsed?.id));
+        }
+    };
+
     return (
-        <Card
-            css={styles}
-            onClick={() => {
-                notiParsed?.id &&
-                    notiParsed?.entity === 'Post' &&
-                    navigate(
-                        `${PATHS.POST_DETAIL.replace(':id', notiParsed?.id)}${
-                            notification?.commentId ? `&commentId=${notification.commentId}` : ''
-                        }`,
-                    );
-            }}
-        >
+        <Card css={styles} onClick={handleReadNotification}>
             <Flex vertical gap={6}>
                 <Flex align="center" gap={10}>
                     <div>
-                        <img src={StarIcon}></img>
+                        <img src={StarIcon} alt="Star Icon" />
                     </div>
                     <div>
                         <Avatar src={notification?.account?.avatar} />
                     </div>
+                    {!notification.read && (
+                        <Tag color="blue" css={unreadTagStyle}>
+                            Unread
+                        </Tag>
+                    )}
                 </Flex>
                 <div>
                     <Typography.Text className="notification-title">{notification?.title}</Typography.Text>
@@ -88,6 +96,10 @@ const styles = css(`
         font-weight: 600;
         font-size: 16px;
     }
-
 `);
+
+const unreadTagStyle = css(`
+    margin-left: 8px;
+`);
+
 export default NotificationItem;

@@ -79,12 +79,22 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
     };
 
     const handleSelectTopic = (id: string | undefined) => {
-        setSearchParams(params => ({
-            ...params,
-            ...(categoryId && { category: categoryId }),
-            topicId: id,
-            ...(tagId && { tagId }),
-        }));
+        console.log('id', id);
+
+        if (id === topicId) {
+            setSearchParams(params => {
+                params.delete('topicId');
+
+                return params;
+            });
+        } else {
+            setSearchParams(params => ({
+                ...params,
+                ...(categoryId && { category: categoryId }),
+                topicId: id,
+                ...(tagId && { tagId }),
+            }));
+        }
     };
 
     const handleReportAccount = () => {

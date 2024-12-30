@@ -43,6 +43,7 @@ const PostDetailPage = lazy(() => import('@/pages/post-detail'));
 const DepositPage = lazy(() => import('@/pages/deposit'));
 const RecommendationsPage = lazy(() => import('@/pages/recommendations'));
 const FollowPage = lazy(() => import('@/pages/followings'));
+const BlockedListPage = lazy(() => import('@/pages/blocked-list'));
 const ExplorePage = lazy(() => import('@/pages/explore'));
 const AdminCategoryPage = lazy(() => import('@/pages/admin/category'));
 const AdminTopicPage = lazy(() => import('@/pages/admin/topic'));
@@ -162,6 +163,10 @@ const RenderRouter: FC = () => {
                 {
                     path: PATHS.FOLLOWER,
                     element: <WrapperRouteComponent element={<FollowerPage />} title="Followers" />,
+                },
+                {
+                    path: PATHS.BLOCKED_LIST,
+                    element: <WrapperRouteComponent element={<BlockedListPage />} title="Blocked List" />,
                 },
                 {
                     path: PATHS.EXPLORE,

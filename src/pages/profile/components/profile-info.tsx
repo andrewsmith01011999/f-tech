@@ -111,26 +111,33 @@ export const ProfileInfo = () => {
                         </Upload>
                     )}
                 </div>
-
-                {isEdit ? (
+                <Flex gap={20}>
                     <Button
-                        htmlType="button"
-                        variant="outlined"
-                        style={{ position: 'absolute', top: 280, right: 20 }}
-                        onClick={update}
+                        onClick={() => navigate(PATHS.BLOCKED_LIST)}
+                        style={{ position: 'absolute', top: 280, right: 130 }}
                     >
-                        Save
+                        Blocked list
                     </Button>
-                ) : (
-                    <Button
-                        htmlType="button"
-                        variant="outlined"
-                        style={{ position: 'absolute', top: 280, right: 20 }}
-                        onClick={() => setIsEdit(true)}
-                    >
-                        Edit Profile
-                    </Button>
-                )}
+                    {isEdit ? (
+                        <Button
+                            htmlType="button"
+                            variant="outlined"
+                            style={{ position: 'absolute', top: 280, right: 20 }}
+                            onClick={update}
+                        >
+                            Save
+                        </Button>
+                    ) : (
+                        <Button
+                            htmlType="button"
+                            variant="outlined"
+                            style={{ position: 'absolute', top: 280, right: 20 }}
+                            onClick={() => setIsEdit(true)}
+                        >
+                            Edit Profile
+                        </Button>
+                    )}
+                </Flex>
             </div>
             <Flex vertical gap={8}>
                 <Typography.Title level={4}>{accountInfo?.username}</Typography.Title>

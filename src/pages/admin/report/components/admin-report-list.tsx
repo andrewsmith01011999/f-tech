@@ -1,22 +1,27 @@
-import { Button, Checkbox, Dropdown, Empty, Flex, GetProp, Input, Modal, Popover, Tag, Typography } from 'antd';
-import React, { useEffect } from 'react';
-import AdminFeedbackWrapper from '../../feedback/layout/admin-feedback-wrapper';
-import { PostReportParams, useReportPostsListing } from '@/hooks/query/report/use-report-posts';
-import AdminReportItem from './admin-report-item';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import type { PostReportParams } from '@/hooks/query/report/use-report-posts';
+import type { FeedbackStatus } from '@/types/feedback/feedback';
+import type { PostReport } from '@/types/report/report';
+import type { GetProp } from 'antd';
+
 import { DeleteOutlined, EllipsisOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
-import { mapFeedbackStatusColor } from '../../feedback/utils/map-feedback-status-color';
-import { FeedbackStatus } from '@/types/feedback/feedback';
-import { useDebounce } from '@/hooks/use-debounce';
-import { useGetPost } from '@/hooks/query/post/use-get-post';
-import { PostItem } from '@/components/post/post-item';
-import { PostReport } from '@/types/report/report';
-import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
 import { useQueryClient } from '@tanstack/react-query';
-import { useMessage } from '@/hooks/use-message';
+import { Button, Checkbox, Dropdown, Empty, Flex, Input, Modal, Popover, Tag, Typography } from 'antd';
+import React, { useEffect } from 'react';
+import { IoIosRefresh } from 'react-icons/io';
+
+import { PostItem } from '@/components/post/post-item';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { reportKeys } from '@/consts/factory/report';
 import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
-import { IoIosRefresh } from 'react-icons/io';
+import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
+import { useGetPost } from '@/hooks/query/post/use-get-post';
+import { useReportPostsListing } from '@/hooks/query/report/use-report-posts';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useMessage } from '@/hooks/use-message';
+
+import AdminFeedbackWrapper from '../../feedback/layout/admin-feedback-wrapper';
+import { mapFeedbackStatusColor } from '../../feedback/utils/map-feedback-status-color';
+import AdminReportItem from './admin-report-item';
 
 const { confirm } = Modal;
 
